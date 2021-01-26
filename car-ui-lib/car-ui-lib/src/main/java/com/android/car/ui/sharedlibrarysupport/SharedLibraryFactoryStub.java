@@ -53,7 +53,9 @@ public final class SharedLibraryFactoryStub implements SharedLibraryFactory {
     @Nullable
     @Override
     public ToolbarController installBaseLayoutAround(View contentView,
-            InsetsChangedListener insetsChangedListener, boolean toolbarEnabled) {
+            InsetsChangedListener insetsChangedListener,
+            boolean toolbarEnabled,
+            boolean fullscreen) {
         boolean legacyToolbar = Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q;
         @LayoutRes final int baseLayoutRes;
 
