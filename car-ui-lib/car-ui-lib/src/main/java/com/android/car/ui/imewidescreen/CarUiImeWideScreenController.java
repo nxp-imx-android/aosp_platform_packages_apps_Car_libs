@@ -445,7 +445,13 @@ public class CarUiImeWideScreenController {
                 } while (c.moveToNext());
             }
         }
-        mInputConnection.performPrivateCommand(WIDE_SCREEN_POST_LOAD_SEARCH_RESULTS_ACTION, null);
+
+        // TODO(b/179733973) This null check was added for a test. Redo the test to properly
+        // initialize mInputConnection first.
+        if (mInputConnection != null) {
+            mInputConnection.performPrivateCommand(WIDE_SCREEN_POST_LOAD_SEARCH_RESULTS_ACTION,
+                    null);
+        }
     }
 
     void onItemClicked(String itemId) {
