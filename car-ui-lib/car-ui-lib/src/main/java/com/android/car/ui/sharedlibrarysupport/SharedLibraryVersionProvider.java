@@ -19,7 +19,7 @@ import android.content.Context;
 
 /**
  * An interface for objects that support providing a list a supported versions of
- * {@link SharedLibraryFactory} to the app. See {@link #getSharedLibraryFactory(int)}}
+ * {@link SharedLibraryFactory} to the app. See {@link #getSharedLibraryFactory(int, Context)}}
  * for more information.
  *
  * Do not use from client apps, for car-ui-lib internal use only.
@@ -40,10 +40,13 @@ public interface SharedLibraryVersionProvider {
      *
      * @param maxVersion The maximum version of {@link SharedLibraryFactory} supported by the
      *                   app.
-     * @param context Used for making a classloader for the oem sharedlibrary
+     * @param context The shared library's context. It uses the shared library's classloader,
+     *                so layout inflaters created from it can use views defined in the shared lib.
+     * @param packageName The package name of the app creating the shared library. Can be used
+     *                    to provide per-app customizations.
      *
      * @return An object implementing {@link SharedLibraryFactory} for a version <=
      *         {@code maxVersion}.
      */
-    Object getSharedLibraryFactory(int maxVersion, Context context);
+    Object getSharedLibraryFactory(int maxVersion, Context context, String packageName);
 }
