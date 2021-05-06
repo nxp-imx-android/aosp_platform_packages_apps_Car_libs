@@ -114,12 +114,12 @@ public class CarUiListItemTest {
         mListView.setAdapter(adapter);
 
         // Force CarUiRecyclerView and the nested RecyclerView to be laid out.
-        mListView.measure(0, 0);
-        mListView.layout(0, 0, 100, 10000);
+        mListView.getView().measure(0, 0);
+        mListView.getView().layout(0, 0, 100, 10000);
 
         if (mListView != null) {
-            mListView.measure(0, 0);
-            mListView.layout(0, 0, 100, 10000);
+            mListView.getView().measure(0, 0);
+            mListView.getView().layout(0, 0, 100, 10000);
         }
 
         // Required to init nested RecyclerView

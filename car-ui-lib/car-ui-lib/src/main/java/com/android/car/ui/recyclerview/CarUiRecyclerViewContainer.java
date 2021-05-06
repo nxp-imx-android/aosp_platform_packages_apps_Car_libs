@@ -18,16 +18,19 @@ package com.android.car.ui.recyclerview;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
-import android.widget.FrameLayout;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
- * Container that contains the scrollbar and RecyclerView when scrollbar is enabled.
- *
- * This container is required to expose addViewInLayout such that the scrollbar and be added without
- * triggering multiple invalidate and relayout calls.
+ * @deprecated Only maintained for legacy reasons.
+ * Historically this class used to contain the CarUiRecyclerView, and ScrollBar.
+ * This class can't be removed because OEMs might have overlaid car_ui_recycler_view.xml with their
+ * RROs.
+ * Now this class is only an empty subclass of {@link RecyclerView} to maintain backwards
+ * compatibility.
  */
-public class CarUiRecyclerViewContainer extends FrameLayout {
+@Deprecated
+public class CarUiRecyclerViewContainer extends RecyclerView {
 
     public CarUiRecyclerViewContainer(Context context) {
         super(context);
@@ -39,18 +42,5 @@ public class CarUiRecyclerViewContainer extends FrameLayout {
 
     public CarUiRecyclerViewContainer(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-    }
-
-    public CarUiRecyclerViewContainer(Context context, AttributeSet attrs, int defStyleAttr,
-            int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-    }
-
-    /**
-     * Adds the recyclerview using addViewInLayout so that invalidate and relayout calls are not
-     * triggered.
-     */
-    void addRecyclerView(View view, LayoutParams layoutParams) {
-        addViewInLayout(view, 0, layoutParams);
     }
 }

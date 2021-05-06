@@ -15,7 +15,6 @@
  */
 package com.android.car.ui.sharedlibrary.oemapis.recyclerview;
 
-import android.view.View;
 import android.view.ViewGroup;
 
 /**
@@ -73,10 +72,4 @@ public interface AdapterOEMV1<V extends ViewHolderOEMV1> {
 
     /** See {@link androidx.recyclerview.widget.RecyclerView.Adapter#hasStableIds} */
     boolean hasStableIds();
-
-    /**
-     * Sets the wrapping recyclerview
-     * @param recyclerview the wrapping recyclerview
-     */
-    void setRecyclerView(View recyclerview);
 }

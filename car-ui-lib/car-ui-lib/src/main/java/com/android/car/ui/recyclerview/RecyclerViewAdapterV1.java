@@ -19,18 +19,25 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.Adapter;
+import androidx.recyclerview.widget.RecyclerView.ItemAnimator;
+import androidx.recyclerview.widget.RecyclerView.LayoutManager;
+import androidx.recyclerview.widget.RecyclerView.OnFlingListener;
+import androidx.recyclerview.widget.RecyclerView.OnScrollListener;
+import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import com.android.car.ui.R;
 import com.android.car.ui.sharedlibrary.oemapis.recyclerview.AdapterOEMV1;
 import com.android.car.ui.sharedlibrary.oemapis.recyclerview.LayoutStyleOEMV1;
 import com.android.car.ui.sharedlibrary.oemapis.recyclerview.OnScrollListenerOEMV1;
 import com.android.car.ui.sharedlibrary.oemapis.recyclerview.RecyclerViewOEMV1;
-import com.android.car.ui.sharedlibrary.oemapis.recyclerview.SpanSizeLookupOEMV1;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,15 +47,22 @@ import java.util.List;
  *
  * For CarUi internal usage only.
  */
-public final class RecyclerViewAdapterV1 extends CarUiRecyclerView
-        implements OnScrollListenerOEMV1 {
+public final class RecyclerViewAdapterV1 extends FrameLayout
+            implements CarUiRecyclerView, OnScrollListenerOEMV1 {
 
+    @Nullable
+    private final AttributeSet mAttributes;
+    private final int mDefStyle;
     @Nullable
     private RecyclerViewOEMV1 mOEMRecyclerView;
     @Nullable
     private AdapterOEMV1 mOEMAdapter;
 
     private List<OnScrollListener> mScrollListeners = new ArrayList<>();
+    @Nullable
+    private ProxyRecyclerView mRecyclerView;
+    @Nullable
+    private CarUiLayoutStyle mLayoutStyle;
 
     public RecyclerViewAdapterV1(@NonNull Context context) {
         this(context, null);
@@ -60,7 +74,10 @@ public final class RecyclerViewAdapterV1 extends CarUiRecyclerView
 
     public RecyclerViewAdapterV1(@NonNull Context context, @Nullable AttributeSet attrs,
             int defStyle) {
-        super(context, attrs, defStyle);
+        super(context, attrs, defStyle, 0);
+
+        mAttributes = attrs;
+        mDefStyle = defStyle;
     }
 
     /**
@@ -70,44 +87,81 @@ public final class RecyclerViewAdapterV1 extends CarUiRecyclerView
     public void setRecyclerViewOEMV1(@NonNull RecyclerViewOEMV1 oemRecyclerView) {
         mOEMRecyclerView = oemRecyclerView;
 
+        // Adding this parent so androidx PreferenceFragmentCompat doesn't add the ProxyRecyclerView
+        // to the view hierarchy
+        ViewGroup parent = new FrameLayout(getContext());
+        mRecyclerView = new ProxyRecyclerView(getContext(), this);
+        parent.addView(mRecyclerView);
+
         mOEMRecyclerView.addOnScrollListener(this);
-        super.setLayoutManager(new LinearLayoutManager(getContext()));
-        View oemRV = oemRecyclerView.getView();
+
         ViewGroup.LayoutParams params = new MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
-        oemRV.setLayoutParams(params);
-        RecyclerView.Adapter adapter = new CustomAdapter(oemRV);
-        super.setAdapter(adapter);
+        addView(mOEMRecyclerView.getView(), params);
     }
 
     @Override
     public void setLayoutManager(@Nullable LayoutManager layoutManager) {
-        if (layoutManager instanceof LinearLayoutManager) {
-            setLayoutStyle(CarUiLinearLayoutStyle.from(layoutManager));
-        } else {
+        if (layoutManager instanceof GridLayoutManager) {
             setLayoutStyle(CarUiGridLayoutStyle.from(layoutManager));
+        } else {
+            setLayoutStyle(CarUiLinearLayoutStyle.from(layoutManager));
         }
     }
 
+    @Nullable
     @Override
-    public View getContainer() {
-        return mOEMRecyclerView.getContainer();
+    public RecyclerView getRecyclerView() {
+        return mRecyclerView;
     }
 
     @Override
-    public void setAdapter(RecyclerView.Adapter adapter) {
-        if (mOEMAdapter != null) {
-            mOEMAdapter.setRecyclerView(null);
-        }
+    public int getScrollState() {
+        // TODO
+        return 0;
+    }
 
+    @NonNull
+    @Override
+    public View getView() {
+        return this;
+    }
+
+    @Override
+    public void invalidateItemDecorations() {}
+
+    @Override
+    public void removeItemDecoration(@NonNull RecyclerView.ItemDecoration decor) {}
+
+    @Override
+    public void removeItemDecorationAt(int index) {}
+
+    @Nullable
+    @Override
+    public RecyclerView.ItemDecoration getItemDecorationAt(int index) {
+        return null;
+    }
+
+    @Override
+    public int getItemDecorationCount() {
+        return 0;
+    }
+
+    @Override
+    public void setAdapter(RecyclerView.Adapter<?> adapter) {
         if (adapter == null) {
             mOEMRecyclerView.setAdapter(null);
         } else {
             mOEMAdapter = new RecyclerViewAdapterAdapterV1(adapter);
             mOEMRecyclerView.setAdapter(mOEMAdapter);
-            mOEMAdapter.setRecyclerView(this);
         }
     }
+
+    @Override
+    public void addItemDecoration(@NonNull RecyclerView.ItemDecoration decor) {}
+
+    @Override
+    public void addItemDecoration(@NonNull RecyclerView.ItemDecoration decor, int index) {}
 
     @Override
     public void addOnScrollListener(@NonNull RecyclerView.OnScrollListener listener) {
@@ -133,7 +187,8 @@ public final class RecyclerViewAdapterV1 extends CarUiRecyclerView
     public void onScrollStateChanged(@NonNull RecyclerViewOEMV1 recyclerView, int newState) {
         if (mScrollListeners != null) {
             for (RecyclerView.OnScrollListener listener: mScrollListeners) {
-                listener.onScrollStateChanged(this, newState);
+                // TODO: can we return something other than null here?
+                listener.onScrollStateChanged(null, newState);
             }
         }
     }
@@ -142,7 +197,8 @@ public final class RecyclerViewAdapterV1 extends CarUiRecyclerView
     public void onScrolled(@NonNull RecyclerViewOEMV1 recyclerView, int dx, int dy) {
         if (mScrollListeners != null) {
             for (RecyclerView.OnScrollListener listener: mScrollListeners) {
-                listener.onScrolled(this, dx, dy);
+                // TODO: can we return something other than null here?
+                listener.onScrolled(null, dx, dy);
             }
         }
     }
@@ -169,45 +225,30 @@ public final class RecyclerViewAdapterV1 extends CarUiRecyclerView
     }
 
     @Override
+    public ViewHolder findViewHolderForLayoutPosition(int position) {
+        // TODO
+        return null;
+    }
+
+    @Override
+    public Adapter<?> getAdapter() {
+        // TODO
+        return null;
+    }
+
+    @Override
     public void setHasFixedSize(boolean hasFixedSize) {
         mOEMRecyclerView.setHasFixedSize(hasFixedSize);
     }
 
     @Override
-    public boolean hasFixedSize() {
-        return mOEMRecyclerView.hasFixedSize();
+    public void setOnFlingListener(OnFlingListener listener) {
+        // TODO
     }
 
-    private static class CustomAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
-        @NonNull
-        private View mView;
-
-        CustomAdapter(@NonNull View view) {
-            mView = view;
-        }
-
-        @Override
-        public int getItemCount() {
-            return 1;
-        }
-
-        @NonNull
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(
-                @NonNull ViewGroup parent, int viewType) {
-            return new CustomViewHolder(mView);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        }
-
-        static class CustomViewHolder extends RecyclerView.ViewHolder {
-            CustomViewHolder(@NonNull View itemView) {
-                super(itemView);
-            }
-        }
+    @Override
+    public boolean hasFixedSize() {
+        return mOEMRecyclerView.hasFixedSize();
     }
 
     /**
@@ -223,7 +264,13 @@ public final class RecyclerViewAdapterV1 extends CarUiRecyclerView
     }
 
     @Override
-    public void setLayoutStyle(@Nullable CarUiLayoutStyle layoutStyle) {
+    public CarUiLayoutStyle getLayoutStyle() {
+        return mLayoutStyle;
+    }
+
+    @Override
+    public void setLayoutStyle(CarUiLayoutStyle layoutStyle) {
+        mLayoutStyle = layoutStyle;
         if (layoutStyle == null) mOEMRecyclerView.setLayoutStyle(null);
 
         final LayoutStyleOEMV1 oemLayoutStyle = new LayoutStyleOEMV1() {
@@ -246,30 +293,72 @@ public final class RecyclerViewAdapterV1 extends CarUiRecyclerView
             public boolean getReverseLayout() {
                 return layoutStyle.getReverseLayout();
             }
-
-            @Override
-            public SpanSizeLookupOEMV1 getSpanSizeLookup() {
-                if (layoutStyle instanceof CarUiLinearLayoutStyle) return null;
-                return ((CarUiGridLayoutStyle) layoutStyle).getSpanSizeLookup() == null ? null
-                        : position -> ((CarUiGridLayoutStyle) layoutStyle)
-                                .getSpanSizeLookup().getSpanSize(position);
-            }
         };
-        mOEMRecyclerView.setLayoutStyle(oemLayoutStyle);
+
+        if (mOEMRecyclerView != null) {
+            if (layoutStyle instanceof CarUiGridLayoutStyle) {
+                mOEMRecyclerView.setSpanSizeLookup(position ->
+                        ((CarUiGridLayoutStyle) layoutStyle).getSpanSizeLookup()
+                                .getSpanSize(position));
+            }
+
+            mOEMRecyclerView.setLayoutStyle(oemLayoutStyle);
+        }
     }
 
     @Override
     public void setPadding(int left, int top, int right, int bottom) {
-        mOEMRecyclerView.setPadding(left, top, right, bottom);
+        if (mOEMRecyclerView != null) {
+            mOEMRecyclerView.getView().setPadding(left, top, right, bottom);
+        }
     }
 
     @Override
     public void setPaddingRelative(int start, int top, int end, int bottom) {
-        mOEMRecyclerView.setPaddingRelative(start, top, end, bottom);
+        if (mOEMRecyclerView != null) {
+            mOEMRecyclerView.getView().setPaddingRelative(start, top, end, bottom);
+        }
     }
 
     @Override
     public void setClipToPadding(boolean clipToPadding) {
-        mOEMRecyclerView.setClipToPadding(clipToPadding);
+        if (mOEMRecyclerView != null) {
+            mOEMRecyclerView.setClipToPadding(clipToPadding);
+        }
+    }
+
+    @Override
+    public void setItemAnimator(ItemAnimator itemAnimator) {}
+
+    @Override
+    public int findFirstCompletelyVisibleItemPosition() {
+        return mOEMRecyclerView != null ? mOEMRecyclerView
+                .findFirstCompletelyVisibleItemPosition() : 0;
+    }
+
+    @Override
+    public int findFirstVisibleItemPosition() {
+        return mOEMRecyclerView != null ? mOEMRecyclerView
+                .findFirstVisibleItemPosition() : 0;
+    }
+
+    @Override
+    public int findLastCompletelyVisibleItemPosition() {
+        return mOEMRecyclerView != null ? mOEMRecyclerView
+                .findLastCompletelyVisibleItemPosition() : 0;
+    }
+
+    @Override
+    public int findLastVisibleItemPosition() {
+        return mOEMRecyclerView != null ? mOEMRecyclerView
+                .findLastVisibleItemPosition() : 0;
+    }
+
+    @Override
+    public void setSpanSizeLookup(@NonNull SpanSizeLookup spanSizeLookup) {
+        if (mLayoutStyle instanceof CarUiGridLayoutStyle) {
+            ((CarUiGridLayoutStyle) mLayoutStyle).setSpanSizeLookup(spanSizeLookup);
+            setLayoutStyle(mLayoutStyle);
+        }
     }
 }

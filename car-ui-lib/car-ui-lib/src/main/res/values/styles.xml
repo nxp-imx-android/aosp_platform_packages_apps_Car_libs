@@ -226,7 +226,6 @@
 
     <style name="PreferenceFragment.CarUi">
         <item name="android:divider">?android:attr/listDivider</item>
-        <!-- TODO(b/150230923) change this to car_ui_preference_fragment -->
         <item name="android:layout">@layout/car_ui_preference_fragment</item>
     </style>
 

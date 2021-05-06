@@ -39,9 +39,6 @@ import java.util.List;
 public final class RecyclerViewAdapterAdapterV1
         implements AdapterOEMV1<RecyclerViewAdapterAdapterV1.ViewHolderAdapterV1> {
 
-    @Nullable
-    private RecyclerView mRecyclerView;
-
     @NonNull
     private final Adapter mAdapter;
 
@@ -141,10 +138,9 @@ public final class RecyclerViewAdapterAdapterV1
 
     @Override
     public void onAttachedToRecyclerView(RecyclerViewOEMV1 recyclerView) {
-        if (mRecyclerView != null) {
-            mAdapter.onAttachedToRecyclerView(mRecyclerView);
-            mAdapter.registerAdapterDataObserver(mAdapterDataObserver);
-        }
+        // TODO: can we return something other than null here?
+        mAdapter.onAttachedToRecyclerView(null);
+        mAdapter.registerAdapterDataObserver(mAdapterDataObserver);
     }
 
     @Override
@@ -159,10 +155,9 @@ public final class RecyclerViewAdapterAdapterV1
 
     @Override
     public void onDetachedFromRecyclerView(RecyclerViewOEMV1 recyclerView) {
-        if (mRecyclerView != null) {
-            mAdapter.unregisterAdapterDataObserver(mAdapterDataObserver);
-            mAdapter.onDetachedFromRecyclerView(mRecyclerView);
-        }
+        mAdapter.unregisterAdapterDataObserver(mAdapterDataObserver);
+        // TODO: can we return something other than null here?
+        mAdapter.onDetachedFromRecyclerView(null);
     }
 
     @Override
@@ -204,11 +199,6 @@ public final class RecyclerViewAdapterAdapterV1
     @Override
     public boolean hasStableIds() {
         return mAdapter.hasStableIds();
-    }
-
-    @Override
-    public void setRecyclerView(@Nullable View recyclerview) {
-        mRecyclerView = (RecyclerView) recyclerview;
     }
 
     static class ViewHolderAdapterV1 implements ViewHolderOEMV1 {
