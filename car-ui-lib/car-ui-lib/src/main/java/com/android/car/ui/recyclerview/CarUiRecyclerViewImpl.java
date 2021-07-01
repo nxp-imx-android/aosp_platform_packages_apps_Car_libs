@@ -25,7 +25,6 @@ import static com.android.car.ui.utils.ViewUtils.setRotaryScrollEnabled;
 import android.car.drivingstate.CarUxRestrictions;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.InputDevice;
@@ -114,20 +113,8 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
     private boolean mIsInitialized;
     private boolean mEnableDividers;
 
-    private boolean mHasScrolled = false;
-
     @NonNull
     private final Set<Runnable> mOnLayoutCompletedListeners = new HashSet<>();
-
-    private final OnScrollListener mOnScrollListener = new OnScrollListener() {
-        @Override
-        public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-            if (dx > 0 || dy > 0) {
-                mHasScrolled = true;
-                mRecyclerView.removeOnScrollListener(this);
-            }
-        }
-    };
 
     @Nullable
     private CarUiLayoutStyle mLayoutStyle;
@@ -225,7 +212,6 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
             // Also the default case
             setLayoutManager(new LinearLayoutManager(getContext()));
         }
-        mRecyclerView.addOnScrollListener(mOnScrollListener);
 
         a.recycle();
 
@@ -284,7 +270,7 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
                     // Iterate through a copied set instead of the original set because the original
                     // set might be modified during iteration.
                     Set<Runnable> onLayoutCompletedListeners =
-                        new HashSet<>(mOnLayoutCompletedListeners);
+                            new HashSet<>(mOnLayoutCompletedListeners);
                     for (Runnable runnable : onLayoutCompletedListeners) {
                         runnable.run();
                     }
@@ -301,7 +287,7 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
                     // Iterate through a copied set instead of the original set because the original
                     // set might be modified during iteration.
                     Set<Runnable> onLayoutCompletedListeners =
-                        new HashSet<>(mOnLayoutCompletedListeners);
+                            new HashSet<>(mOnLayoutCompletedListeners);
                     for (Runnable runnable : onLayoutCompletedListeners) {
                         runnable.run();
                     }
@@ -552,15 +538,6 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
     }
 
     @Override
-    protected void onRestoreInstanceState(Parcelable state) {
-        super.onRestoreInstanceState(state);
-
-        // If we're restoring an existing RecyclerView, consider
-        // it as having already scrolled some.
-        mHasScrolled = true;
-    }
-
-    @Override
     public void requestLayout() {
         super.requestLayout();
         if (mIsInitialized) {
@@ -604,15 +581,10 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
     @Override
     public void setPadding(int left, int top, int right, int bottom) {
         if (mScrollBarEnabled) {
-            boolean isAtStart = (mScrollBar != null && mScrollBar.isAtStart());
-            if (!mHasScrolled || isAtStart) {
-                // If we haven't scrolled, and thus are still at the top of the screen,
-                // we should stay scrolled to the top after applying padding. Without this
-                // scroll, the padding will start scrolled offscreen. We need the padding
-                // to be onscreen to shift the content into a good visible range.
-                mRecyclerView.scrollToPosition(0);
-            }
+            int currentPosition = findFirstVisibleItemPosition();
             setScrollBarPadding(mScrollBarPaddingTop + top, mScrollBarPaddingBottom + bottom);
+            // Maintain same index position after setting padding
+            scrollToPosition(currentPosition);
         }
         mRecyclerView.setPadding(0, top, 0, bottom);
         super.setPadding(left, 0, right, 0);
@@ -621,14 +593,10 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
     @Override
     public void setPaddingRelative(int start, int top, int end, int bottom) {
         if (mScrollBarEnabled) {
-            if (!mHasScrolled) {
-                // If we haven't scrolled, and thus are still at the top of the screen,
-                // we should stay scrolled to the top after applying padding. Without this
-                // scroll, the padding will start scrolled offscreen. We need the padding
-                // to be onscreen to shift the content into a good visible range.
-                mRecyclerView.scrollToPosition(0);
-            }
+            int currentPosition = findFirstVisibleItemPosition();
             setScrollBarPadding(mScrollBarPaddingTop + top, mScrollBarPaddingBottom + bottom);
+            // Maintain same index position after setting padding
+            scrollToPosition(currentPosition);
         }
         mRecyclerView.setPaddingRelative(0, top, 0, bottom);
         super.setPaddingRelative(start, 0, end, 0);
@@ -710,8 +678,8 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
         Class<?> cls;
         try {
             cls = !TextUtils.isEmpty(mScrollBarClass)
-                ? getContext().getClassLoader().loadClass(mScrollBarClass)
-                : DefaultScrollBar.class;
+                    ? getContext().getClassLoader().loadClass(mScrollBarClass)
+                    : DefaultScrollBar.class;
         } catch (ReflectiveOperationException e) {
             throw new IllegalArgumentException("Error loading scroll bar component: "
                     + mScrollBarClass, e);
@@ -790,7 +758,7 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
                     Object[] constructorArgs = null;
                     try {
                         constructor = layoutManagerClass
-                            .getConstructor(LAYOUT_MANAGER_CONSTRUCTOR_SIGNATURE);
+                                .getConstructor(LAYOUT_MANAGER_CONSTRUCTOR_SIGNATURE);
                         constructorArgs = new Object[]{context, attrs, defStyleAttr, defStyleRes};
                     } catch (NoSuchMethodException e) {
                         try {
@@ -798,26 +766,26 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
                         } catch (NoSuchMethodException e1) {
                             e1.initCause(e);
                             throw new IllegalStateException(attrs.getPositionDescription()
-                                + ": Error creating LayoutManager " + className, e1);
+                                    + ": Error creating LayoutManager " + className, e1);
                         }
                     }
                     constructor.setAccessible(true);
                     setLayoutManager(constructor.newInstance(constructorArgs));
                 } catch (ClassNotFoundException e) {
                     throw new IllegalStateException(attrs.getPositionDescription()
-                        + ": Unable to find LayoutManager " + className, e);
+                            + ": Unable to find LayoutManager " + className, e);
                 } catch (InvocationTargetException e) {
                     throw new IllegalStateException(attrs.getPositionDescription()
-                        + ": Could not instantiate the LayoutManager: " + className, e);
+                            + ": Could not instantiate the LayoutManager: " + className, e);
                 } catch (InstantiationException e) {
                     throw new IllegalStateException(attrs.getPositionDescription()
-                        + ": Could not instantiate the LayoutManager: " + className, e);
+                            + ": Could not instantiate the LayoutManager: " + className, e);
                 } catch (IllegalAccessException e) {
                     throw new IllegalStateException(attrs.getPositionDescription()
-                        + ": Cannot access non-public constructor " + className, e);
+                            + ": Cannot access non-public constructor " + className, e);
                 } catch (ClassCastException e) {
                     throw new IllegalStateException(attrs.getPositionDescription()
-                        + ": Class is not a LayoutManager " + className, e);
+                            + ": Class is not a LayoutManager " + className, e);
                 }
             }
         }

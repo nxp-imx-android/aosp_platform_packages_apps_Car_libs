@@ -33,6 +33,7 @@ import static androidx.test.espresso.assertion.PositionAssertions.isTopAlignedWi
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.assertThat;
+import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isEnabled;
 import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
@@ -354,6 +355,80 @@ public class CarUiRecyclerViewTest {
                 isCompletelyAbove(withText(adapter.getItemText(2))));
         onView(withText(adapter.getItemText(2))).check(
                 isCompletelyAbove(withText(adapter.getItemText(3))));
+    }
+
+    @Test
+    public void testStartAtFirstPosition() {
+        CarUiRecyclerView carUiRecyclerView = new CarUiRecyclerViewImpl(mTestableContext);
+        ViewGroup container = mActivity.findViewById(R.id.test_container);
+        TestAdapter adapter = new TestAdapter(100);
+        container.post(() -> {
+            container.addView(carUiRecyclerView.getView());
+            carUiRecyclerView.setAdapter(adapter);
+        });
+
+        // Check that the first item is completely displayed.
+        onView(withText(adapter.getItemText(0))).check(matches(isCompletelyDisplayed()));
+        assertEquals(0,
+                ((LinearLayoutManager) carUiRecyclerView.getLayoutManager())
+                        .findFirstCompletelyVisibleItemPosition());
+    }
+
+    @Test
+    public void testPositionAfterPadding() {
+        CarUiRecyclerView carUiRecyclerView = new CarUiRecyclerViewImpl(mTestableContext);
+        ViewGroup container = mActivity.findViewById(R.id.test_container);
+        TestAdapter adapter = new TestAdapter(100);
+        int testPosition = 40;
+        container.post(() -> {
+            container.addView(carUiRecyclerView.getView());
+            carUiRecyclerView.setAdapter(adapter);
+            carUiRecyclerView.scrollToPosition(testPosition);
+        });
+
+        // Check that the scrolled to item is completely displayed.
+        onView(withText(adapter.getItemText(testPosition))).check(matches(isCompletelyDisplayed()));
+        assertEquals(testPosition,
+                ((LinearLayoutManager) carUiRecyclerView.getLayoutManager())
+                        .findFirstCompletelyVisibleItemPosition());
+
+        int padding = 150;
+        container.post(() -> carUiRecyclerView.setPadding(padding, padding, padding, padding));
+
+        // Check that the scrolled to item is completely displayed.
+        onView(withText(adapter.getItemText(testPosition))).check(matches(isCompletelyDisplayed()));
+        assertEquals(testPosition,
+                ((LinearLayoutManager) carUiRecyclerView.getLayoutManager())
+                        .findFirstCompletelyVisibleItemPosition());
+    }
+
+    @Test
+    public void testPositionAfterPaddingRelative() {
+        CarUiRecyclerView carUiRecyclerView = new CarUiRecyclerViewImpl(mTestableContext);
+        ViewGroup container = mActivity.findViewById(R.id.test_container);
+        TestAdapter adapter = new TestAdapter(100);
+        int testPosition = 40;
+        container.post(() -> {
+            container.addView(carUiRecyclerView.getView());
+            carUiRecyclerView.setAdapter(adapter);
+            carUiRecyclerView.scrollToPosition(testPosition);
+        });
+
+        // Check that the scrolled to item is completely displayed.
+        onView(withText(adapter.getItemText(testPosition))).check(matches(isCompletelyDisplayed()));
+        assertEquals(testPosition,
+                ((LinearLayoutManager) carUiRecyclerView.getLayoutManager())
+                        .findFirstCompletelyVisibleItemPosition());
+
+        int padding = 150;
+        container.post(
+                () -> carUiRecyclerView.setPaddingRelative(padding, padding, padding, padding));
+
+        // Check that the scrolled to item is completely displayed.
+        onView(withText(adapter.getItemText(testPosition))).check(matches(isCompletelyDisplayed()));
+        assertEquals(testPosition,
+                ((LinearLayoutManager) carUiRecyclerView.getLayoutManager())
+                        .findFirstCompletelyVisibleItemPosition());
     }
 
     @Test
@@ -1274,8 +1349,8 @@ public class CarUiRecyclerViewTest {
         // 2 * minTouchSize + max(minTouchSize, mScrollbarThumbMinHeight) + 2 * margin
         int recyclerviewHeight =
                 2 *  minTouchSize
-                + max(minTouchSize, mScrollbarThumbMinHeight)
-                + 2 * margin + trackMargin;
+                        + max(minTouchSize, mScrollbarThumbMinHeight)
+                        + 2 * margin + trackMargin;
 
         CarUiRecyclerView carUiRecyclerView = CarUiRecyclerView.create(mTestableContext);
         ViewGroup container = mActivity.findViewById(R.id.test_container);
@@ -1903,7 +1978,7 @@ public class CarUiRecyclerViewTest {
     public void testPageUp_returnsWhen_verticalScrollOffsetIsZero() {
         doReturn(true).when(mTestableResources).getBoolean(R.bool.car_ui_scrollbar_enable);
         doReturn(TestScrollBar.class.getName()).when(mTestableResources)
-            .getString(R.string.car_ui_scrollbar_component);
+                .getString(R.string.car_ui_scrollbar_component);
 
         CarUiRecyclerView carUiRecyclerView = CarUiRecyclerView.create(mTestableContext);
         ViewGroup container = mActivity.findViewById(R.id.test_container);
@@ -1967,7 +2042,7 @@ public class CarUiRecyclerViewTest {
     public void testPageDown_returnsWhen_layoutManagerIsNullOrEmpty() {
         doReturn(true).when(mTestableResources).getBoolean(R.bool.car_ui_scrollbar_enable);
         doReturn(TestScrollBar.class.getName()).when(mTestableResources)
-            .getString(R.string.car_ui_scrollbar_component);
+                .getString(R.string.car_ui_scrollbar_component);
 
         CarUiRecyclerView carUiRecyclerView = CarUiRecyclerView.create(mTestableContext);
         ViewGroup container = mActivity.findViewById(R.id.test_container);
