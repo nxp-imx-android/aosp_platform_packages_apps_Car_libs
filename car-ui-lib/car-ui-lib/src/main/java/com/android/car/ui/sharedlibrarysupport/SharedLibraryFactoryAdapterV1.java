@@ -54,7 +54,6 @@ import com.android.car.ui.sharedlibrary.oemapis.recyclerview.LayoutStyleOEMV1;
 import com.android.car.ui.sharedlibrary.oemapis.recyclerview.ListItemOEMV1;
 import com.android.car.ui.sharedlibrary.oemapis.recyclerview.RecyclerViewAttributesOEMV1;
 import com.android.car.ui.sharedlibrary.oemapis.recyclerview.RecyclerViewOEMV1;
-import com.android.car.ui.sharedlibrary.oemapis.recyclerview.SpanSizeLookupOEMV1;
 import com.android.car.ui.sharedlibrary.oemapis.recyclerview.ViewHolderOEMV1;
 import com.android.car.ui.sharedlibrary.oemapis.toolbar.ToolbarControllerOEMV1;
 import com.android.car.ui.toolbar.ToolbarController;
@@ -70,6 +69,7 @@ import java.util.function.Consumer;
  * SharedLibraryFactory}, to provide a version-agnostic way of interfacing with the OEM's
  * SharedLibraryFactory.
  */
+@SuppressWarnings("AndroidJdkLibsChecker")
 public final class SharedLibraryFactoryAdapterV1 implements SharedLibraryFactory {
 
     private final Context mSharedLibContext;
@@ -135,7 +135,8 @@ public final class SharedLibraryFactoryAdapterV1 implements SharedLibraryFactory
         RecyclerViewAttributesOEMV1 oemAttrs = from(context, attrs);
         RecyclerViewOEMV1 oemRecyclerView = mOem.createRecyclerView(context, oemAttrs);
         if (oemRecyclerView != null) {
-            RecyclerViewAdapterV1 rv = new RecyclerViewAdapterV1(context, attrs);
+            RecyclerViewAdapterV1 rv = new RecyclerViewAdapterV1(context, attrs,
+                    R.attr.carUiRecyclerViewStyle);
             rv.setRecyclerViewOEMV1(oemRecyclerView);
             return rv;
         } else {
@@ -210,12 +211,6 @@ public final class SharedLibraryFactoryAdapterV1 implements SharedLibraryFactory
                 @Override
                 public boolean getReverseLayout() {
                     return reversed;
-                }
-
-                @Override
-                public SpanSizeLookupOEMV1 getSpanSizeLookup() {
-                    // This can be set via setLayoutStyle API later.
-                    return null;
                 }
             };
 

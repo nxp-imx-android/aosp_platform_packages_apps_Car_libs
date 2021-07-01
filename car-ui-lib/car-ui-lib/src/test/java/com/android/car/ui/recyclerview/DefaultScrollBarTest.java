@@ -73,7 +73,7 @@ public class DefaultScrollBarTest {
 
         View scrollView = LayoutInflater.from(mContext).inflate(
                 R.layout.car_ui_recyclerview_scrollbar, null);
-        mScrollBar.initialize(mRecyclerView, scrollView);
+        mScrollBar.initialize(mContext, mRecyclerView, scrollView);
 
         // called once in DefaultScrollBar and once in SnapHelper while setting up the call backs
         // when we use attachToRecyclerView(recyclerview)
@@ -90,7 +90,7 @@ public class DefaultScrollBarTest {
 
         View scrollView = LayoutInflater.from(mContext).inflate(
                 R.layout.car_ui_recyclerview_scrollbar, null);
-        mScrollBar.initialize(mRecyclerView, scrollView);
+        mScrollBar.initialize(mContext, mRecyclerView, scrollView);
 
         verify(mRecycledViewPool).setMaxRecycledViews(0, 12);
     }
@@ -104,7 +104,7 @@ public class DefaultScrollBarTest {
 
         View scrollView = LayoutInflater.from(mContext).inflate(
                 R.layout.car_ui_recyclerview_scrollbar, null);
-        mScrollBar.initialize(mRecyclerView, scrollView);
+        mScrollBar.initialize(mContext, mRecyclerView, scrollView);
 
         verify(mRecyclerView).setOnFlingListener(null);
     }
@@ -118,7 +118,7 @@ public class DefaultScrollBarTest {
 
         View scrollView = LayoutInflater.from(mContext).inflate(
                 R.layout.car_ui_recyclerview_scrollbar, null);
-        mScrollBar.initialize(mRecyclerView, scrollView);
+        mScrollBar.initialize(mContext, mRecyclerView, scrollView);
         mScrollBar.setPadding(10, 20);
 
         assertThat(scrollView.getPaddingTop()).isEqualTo(10);

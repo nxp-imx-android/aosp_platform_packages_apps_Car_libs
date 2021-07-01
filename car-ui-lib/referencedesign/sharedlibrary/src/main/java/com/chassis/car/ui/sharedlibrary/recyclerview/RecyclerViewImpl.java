@@ -19,6 +19,7 @@ import android.content.Context;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -29,6 +30,7 @@ import com.android.car.ui.sharedlibrary.oemapis.recyclerview.LayoutStyleOEMV1;
 import com.android.car.ui.sharedlibrary.oemapis.recyclerview.OnScrollListenerOEMV1;
 import com.android.car.ui.sharedlibrary.oemapis.recyclerview.RecyclerViewAttributesOEMV1;
 import com.android.car.ui.sharedlibrary.oemapis.recyclerview.RecyclerViewOEMV1;
+import com.android.car.ui.sharedlibrary.oemapis.recyclerview.SpanSizeLookupOEMV1;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,12 +60,16 @@ public final class RecyclerViewImpl extends RecyclerView implements RecyclerView
         }
     };
 
+    @Nullable
+    private LayoutStyleOEMV1 mLayoutStyle;
+
     public RecyclerViewImpl(@NonNull Context context) {
         super(context);
     }
 
     public RecyclerViewImpl(Context context, RecyclerViewAttributesOEMV1 attrs) {
         super(context);
+        setClipToPadding(false);
         setLayoutStyle(attrs.getLayoutStyle());
     }
 
@@ -132,7 +138,11 @@ public final class RecyclerViewImpl extends RecyclerView implements RecyclerView
     }
 
     @Override
-    public void setLayoutStyle(LayoutStyleOEMV1 layoutStyle) {
+    public void setLayoutStyle(@Nullable LayoutStyleOEMV1 layoutStyle) {
+        mLayoutStyle = layoutStyle;
+        if (layoutStyle == null) {
+            return;
+        }
         if (layoutStyle.getLayoutType() == LayoutStyleOEMV1.LAYOUT_TYPE_LINEAR) {
             setLayoutManager(new LinearLayoutManager(getContext(),
                     layoutStyle.getOrientation(),
@@ -142,15 +152,12 @@ public final class RecyclerViewImpl extends RecyclerView implements RecyclerView
                     layoutStyle.getSpanCount(),
                     layoutStyle.getOrientation(),
                     layoutStyle.getReverseLayout()));
-            if (layoutStyle.getSpanSizeLookup() != null) {
-                ((GridLayoutManager) getLayoutManager()).setSpanSizeLookup(new SpanSizeLookup() {
-                    @Override
-                    public int getSpanSize(int position) {
-                        return layoutStyle.getSpanSizeLookup().getSpanSize(position);
-                    }
-                });
-            }
         }
+    }
+
+    @Override
+    public LayoutStyleOEMV1 getLayoutStyle() {
+        return mLayoutStyle;
     }
 
     public View getView() {
@@ -158,7 +165,55 @@ public final class RecyclerViewImpl extends RecyclerView implements RecyclerView
     }
 
     @Override
-    public View getContainer() {
-        return this;
+    public int findFirstCompletelyVisibleItemPosition() {
+        LayoutManager layoutManager = getLayoutManager();
+        if (layoutManager instanceof LinearLayoutManager) {
+            return ((LinearLayoutManager) layoutManager)
+                .findFirstCompletelyVisibleItemPosition();
+        }
+        return 0;
+    }
+
+    @Override
+    public int findFirstVisibleItemPosition() {
+        LayoutManager layoutManager = getLayoutManager();
+        if (layoutManager instanceof LinearLayoutManager) {
+            return ((LinearLayoutManager) layoutManager)
+                .findFirstVisibleItemPosition();
+        }
+        return 0;
+    }
+
+    @Override
+    public int findLastCompletelyVisibleItemPosition() {
+        LayoutManager layoutManager = getLayoutManager();
+        if (layoutManager instanceof LinearLayoutManager) {
+            return ((LinearLayoutManager) layoutManager)
+                .findLastCompletelyVisibleItemPosition();
+        }
+        return 0;
+    }
+
+    @Override
+    public int findLastVisibleItemPosition() {
+        LayoutManager layoutManager = getLayoutManager();
+        if (layoutManager instanceof LinearLayoutManager) {
+            return ((LinearLayoutManager) layoutManager)
+                .findLastVisibleItemPosition();
+        }
+        return 0;
+    }
+
+    @Override
+    public void setSpanSizeLookup(@NonNull SpanSizeLookupOEMV1 spanSizeLookup) {
+        LayoutManager layoutManager = getLayoutManager();
+        if (layoutManager instanceof GridLayoutManager) {
+            ((GridLayoutManager) layoutManager).setSpanSizeLookup(new SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    return spanSizeLookup.getSpanSize(position);
+                }
+            });
+        }
     }
 }

@@ -56,6 +56,12 @@ public interface RecyclerViewOEMV1 {
     void setLayoutStyle(LayoutStyleOEMV1 layoutStyle);
 
     /**
+     * set {@link LayoutStyleOEMV1}. This is the replacement for
+     * {@link androidx.recyclerview.widget.RecyclerView.LayoutManager}
+     */
+    LayoutStyleOEMV1 getLayoutStyle();
+
+    /**
      * Returns the view that will be displayed on the screen.
      */
     View getView();
@@ -69,8 +75,18 @@ public interface RecyclerViewOEMV1 {
     /** {@link androidx.recyclerview.widget.RecyclerView#setClipToPadding(boolean)} */
     void setClipToPadding(boolean clipToPadding);
 
-    /**
-     * Return's the container which contains the scrollbar and this RecyclerView.
-     */
-    View getContainer();
+    /** setter for {@link androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup} */
+    void setSpanSizeLookup(SpanSizeLookupOEMV1 spanSizeLookup);
+
+    /** see {@link LinearLayoutManager#findFirstCompletelyVisibleItemPosition()} */
+    int findFirstCompletelyVisibleItemPosition();
+
+    /** see {@link LinearLayoutManager#findFirstVisibleItemPosition()} */
+    int findFirstVisibleItemPosition();
+
+    /** see {@link LinearLayoutManager#findLastCompletelyVisibleItemPosition()} */
+    int findLastCompletelyVisibleItemPosition();
+
+    /** see {@link LinearLayoutManager#findLastVisibleItemPosition()} */
+    int findLastVisibleItemPosition();
 }

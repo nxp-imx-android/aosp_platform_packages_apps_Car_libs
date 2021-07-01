@@ -195,11 +195,6 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.BaseVi
     }
 
     @Override
-    public void setRecyclerView(View recyclerview) {
-        //  Do nothing. This method will never be invoked.
-    }
-
-    @Override
     public void onBindViewHolder(@NonNull ListItemAdapter.BaseViewHolder holder, int position) {
         switch (holder.getItemViewType()) {
             case VIEW_TYPE_LIST_ITEM:

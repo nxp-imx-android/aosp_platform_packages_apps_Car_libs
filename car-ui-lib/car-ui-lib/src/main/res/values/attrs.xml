@@ -138,6 +138,8 @@
         <attr name="android:orientation" />
         <!-- car ui recyclerview layout reversed -->
         <attr name="reverseLayout" format="boolean" />
+        <!-- car ui recyclerview layoutmanager -->
+        <attr name="layoutManager" format="string" />
     </declare-styleable>
 
     <declare-styleable name="CarUiPreference">
