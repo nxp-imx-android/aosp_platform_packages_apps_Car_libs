@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 The Android Open Source Project
+ * Copyright (C) 2021 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.car.ui.recyclerview;
-
-import static com.android.car.ui.utils.CarUiUtils.requireViewByRefId;
+package com.chassis.car.ui.plugin.recyclerview;
 
 import android.view.MotionEvent;
 import android.view.View;
@@ -25,7 +23,7 @@ import android.view.ViewConfiguration;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.car.ui.R;
+import com.chassis.car.ui.plugin.R;
 
 /**
  * Class responsible for fast scrolling. This class offers two functionalities.
@@ -34,7 +32,7 @@ import com.android.car.ui.R;
  *     <li>User can click anywhere on the track and thumb will scroll to that position.</li>
  * </ul>
  */
-class FastScroller implements View.OnTouchListener {
+/* package */ final class FastScroller implements View.OnTouchListener {
 
     private float mTouchDownY = -1;
 
@@ -47,10 +45,10 @@ class FastScroller implements View.OnTouchListener {
     private final int mClickActionThreshold;
 
     FastScroller(@NonNull RecyclerView recyclerView, @NonNull View scrollTrackView,
-            @NonNull View scrollView) {
+                 @NonNull View scrollView) {
         mRecyclerView = recyclerView;
         mScrollTrackView = scrollTrackView;
-        mScrollThumb = requireViewByRefId(scrollView, R.id.car_ui_scrollbar_thumb);
+        mScrollThumb = scrollView.requireViewById(R.id.scrollbar_thumb);
         mClickActionThreshold = ViewConfiguration.get(
                 recyclerView.getContext()).getScaledTouchSlop();
     }

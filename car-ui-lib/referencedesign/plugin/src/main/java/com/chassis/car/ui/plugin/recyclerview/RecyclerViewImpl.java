@@ -15,9 +15,18 @@
  */
 package com.chassis.car.ui.plugin.recyclerview;
 
-import android.content.Context;
-import android.view.View;
+import static androidx.recyclerview.widget.RecyclerView.VERTICAL;
 
+import static com.android.car.ui.plugin.oemapis.recyclerview.RecyclerViewAttributesOEMV1.SIZE_LARGE;
+import static com.android.car.ui.plugin.oemapis.recyclerview.RecyclerViewAttributesOEMV1.SIZE_MEDIUM;
+import static com.android.car.ui.plugin.oemapis.recyclerview.RecyclerViewAttributesOEMV1.SIZE_SMALL;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.FrameLayout;
+
+import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -31,6 +40,9 @@ import com.android.car.ui.plugin.oemapis.recyclerview.OnScrollListenerOEMV1;
 import com.android.car.ui.plugin.oemapis.recyclerview.RecyclerViewAttributesOEMV1;
 import com.android.car.ui.plugin.oemapis.recyclerview.RecyclerViewOEMV1;
 import com.android.car.ui.plugin.oemapis.recyclerview.SpanSizeLookupOEMV1;
+import com.android.car.ui.plugin.oemapis.recyclerview.ViewHolderOEMV1;
+
+import com.chassis.car.ui.plugin.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,24 +50,28 @@ import java.util.List;
 /**
  * Reference OEM implementation for RecyclerView
  */
-public final class RecyclerViewImpl extends RecyclerView implements RecyclerViewOEMV1 {
+public final class RecyclerViewImpl extends FrameLayout implements RecyclerViewOEMV1 {
 
     @NonNull
-    private List<OnScrollListenerOEMV1> mScrollListeners = new ArrayList<>();
+    private final RecyclerView mRecyclerView;
 
     @NonNull
-    private RecyclerView.OnScrollListener mOnScrollListener = new RecyclerView.OnScrollListener() {
+    private final List<OnScrollListenerOEMV1> mScrollListeners = new ArrayList<>();
+
+    @NonNull
+    private final RecyclerView.OnScrollListener mOnScrollListener =
+            new RecyclerView.OnScrollListener() {
         @Override
         public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-            for (OnScrollListenerOEMV1 listener : mScrollListeners) {
-                listener.onScrolled((RecyclerViewOEMV1) recyclerView, dx, dy);
+            for (OnScrollListenerOEMV1 listener: mScrollListeners) {
+                listener.onScrolled(RecyclerViewImpl.this, dx, dy);
             }
         }
 
         @Override
-        public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-            for (OnScrollListenerOEMV1 listener : mScrollListeners) {
-                listener.onScrollStateChanged((RecyclerViewOEMV1) recyclerView, newState);
+        public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+            for (OnScrollListenerOEMV1 listener: mScrollListeners) {
+                listener.onScrollStateChanged(RecyclerViewImpl.this, newState);
             }
         }
     };
@@ -64,21 +80,56 @@ public final class RecyclerViewImpl extends RecyclerView implements RecyclerView
     private LayoutStyleOEMV1 mLayoutStyle;
 
     public RecyclerViewImpl(@NonNull Context context) {
-        super(context);
+        this(context, null);
     }
 
-    public RecyclerViewImpl(Context context, RecyclerViewAttributesOEMV1 attrs) {
+    public RecyclerViewImpl(@NonNull Context context,
+                            @Nullable RecyclerViewAttributesOEMV1 attrs) {
         super(context);
-        setClipToPadding(false);
-        setLayoutStyle(attrs.getLayoutStyle());
+
+        boolean mScrollBarEnabled = context.getResources().getBoolean(R.bool.scrollbar_enable);
+        @LayoutRes int layout = R.layout.recycler_view_no_scrollbar;
+        if (mScrollBarEnabled && attrs != null) {
+            switch (attrs.getSize()) {
+                case SIZE_SMALL:
+                    // Small layout is always rendered without scrollbar
+                    mScrollBarEnabled = false;
+                    layout = R.layout.recycler_view_no_scrollbar;
+                    break;
+                case SIZE_MEDIUM:
+                    layout = R.layout.recycler_view_medium;
+                    break;
+                case SIZE_LARGE:
+                    layout = R.layout.recycler_view;
+            }
+        }
+
+        LayoutInflater factory = LayoutInflater.from(context);
+        View rootView = factory.inflate(layout, this, true);
+        mRecyclerView = rootView.requireViewById(R.id.recycler_view);
+
+        // Set to false so the items below the toolbar are visible.
+        mRecyclerView.setClipToPadding(false);
+
+        setLayoutStyle(attrs == null ? null : attrs.getLayoutStyle());
+
+        if (!mScrollBarEnabled) {
+            return;
+        }
+
+        mRecyclerView.setVerticalScrollBarEnabled(false);
+        mRecyclerView.setHorizontalScrollBarEnabled(false);
+
+        DefaultScrollBar mScrollBar = new DefaultScrollBar();
+        mScrollBar.initialize(context, mRecyclerView, rootView.requireViewById(R.id.scroll_bar));
     }
 
     @Override
-    public void setAdapter(AdapterOEMV1 adapterV1) {
+    public <V extends ViewHolderOEMV1> void setAdapter(AdapterOEMV1<V> adapterV1) {
         if (adapterV1 == null) {
-            super.setAdapter(null);
+            mRecyclerView.setAdapter(null);
         } else {
-            super.setAdapter(new AdapterWrapper(adapterV1));
+            mRecyclerView.setAdapter(new AdapterWrapper(adapterV1));
         }
     }
 
@@ -88,7 +139,7 @@ public final class RecyclerViewImpl extends RecyclerView implements RecyclerView
             return;
         }
         if (mScrollListeners.isEmpty()) {
-            super.addOnScrollListener(mOnScrollListener);
+            mRecyclerView.addOnScrollListener(mOnScrollListener);
         }
         mScrollListeners.add(listener);
     }
@@ -100,58 +151,60 @@ public final class RecyclerViewImpl extends RecyclerView implements RecyclerView
         }
         mScrollListeners.remove(listener);
         if (mScrollListeners.isEmpty()) {
-            super.removeOnScrollListener(mOnScrollListener);
+            mRecyclerView.removeOnScrollListener(mOnScrollListener);
         }
     }
 
     @Override
     public void clearOnScrollListeners() {
-        if (mScrollListeners != null) {
+        if (!mScrollListeners.isEmpty()) {
             mScrollListeners.clear();
-            super.clearOnScrollListeners();
+            mRecyclerView.clearOnScrollListeners();
         }
     }
 
     @Override
     public void scrollToPosition(int position) {
-        super.scrollToPosition(position);
+        mRecyclerView.scrollToPosition(position);
     }
 
     @Override
     public void smoothScrollBy(int dx, int dy) {
-        super.smoothScrollBy(dx, dy);
+        mRecyclerView.smoothScrollBy(dx, dy);
     }
 
     @Override
     public void smoothScrollToPosition(int position) {
-        super.smoothScrollToPosition(position);
+        mRecyclerView.smoothScrollToPosition(position);
     }
 
     @Override
     public void setHasFixedSize(boolean hasFixedSize) {
-        super.setHasFixedSize(hasFixedSize);
+        mRecyclerView.setHasFixedSize(hasFixedSize);
     }
 
     @Override
     public boolean hasFixedSize() {
-        return super.hasFixedSize();
+        return mRecyclerView.hasFixedSize();
     }
 
     @Override
     public void setLayoutStyle(@Nullable LayoutStyleOEMV1 layoutStyle) {
         mLayoutStyle = layoutStyle;
-        if (layoutStyle == null) {
-            return;
-        }
-        if (layoutStyle.getLayoutType() == LayoutStyleOEMV1.LAYOUT_TYPE_LINEAR) {
-            setLayoutManager(new LinearLayoutManager(getContext(),
-                    layoutStyle.getOrientation(),
-                    layoutStyle.getReverseLayout()));
+
+        int orientation = layoutStyle == null ? VERTICAL : layoutStyle.getOrientation();
+        boolean reverseLayout  = layoutStyle != null && layoutStyle.getReverseLayout();
+
+        if (layoutStyle == null
+                || layoutStyle.getLayoutType() == LayoutStyleOEMV1.LAYOUT_TYPE_LINEAR) {
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
+                    orientation,
+                    reverseLayout));
         } else {
-            setLayoutManager(new GridLayoutManager(getContext(),
+            mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(),
                     layoutStyle.getSpanCount(),
-                    layoutStyle.getOrientation(),
-                    layoutStyle.getReverseLayout()));
+                    orientation,
+                    reverseLayout));
         }
     }
 
@@ -166,7 +219,7 @@ public final class RecyclerViewImpl extends RecyclerView implements RecyclerView
 
     @Override
     public int findFirstCompletelyVisibleItemPosition() {
-        LayoutManager layoutManager = getLayoutManager();
+        RecyclerView.LayoutManager layoutManager = mRecyclerView.getLayoutManager();
         if (layoutManager instanceof LinearLayoutManager) {
             return ((LinearLayoutManager) layoutManager)
                     .findFirstCompletelyVisibleItemPosition();
@@ -176,7 +229,7 @@ public final class RecyclerViewImpl extends RecyclerView implements RecyclerView
 
     @Override
     public int findFirstVisibleItemPosition() {
-        LayoutManager layoutManager = getLayoutManager();
+        RecyclerView.LayoutManager layoutManager = mRecyclerView.getLayoutManager();
         if (layoutManager instanceof LinearLayoutManager) {
             return ((LinearLayoutManager) layoutManager)
                     .findFirstVisibleItemPosition();
@@ -186,7 +239,7 @@ public final class RecyclerViewImpl extends RecyclerView implements RecyclerView
 
     @Override
     public int findLastCompletelyVisibleItemPosition() {
-        LayoutManager layoutManager = getLayoutManager();
+        RecyclerView.LayoutManager layoutManager = mRecyclerView.getLayoutManager();
         if (layoutManager instanceof LinearLayoutManager) {
             return ((LinearLayoutManager) layoutManager)
                     .findLastCompletelyVisibleItemPosition();
@@ -196,7 +249,7 @@ public final class RecyclerViewImpl extends RecyclerView implements RecyclerView
 
     @Override
     public int findLastVisibleItemPosition() {
-        LayoutManager layoutManager = getLayoutManager();
+        RecyclerView.LayoutManager layoutManager = mRecyclerView.getLayoutManager();
         if (layoutManager instanceof LinearLayoutManager) {
             return ((LinearLayoutManager) layoutManager)
                     .findLastVisibleItemPosition();
@@ -206,7 +259,7 @@ public final class RecyclerViewImpl extends RecyclerView implements RecyclerView
 
     @Override
     public void setSpanSizeLookup(@NonNull SpanSizeLookupOEMV1 spanSizeLookup) {
-        LayoutManager layoutManager = getLayoutManager();
+        RecyclerView.LayoutManager layoutManager = mRecyclerView.getLayoutManager();
         if (layoutManager instanceof GridLayoutManager) {
             ((GridLayoutManager) layoutManager).setSpanSizeLookup(new SpanSizeLookup() {
                 @Override

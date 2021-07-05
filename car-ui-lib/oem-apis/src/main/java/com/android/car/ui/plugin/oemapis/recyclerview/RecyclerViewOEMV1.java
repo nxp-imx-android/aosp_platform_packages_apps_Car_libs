@@ -23,7 +23,7 @@ import android.view.View;
 public interface RecyclerViewOEMV1 {
 
     /** {@link androidx.recyclerview.widget.RecyclerView#setAdapter(Adapter)} */
-    void setAdapter(AdapterOEMV1 adapter);
+    <V extends ViewHolderOEMV1> void setAdapter(AdapterOEMV1<V> adapter);
 
     /** {@link androidx.recyclerview.widget.RecyclerView#addOnScrollListener} */
     void addOnScrollListener(OnScrollListenerOEMV1 listener);

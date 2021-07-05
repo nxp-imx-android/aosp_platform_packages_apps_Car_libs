@@ -206,7 +206,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.BaseVi
                 if (!(item instanceof ContentListItemOEMV1)) {
                     throw new IllegalStateException(
                             "Expected item to be bound to viewHolder to be instance of "
-                                    + "CarUiContentListItem.");
+                                    + "ContentListItemOEMV1.");
                 }
 
                 ((ListItemViewHolder) holder).bind((ContentListItemOEMV1) item);
@@ -220,7 +220,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.BaseVi
                 if (!(header instanceof HeaderListItemOEMV1)) {
                     throw new IllegalStateException(
                             "Expected item to be bound to viewHolder to be instance of "
-                                    + "CarUiHeaderListItem.");
+                                    + "HeaderListItemOEMV1.");
                 }
 
                 ((HeaderViewHolder) holder).bind((HeaderListItemOEMV1) header);
