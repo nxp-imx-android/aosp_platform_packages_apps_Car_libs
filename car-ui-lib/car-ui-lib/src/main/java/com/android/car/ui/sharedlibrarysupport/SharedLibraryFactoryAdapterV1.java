@@ -74,9 +74,9 @@ public final class SharedLibraryFactoryAdapterV1 implements SharedLibraryFactory
     SharedLibraryFactoryOEMV1 mOem;
     SharedLibraryFactoryStub mFactoryStub;
 
-    public SharedLibraryFactoryAdapterV1(SharedLibraryFactoryOEMV1 oem, Context sharedLibContext) {
+    public SharedLibraryFactoryAdapterV1(SharedLibraryFactoryOEMV1 oem) {
         mOem = oem;
-        mFactoryStub = new SharedLibraryFactoryStub(sharedLibContext);
+        mFactoryStub = new SharedLibraryFactoryStub();
 
         mOem.setRotaryFactories(
                 c -> new FocusParkingViewAdapterV1(new FocusParkingView(c)),
@@ -126,203 +126,13 @@ public final class SharedLibraryFactoryAdapterV1 implements SharedLibraryFactory
     }
 
     @Override
-    public CarUiRecyclerView createRecyclerView(@NonNull Context context,
-            @Nullable AttributeSet attrs) {
-        RecyclerViewAttributesOEMV1 oemAttrs = from(context, attrs);
-        RecyclerViewOEMV1 oemRecyclerView = mOem.createRecyclerView(context, oemAttrs);
-        if (oemRecyclerView != null) {
-            RecyclerViewAdapterV1 rv = new RecyclerViewAdapterV1(context, attrs,
-                    R.attr.carUiRecyclerViewStyle);
-            rv.setRecyclerViewOEMV1(oemRecyclerView);
-            return rv;
-        } else {
-            return mFactoryStub.createRecyclerView(context, attrs);
-        }
+    public CarUiRecyclerView createRecyclerView(Context context, AttributeSet attrs) {
+        return mFactoryStub.createRecyclerView(context, attrs);
     }
 
     @Override
     public RecyclerView.Adapter<? extends RecyclerView.ViewHolder> createListItemAdapter(
             List<? extends CarUiListItem> items) {
-        List<ListItemOEMV1> oemItems = CarUiUtils.convertList(items,
-                SharedLibraryFactoryAdapterV1::toOemListItem);
-
-        AdapterOEMV1<? extends ViewHolderOEMV1> oemAdapter = mOem.createListItemAdapter(oemItems);
-        return oemAdapter != null ? new CarUiListItemAdapterAdapterV1(oemAdapter)
-                : mFactoryStub.createListItemAdapter(items);
-    }
-
-    private static RecyclerViewAttributesOEMV1 from(Context context, AttributeSet attrs) {
-        RecyclerViewAttributesOEMV1 oemAttrs = null;
-        if (attrs != null) {
-            TypedArray a = context.obtainStyledAttributes(
-                    attrs,
-                    R.styleable.CarUiRecyclerView,
-                    0,
-                    R.style.Widget_CarUi_CarUiRecyclerView);
-            final int carUiRecyclerViewLayout = a.getInt(
-                    R.styleable.CarUiRecyclerView_layoutStyle,
-                    CarUiRecyclerViewLayout.LINEAR);
-            final int spanCount = a.getInt(
-                    R.styleable.CarUiRecyclerView_numOfColumns, /* defValue= */ 1);
-            final boolean rotaryScrollEnabled = a.getBoolean(
-                    R.styleable.CarUiRecyclerView_rotaryScrollEnabled,
-                    /* defValue=*/ false);
-            final int orientation = a.getInt(
-                    R.styleable.CarUiRecyclerView_android_orientation,
-                    CarUiLayoutStyle.VERTICAL);
-            final boolean reversed = a.getBoolean(
-                    R.styleable.CarUiRecyclerView_reverseLayout, false);
-            final int size = a.getInt(R.styleable.CarUiRecyclerView_carUiSize,
-                    CarUiRecyclerView.SIZE_LARGE);
-            a.recycle();
-
-            final LayoutStyleOEMV1 layoutStyle = new LayoutStyleOEMV1() {
-                @Override
-                public int getSpanCount() {
-                    return spanCount;
-                }
-
-                @Override
-                public int getLayoutType() {
-                    switch (carUiRecyclerViewLayout) {
-                        case CarUiRecyclerViewLayout.GRID:
-                            return LayoutStyleOEMV1.LAYOUT_TYPE_GRID;
-                        case CarUiRecyclerViewLayout.LINEAR:
-                        default:
-                            return LayoutStyleOEMV1.LAYOUT_TYPE_LINEAR;
-                    }
-                }
-
-                @Override
-                public int getOrientation() {
-                    switch (orientation) {
-                        case CarUiLayoutStyle.HORIZONTAL:
-                            return LayoutStyleOEMV1.ORIENTATION_HORIZONTAL;
-                        case CarUiLayoutStyle.VERTICAL:
-                        default:
-                            return LayoutStyleOEMV1.ORIENTATION_VERTICAL;
-                    }
-                }
-
-                @Override
-                public boolean getReverseLayout() {
-                    return reversed;
-                }
-            };
-
-            oemAttrs = new RecyclerViewAttributesOEMV1() {
-                @Override
-                public boolean isRotaryScrollEnabled() {
-                    return rotaryScrollEnabled;
-                }
-
-                @Override
-                public int getSize() {
-                    switch (size) {
-                        case CarUiRecyclerView.SIZE_SMALL:
-                            return RecyclerViewAttributesOEMV1.SIZE_SMALL;
-                        case CarUiRecyclerView.SIZE_MEDIUM:
-                            return RecyclerViewAttributesOEMV1.SIZE_MEDIUM;
-                        case CarUiRecyclerView.SIZE_LARGE:
-                        default:
-                            return RecyclerViewAttributesOEMV1.SIZE_LARGE;
-                    }
-                }
-
-                @Override
-                public LayoutStyleOEMV1 getLayoutStyle() {
-                    return layoutStyle;
-                }
-            };
-        }
-        return oemAttrs;
-    }
-
-    private static ListItemOEMV1 toOemListItem(CarUiListItem item) {
-        if (item instanceof CarUiHeaderListItem) {
-            CarUiHeaderListItem header = (CarUiHeaderListItem) item;
-            return new HeaderListItemOEMV1.Builder(new SpannableString(header.getTitle()))
-                    .setBody(new SpannableString(header.getBody()))
-                    .build();
-        } else if (item instanceof CarUiContentListItem) {
-            CarUiContentListItem contentItem = (CarUiContentListItem) item;
-
-            ContentListItemOEMV1.Builder builder = new ContentListItemOEMV1.Builder(
-                    toOemListItemAction(contentItem.getAction()));
-
-            if (contentItem.getTitle() != null) {
-                builder.setTitle(
-                        new SpannableString(contentItem.getTitle().getPreferredText()));
-            }
-
-            if (contentItem.getBody() != null) {
-                builder.setBody(new SpannableString(
-                        CarUiText.combineMultiLine(contentItem.getBody())));
-            }
-
-            builder.setIcon(contentItem.getIcon(),
-                    toOemListItemIconType(contentItem.getPrimaryIconType()));
-
-            if (contentItem.getAction() == CarUiContentListItem.Action.ICON) {
-                Consumer<ContentListItemOEMV1> listener =
-                        contentItem.getSupplementalIconOnClickListener() != null
-                                ? oemItem ->
-                                contentItem.getSupplementalIconOnClickListener().onClick(
-                                        contentItem) : null;
-                builder.setSupplementalIcon(contentItem.getSupplementalIcon(), listener);
-            }
-
-            if (contentItem.getOnClickListener() != null) {
-                Consumer<ContentListItemOEMV1> listener =
-                        contentItem.getOnClickListener() != null
-                                ? oemItem ->
-                                contentItem.getOnClickListener().onClick(contentItem) : null;
-                builder.setOnItemClickedListener(listener);
-            }
-
-            builder.setOnCheckedChangeListener(
-                    oemItem -> contentItem.setChecked(oemItem.isChecked()))
-                    .setActionDividerVisible(contentItem.isActionDividerVisible())
-                    .setEnabled(contentItem.isEnabled())
-                    .setChecked(contentItem.isChecked())
-                    .setActivated(contentItem.isActivated());
-            return builder.build();
-        } else {
-            throw new IllegalStateException("Unexpected list item type");
-        }
-    }
-
-    private static ContentListItemOEMV1.Action toOemListItemAction(
-            CarUiContentListItem.Action action) {
-        switch (action) {
-            case NONE:
-                return ContentListItemOEMV1.Action.NONE;
-            case SWITCH:
-                return ContentListItemOEMV1.Action.SWITCH;
-            case CHECK_BOX:
-                return ContentListItemOEMV1.Action.CHECK_BOX;
-            case RADIO_BUTTON:
-                return ContentListItemOEMV1.Action.RADIO_BUTTON;
-            case ICON:
-                return ContentListItemOEMV1.Action.ICON;
-            case CHEVRON:
-                return ContentListItemOEMV1.Action.CHEVRON;
-            default:
-                throw new IllegalStateException("Unexpected list item action type");
-        }
-    }
-
-    private static ContentListItemOEMV1.IconType toOemListItemIconType(
-            CarUiContentListItem.IconType iconType) {
-        switch (iconType) {
-            case CONTENT:
-                return ContentListItemOEMV1.IconType.CONTENT;
-            case STANDARD:
-                return ContentListItemOEMV1.IconType.STANDARD;
-            case AVATAR:
-                return ContentListItemOEMV1.IconType.AVATAR;
-            default:
-                throw new IllegalStateException("Unexpected list item icon type");
-        }
+        return mFactoryStub.createListItemAdapter(items);
     }
 }
