@@ -133,7 +133,7 @@ public class CarUiRecyclerViewTest {
     public static Object[] data() {
         // It's important to do no shared library first, so that the shared library will
         // still be enabled when this test finishes
-        return new Object[] { false, /* true b/192677345 */};
+        return new Object[]{false, /* true b/192677345 */};
     }
 
     @Rule
@@ -1109,7 +1109,7 @@ public class CarUiRecyclerViewTest {
         assertThat(carUiRecyclerView.getView().getPaddingRight(), is(equalTo(0)));
         // available space in recyclerview after applying paddings.
         int screenHeight = orientationHelper.getTotalSpace();
-        assertThat(carUiRecyclerView.getHeight() , is(equalTo(screenHeight)));
+        assertThat(carUiRecyclerView.getHeight(), is(equalTo(screenHeight)));
 
         View scrollbar = mActivity.findViewById(R.id.car_ui_scroll_bar);
         assertThat(scrollbar.getPaddingTop(), is(equalTo(0)));
@@ -1126,7 +1126,7 @@ public class CarUiRecyclerViewTest {
         assertThat(orientationHelper.getStartAfterPadding(), is(equalTo(150)));
         // available space in recyclerview after applying paddings.
         screenHeight = orientationHelper.getTotalSpace();
-        assertThat(carUiRecyclerView.getHeight() - 150 - 170 , is(equalTo(screenHeight)));
+        assertThat(carUiRecyclerView.getHeight() - 150 - 170, is(equalTo(screenHeight)));
 
         assertThat(scrollbar.getPaddingTop(), is(equalTo(150)));
         assertThat(scrollbar.getPaddingLeft(), is(equalTo(0)));
@@ -1158,7 +1158,7 @@ public class CarUiRecyclerViewTest {
         assertThat(carUiRecyclerView.getView().getPaddingRight(), is(equalTo(0)));
         // available space in recyclerview after applying paddings.
         int screenHeight = orientationHelper.getTotalSpace();
-        assertThat(carUiRecyclerView.getHeight() , is(equalTo(screenHeight)));
+        assertThat(carUiRecyclerView.getHeight(), is(equalTo(screenHeight)));
 
         mActivity.runOnUiThread(() -> carUiRecyclerView.setPadding(20, 150, 30, 170));
 
@@ -1169,7 +1169,7 @@ public class CarUiRecyclerViewTest {
         assertThat(orientationHelper.getStartAfterPadding(), is(equalTo(150)));
         // available space in recyclerview after applying paddings.
         screenHeight = orientationHelper.getTotalSpace();
-        assertThat(carUiRecyclerView.getHeight() - 150 - 170 , is(equalTo(screenHeight)));
+        assertThat(carUiRecyclerView.getHeight() - 150 - 170, is(equalTo(screenHeight)));
     }
 
     @Test
@@ -1196,7 +1196,7 @@ public class CarUiRecyclerViewTest {
         assertThat(carUiRecyclerView.getView().getPaddingEnd(), is(equalTo(0)));
         // available space in recyclerview after applying paddings.
         int screenHeight = orientationHelper.getTotalSpace();
-        assertThat(carUiRecyclerView.getHeight() , is(equalTo(screenHeight)));
+        assertThat(carUiRecyclerView.getHeight(), is(equalTo(screenHeight)));
 
         View scrollbar = mActivity.findViewById(R.id.car_ui_scroll_bar);
         assertThat(scrollbar.getPaddingTop(), is(equalTo(0)));
@@ -1215,7 +1215,7 @@ public class CarUiRecyclerViewTest {
         assertThat(orientationHelper.getStartAfterPadding(), is(equalTo(150)));
         // available space in recyclerview after applying paddings.
         screenHeight = orientationHelper.getTotalSpace();
-        assertThat(carUiRecyclerView.getHeight() - 150 - 170 , is(equalTo(screenHeight)));
+        assertThat(carUiRecyclerView.getHeight() - 150 - 170, is(equalTo(screenHeight)));
 
         assertThat(scrollbar.getPaddingTop(), is(equalTo(150)));
         assertThat(scrollbar.getPaddingStart(), is(equalTo(0)));
@@ -1247,7 +1247,7 @@ public class CarUiRecyclerViewTest {
         assertThat(carUiRecyclerView.getView().getPaddingEnd(), is(equalTo(0)));
         // available space in recyclerview after applying paddings.
         int screenHeight = orientationHelper.getTotalSpace();
-        assertThat(carUiRecyclerView.getHeight() , is(equalTo(screenHeight)));
+        assertThat(carUiRecyclerView.getHeight(), is(equalTo(screenHeight)));
 
         mActivity.runOnUiThread(() -> carUiRecyclerView.setPaddingRelative(20, 150, 30, 170));
 
@@ -1258,7 +1258,7 @@ public class CarUiRecyclerViewTest {
         assertThat(orientationHelper.getStartAfterPadding(), is(equalTo(150)));
         // available space in recyclerview after applying paddings.
         screenHeight = orientationHelper.getTotalSpace();
-        assertThat(carUiRecyclerView.getHeight() - 150 - 170 , is(equalTo(screenHeight)));
+        assertThat(carUiRecyclerView.getHeight() - 150 - 170, is(equalTo(screenHeight)));
     }
 
     @Test
@@ -1348,7 +1348,7 @@ public class CarUiRecyclerViewTest {
         // Set to anything greater or equal to
         // 2 * minTouchSize + max(minTouchSize, mScrollbarThumbMinHeight) + 2 * margin
         int recyclerviewHeight =
-                2 *  minTouchSize
+                2 * minTouchSize
                         + max(minTouchSize, mScrollbarThumbMinHeight)
                         + 2 * margin + trackMargin;
 
@@ -1505,7 +1505,7 @@ public class CarUiRecyclerViewTest {
 
         int firstViewHeight = layoutManager.getChildAt(0).getHeight();
         int itemsToScroll = 10;
-        CarUiSnapHelper snapHelper  = new CarUiSnapHelper(mActivity);
+        CarUiSnapHelper snapHelper = new CarUiSnapHelper(mActivity);
         // Get an estimate of how many items CarUiSnaphelpwer says we need to scroll. The scroll
         // distance is set to 10 * height of the first item. Since all items have the items have
         // the same height, we're expecting to get exactly 10 back from CarUiSnapHelper.
@@ -1537,7 +1537,7 @@ public class CarUiRecyclerViewTest {
         // the scroll distance has to be less than half of the size of the first view so that
         // recyclerview doesn't snap to the next view
         int distantToScroll = (firstViewHeight / 2) - 1;
-        CarUiSnapHelper snapHelper  = new CarUiSnapHelper(mActivity);
+        CarUiSnapHelper snapHelper = new CarUiSnapHelper(mActivity);
         int estimate = snapHelper.estimateNextPositionDiffForScrollDistance(orientationHelper,
                 distantToScroll);
 
@@ -1567,7 +1567,7 @@ public class CarUiRecyclerViewTest {
 
         // 10 is an arbitrary number
         int distantToScroll = 10;
-        CarUiSnapHelper snapHelper  = new CarUiSnapHelper(mActivity);
+        CarUiSnapHelper snapHelper = new CarUiSnapHelper(mActivity);
         int estimate = snapHelper.estimateNextPositionDiffForScrollDistance(orientationHelper,
                 distantToScroll);
 
@@ -1591,7 +1591,7 @@ public class CarUiRecyclerViewTest {
 
         LayoutManager layoutManager = carUiRecyclerView.getLayoutManager();
         OrientationHelper orientationHelper = OrientationHelper.createVerticalHelper(layoutManager);
-        CarUiSnapHelper snapHelper  = new CarUiSnapHelper(mActivity);
+        CarUiSnapHelper snapHelper = new CarUiSnapHelper(mActivity);
         int estimate = snapHelper.estimateNextPositionDiffForScrollDistance(orientationHelper, 50);
 
         assertEquals(estimate, 50);
@@ -1716,13 +1716,13 @@ public class CarUiRecyclerViewTest {
     @Test
     public void testWrongType_createScrollBarFromConfig() {
         // Basically return any class that exists but doesn't extend ScrollBar
-        doReturn(CarUiRecyclerViewImpl.class.getName()).when(mTestableResources)
+        doReturn(CarUiRecyclerView.class.getName()).when(mTestableResources)
                 .getString(R.string.car_ui_scrollbar_component);
 
         RuntimeException ex = assertThrows(RuntimeException.class,
                 () -> CarUiRecyclerView.create(mTestableContext));
         assertEquals("Error creating scroll bar component: "
-                + CarUiRecyclerViewImpl.class.getName(), ex.getMessage());
+                + CarUiRecyclerView.class.getName(), ex.getMessage());
     }
 
     @Test
@@ -1787,7 +1787,7 @@ public class CarUiRecyclerViewTest {
         SpanSizeLookup spanSizeLookup = new SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                switch(position) {
+                switch (position) {
                     case 0:
                         return 10;
                     case 1:
@@ -1826,7 +1826,7 @@ public class CarUiRecyclerViewTest {
         layoutManager.setSpanSizeLookup(new SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                switch(position) {
+                switch (position) {
                     case 0:
                         return 10;
                     case 1:
