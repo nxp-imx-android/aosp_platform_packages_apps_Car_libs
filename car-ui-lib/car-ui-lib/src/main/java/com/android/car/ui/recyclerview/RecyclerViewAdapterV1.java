@@ -34,10 +34,10 @@ import androidx.recyclerview.widget.RecyclerView.OnScrollListener;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import com.android.car.ui.R;
-import com.android.car.ui.sharedlibrary.oemapis.recyclerview.AdapterOEMV1;
-import com.android.car.ui.sharedlibrary.oemapis.recyclerview.LayoutStyleOEMV1;
-import com.android.car.ui.sharedlibrary.oemapis.recyclerview.OnScrollListenerOEMV1;
-import com.android.car.ui.sharedlibrary.oemapis.recyclerview.RecyclerViewOEMV1;
+import com.android.car.ui.plugin.oemapis.recyclerview.AdapterOEMV1;
+import com.android.car.ui.plugin.oemapis.recyclerview.LayoutStyleOEMV1;
+import com.android.car.ui.plugin.oemapis.recyclerview.OnScrollListenerOEMV1;
+import com.android.car.ui.plugin.oemapis.recyclerview.RecyclerViewOEMV1;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -105,8 +105,8 @@ import androidx.test.espresso.IdlingResource;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
 import com.android.car.ui.TestActivity;
+import com.android.car.ui.pluginsupport.PluginFactorySingleton;
 import com.android.car.ui.recyclerview.decorations.grid.GridDividerItemDecoration;
-import com.android.car.ui.sharedlibrarysupport.SharedLibraryFactorySingleton;
 import com.android.car.ui.test.R;
 import com.android.car.ui.utils.CarUxRestrictionsUtil;
 
@@ -131,7 +131,7 @@ public class CarUiRecyclerViewTest {
 
     @Parameterized.Parameters
     public static Object[] data() {
-        // It's important to do no shared library first, so that the shared library will
+        // It's important to do no plugin first, so that the plugin will
         // still be enabled when this test finishes
         return new Object[]{false, /* true b/192677345 */};
     }
@@ -146,8 +146,8 @@ public class CarUiRecyclerViewTest {
     private Context mTestableContext;
     private Resources mTestableResources;
 
-    public CarUiRecyclerViewTest(boolean sharedLibEnabled) {
-        SharedLibraryFactorySingleton.setSharedLibEnabled(sharedLibEnabled);
+    public CarUiRecyclerViewTest(boolean pluginEnabled) {
+        PluginFactorySingleton.setPluginEnabled(pluginEnabled);
     }
 
     @Before

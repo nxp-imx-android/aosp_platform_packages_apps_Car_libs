@@ -43,7 +43,7 @@ import androidx.recyclerview.widget.RecyclerView.OnFlingListener;
 import androidx.recyclerview.widget.RecyclerView.OnScrollListener;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
-import com.android.car.ui.sharedlibrarysupport.SharedLibraryFactorySingleton;
+import com.android.car.ui.pluginsupport.PluginFactorySingleton;
 
 import java.lang.annotation.Retention;
 
@@ -121,7 +121,7 @@ public interface CarUiRecyclerView {
      * Use this method to create an instance of CarUiRecyclerView at runtime.
      */
     static CarUiRecyclerView create(Context context) {
-        return SharedLibraryFactorySingleton.get(context)
+        return PluginFactorySingleton.get(context)
             .createRecyclerView(context, null);
     }
 
@@ -129,7 +129,7 @@ public interface CarUiRecyclerView {
      * Use this method to create an instance of CarUiRecyclerView at runtime.
      */
     static CarUiRecyclerView create(Context context, AttributeSet attributeSet) {
-        return SharedLibraryFactorySingleton.get(context)
+        return PluginFactorySingleton.get(context)
             .createRecyclerView(context, attributeSet);
     }
 
