@@ -20,8 +20,8 @@
         android:id="@+id/car_ui_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="@dimen/car_ui_scrollbar_margin"
-        android:layout_marginEnd="@dimen/car_ui_scrollbar_margin"
+        android:paddingStart="@dimen/car_ui_scrollbar_margin"
+        android:paddingEnd="@dimen/car_ui_scrollbar_margin"
         android:tag="RecyclerView" />
 
     <FrameLayout

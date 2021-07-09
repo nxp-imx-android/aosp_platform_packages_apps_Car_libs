@@ -13,11 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.android.car.ui.recyclerview;
+
+import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.widget.FrameLayout;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,21 +28,22 @@ import androidx.recyclerview.widget.RecyclerView;
  * Historically this class used to contain the CarUiRecyclerView, and ScrollBar.
  * This class can't be removed because OEMs might have overlaid car_ui_recycler_view.xml with their
  * RROs.
- * Now this class is only an empty subclass of {@link RecyclerView} to maintain backwards
+ * Now this class is only an FrameLayout that contains a {@link RecyclerView} to maintain backwards
  * compatibility.
  */
 @Deprecated
-public class CarUiRecyclerViewContainer extends RecyclerView {
+public class CarUiRecyclerViewContainer extends FrameLayout {
 
     public CarUiRecyclerViewContainer(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public CarUiRecyclerViewContainer(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
     }
 
     public CarUiRecyclerViewContainer(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        addView(new RecyclerView(context), MATCH_PARENT, MATCH_PARENT);
     }
 }
