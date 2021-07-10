@@ -162,7 +162,14 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
 
         LayoutInflater factory = LayoutInflater.from(context);
         View rootView = factory.inflate(layout, this, true);
-        mRecyclerView = requireViewByRefId(rootView, R.id.car_ui_recycler_view);
+        ViewGroup recyclerViewContainer = requireViewByRefId(rootView, R.id.car_ui_recycler_view);
+        if (recyclerViewContainer instanceof CarUiRecyclerViewContainer) {
+            // To keep backwards compatibility CarUiRecyclerViewContainer is a FrameLayout
+            // that has a RecyclerView at index 0
+            mRecyclerView = (RecyclerView) recyclerViewContainer.getChildAt(0);
+        } else {
+            mRecyclerView = (RecyclerView) recyclerViewContainer;
+        }
 
         initRotaryScroll(a);
 
