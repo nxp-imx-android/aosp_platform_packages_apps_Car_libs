@@ -82,8 +82,8 @@ class DefaultScrollBar implements ScrollBar {
         Resources res = context.getResources();
 
         mButtonDisabledAlpha = CarUiUtils.getFloat(res, R.dimen.car_ui_button_disabled_alpha);
-        mScrollbarThumbMinHeight = (int) context.getResources()
-                .getDimension(R.dimen.car_ui_scrollbar_min_thumb_height);
+        mScrollbarThumbMinHeight =
+                res.getDimensionPixelSize(R.dimen.car_ui_scrollbar_min_thumb_height);
 
         mUpButton = requireViewByRefId(mScrollView, R.id.car_ui_scrollbar_page_up);
         View.OnClickListener paginateUpButtonOnClickListener = v -> pageUp();
@@ -513,8 +513,8 @@ class DefaultScrollBar implements ScrollBar {
         } else {
             OrientationHelper orientationHelper = getOrientationHelper(layoutManager);
             int screenSize = orientationHelper.getTotalSpace();
-            int touchTargetSize = (int) mContext.getResources()
-                    .getDimension(R.dimen.car_ui_touch_target_size);
+            int touchTargetSize = mContext.getResources()
+                    .getDimensionPixelSize(R.dimen.car_ui_touch_target_size);
             ViewGroup.MarginLayoutParams upButtonLayoutParam =
                     (ViewGroup.MarginLayoutParams) mUpButton.getLayoutParams();
             int upButtonMargin = upButtonLayoutParam.topMargin
