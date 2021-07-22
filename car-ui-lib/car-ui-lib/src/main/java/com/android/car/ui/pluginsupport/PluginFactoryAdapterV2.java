@@ -98,7 +98,9 @@ public final class PluginFactoryAdapterV2 implements PluginFactory {
                     insetsChangedListener, toolbarEnabled, fullscreen);
         }
 
-        ToolbarControllerOEMV1 toolbar = mOem.installBaseLayoutAround(contentView,
+        ToolbarControllerOEMV1 toolbar = mOem.installBaseLayoutAround(
+                contentView.getContext(),
+                contentView,
                 insets -> insetsChangedListener.onCarUiInsetsChanged(adaptInsets(insets)),
                 toolbarEnabled, fullscreen);
 
@@ -115,7 +117,8 @@ public final class PluginFactoryAdapterV2 implements PluginFactory {
 
     @Override
     public AppStyledViewController createAppStyledView(Context activityContext) {
-        AppStyledViewControllerOEMV1 appStyledViewControllerOEMV1 = mOem.createAppStyledView();
+        AppStyledViewControllerOEMV1 appStyledViewControllerOEMV1 = mOem.createAppStyledView(
+                activityContext);
         return appStyledViewControllerOEMV1 == null ? new AppStyledViewControllerImpl(
                 activityContext) : new AppStyledViewControllerAdapterV1(
                 appStyledViewControllerOEMV1);
