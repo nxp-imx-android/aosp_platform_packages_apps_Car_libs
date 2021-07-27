@@ -281,6 +281,18 @@ public abstract class PreferenceFragment extends PreferenceFragmentCompat implem
         }
     }
 
+    /**
+     * In order to change the layout for {@link PreferenceFragment}, make sure the correct layout is
+     * passed to PreferenceFragment.CarUi theme.
+     * Override ht method in order to inflate {@link CarUiRecyclerView}
+     */
+    @NonNull
+    public CarUiRecyclerView onCreateCarUiRecyclerView(LayoutInflater inflater, ViewGroup parent,
+                                                       Bundle savedInstanceState) {
+        return requireViewByRefId(parent, R.id.recycler_view);
+    }
+
+    @NonNull
     public CarUiRecyclerView getCarUiRecyclerView() {
         return mCarUiRecyclerView;
     }
@@ -339,7 +351,7 @@ public abstract class PreferenceFragment extends PreferenceFragmentCompat implem
     @Override
     public RecyclerView onCreateRecyclerView(LayoutInflater inflater, ViewGroup parent,
             Bundle savedInstanceState) {
-        mCarUiRecyclerView = requireViewByRefId(parent, R.id.recycler_view);
+        mCarUiRecyclerView = onCreateCarUiRecyclerView(inflater, parent, savedInstanceState);
         RecyclerView recyclerView = mCarUiRecyclerView.getRecyclerView();
         if (recyclerView != null) {
             return recyclerView;
