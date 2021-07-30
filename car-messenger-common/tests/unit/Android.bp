@@ -30,7 +30,7 @@ android_test {
     ],
 
     static_libs: [
-        "android.car",
+        "android.car-system-stubs",
         "androidx.test.core",
         "androidx.test.ext.junit",
         "androidx.test.rules",
