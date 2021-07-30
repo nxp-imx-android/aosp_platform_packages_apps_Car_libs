@@ -171,9 +171,7 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
         if (mScrollBarEnabled) {
             switch (mSize) {
                 case SIZE_SMALL:
-                    // Small layout is always rendered without scrollbar
-                    mScrollBarEnabled = false;
-                    layout = R.layout.car_ui_recycler_view_no_scrollbar;
+                    layout = R.layout.car_ui_recycler_view_small;
                     break;
                 case SIZE_MEDIUM:
                     layout = R.layout.car_ui_recycler_view_medium;

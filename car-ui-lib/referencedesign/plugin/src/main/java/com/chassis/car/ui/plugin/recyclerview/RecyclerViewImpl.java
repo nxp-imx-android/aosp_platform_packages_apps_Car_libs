@@ -93,9 +93,7 @@ public final class RecyclerViewImpl extends FrameLayout implements RecyclerViewO
         if (mScrollBarEnabled && attrs != null) {
             switch (attrs.getSize()) {
                 case SIZE_SMALL:
-                    // Small layout is always rendered without scrollbar
-                    mScrollBarEnabled = false;
-                    layout = R.layout.recycler_view_no_scrollbar;
+                    layout = R.layout.recycler_view_small;
                     break;
                 case SIZE_MEDIUM:
                     layout = R.layout.recycler_view_medium;

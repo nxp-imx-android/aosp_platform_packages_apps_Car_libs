@@ -30,11 +30,10 @@ import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.car.ui.CarUiLayoutInflaterFactory;
 import com.android.car.ui.R;
-import com.android.car.ui.recyclerview.CarUiLinearLayoutStyle;
-import com.android.car.ui.recyclerview.CarUiRecyclerView;
 
 /**
  * Controller to interact with the app styled view.
@@ -120,10 +119,10 @@ public class AppStyledViewControllerImpl implements AppStyledViewController {
 
         View appStyleView = localInflater.inflate(R.layout.car_ui_app_styled_view, null, false);
         appStyleView.setClipToOutline(true);
-        CarUiRecyclerView rv = appStyleView.findViewById(R.id.car_ui_app_styled_content);
+        RecyclerView rv = appStyleView.findViewById(R.id.car_ui_app_styled_content);
 
         AppStyledRecyclerViewAdapter adapter = new AppStyledRecyclerViewAdapter(contentView);
-        rv.setLayoutStyle(CarUiLinearLayoutStyle.from(new LinearLayoutManager(mContext)));
+        rv.setLayoutManager(new LinearLayoutManager(mContext));
         rv.setAdapter(adapter);
 
         ImageView close = appStyleView.findViewById(R.id.car_ui_app_styled_view_icon_close);

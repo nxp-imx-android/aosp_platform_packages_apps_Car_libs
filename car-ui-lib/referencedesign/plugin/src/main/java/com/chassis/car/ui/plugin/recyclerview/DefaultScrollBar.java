@@ -107,7 +107,7 @@ import com.chassis.car.ui.plugin.R;
 
         getRecyclerView().addOnScrollListener(mRecyclerViewOnScrollListener);
 
-        mScrollView.setVisibility(View.INVISIBLE);
+        mScrollView.setVisibility(View.GONE);
         mScrollView.addOnLayoutChangeListener(
                 (View v,
                         int left,
@@ -118,6 +118,10 @@ import com.chassis.car.ui.plugin.R;
                         int oldTop,
                         int oldRight,
                         int oldBottom) -> mHandler.post(this::updatePaginationButtons));
+
+        if (mRecyclerView.getAdapter() != null) {
+            adapterChanged(mRecyclerView.getAdapter());
+        }
     }
 
     public RecyclerView getRecyclerView() {
@@ -138,13 +142,16 @@ import com.chassis.car.ui.plugin.R;
             if (mRecyclerView.getAdapter() != null) {
                 mRecyclerView.getAdapter().unregisterAdapterDataObserver(mAdapterChangeObserver);
             }
+        } catch (IllegalStateException e) {
+            // adapter was not registered and we're trying to unregister again. ignore.
+        }
+
+        try {
             if (adapter != null) {
                 adapter.registerAdapterDataObserver(mAdapterChangeObserver);
             }
         } catch (IllegalStateException e) {
-            // adapter is already registered. and we're trying to register again.
-            // or adapter was not registered and we're trying to unregister again.
-            // ignore.
+            // adapter is already registered. and we're trying to register again. ignore.
         }
     }
 
@@ -491,7 +498,7 @@ import com.chassis.car.ui.plugin.R;
         LayoutManager layoutManager = getLayoutManager();
 
         if (layoutManager == null) {
-            mScrollView.setVisibility(View.INVISIBLE);
+            mScrollView.setVisibility(View.GONE);
             return;
         }
 
@@ -502,8 +509,11 @@ import com.chassis.car.ui.plugin.R;
         setUpEnabled(!isAtStart);
         setDownEnabled(!isAtEnd);
 
+        boolean isScrollViewVisiblePreUpdate = mScrollView.getVisibility() == View.VISIBLE;
+        boolean isLayoutRequired = false;
+
         if ((isAtStart && isAtEnd) || layoutManager.getItemCount() == 0) {
-            mScrollView.setVisibility(View.INVISIBLE);
+            mScrollView.setVisibility(View.GONE);
         } else {
             OrientationHelper orientationHelper = getOrientationHelper(layoutManager);
             int screenSize = orientationHelper.getTotalSpace();
@@ -519,7 +529,10 @@ import com.chassis.car.ui.plugin.R;
                     + downButtonLayoutParam.bottomMargin;
             int margin = upButtonMargin + downButtonMargin;
             if (screenSize < 2 * touchTargetSize + margin) {
-                mScrollView.setVisibility(View.INVISIBLE);
+                if (isScrollViewVisiblePreUpdate) {
+                    isLayoutRequired = true;
+                }
+                mScrollView.setVisibility(View.GONE);
             } else {
                 ViewGroup.MarginLayoutParams trackLayoutParam =
                         (ViewGroup.MarginLayoutParams) mScrollTrack.getLayoutParams();
@@ -536,6 +549,10 @@ import com.chassis.car.ui.plugin.R;
                 } else {
                     mScrollTrack.setVisibility(View.VISIBLE);
                     mScrollThumb.setVisibility(View.VISIBLE);
+                }
+
+                if (!isScrollViewVisiblePreUpdate) {
+                    isLayoutRequired = true;
                 }
                 mScrollView.setVisibility(View.VISIBLE);
             }
@@ -554,6 +571,13 @@ import com.chassis.car.ui.plugin.R;
         }
 
         mScrollView.invalidate();
+        // updatePaginationButtons() is called from onLayoutChangeListener, request layout only when
+        // required to avoid infinite loop.
+        if (isLayoutRequired) {
+            // If currently performing a layout pass, layout update may not be picked up until the
+            // next layout pass. Schedule another layout pass to ensure changes take affect.
+            mScrollView.post(() -> mScrollView.requestLayout());
+        }
     }
 
     /**
