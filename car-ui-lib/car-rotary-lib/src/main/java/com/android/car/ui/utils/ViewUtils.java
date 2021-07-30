@@ -137,6 +137,21 @@ public final class ViewUtils {
         void removeOnLayoutCompleteListener(@Nullable Runnable runnable);
     }
 
+    /** Returns whether the {@code descendant} view is a descendant of the {@code view}. */
+    public static boolean isDescendant(@Nullable View descendant, @Nullable View view) {
+        if (descendant == null || view == null) {
+            return false;
+        }
+        ViewParent parent = descendant.getParent();
+        while (parent != null) {
+            if (parent == view) {
+                return true;
+            }
+            parent = parent.getParent();
+        }
+        return false;
+    }
+
     /**
      * Hides the focus by searching the view tree for the {@link FocusParkingView}
      * and focusing on it.
@@ -521,7 +536,7 @@ public final class ViewUtils {
      * @param root the root view to search from
      * @return whether succeeded
      */
-    private static boolean focusOnFirstRegularView(@NonNull View root) {
+    public static boolean focusOnFirstRegularView(@NonNull View root) {
         View focusedView = ViewUtils.depthFirstSearch(root,
                 /* targetPredicate= */
                 v -> v != root && !isScrollableContainer(v) && canTakeFocus(v) && requestFocus(v),
