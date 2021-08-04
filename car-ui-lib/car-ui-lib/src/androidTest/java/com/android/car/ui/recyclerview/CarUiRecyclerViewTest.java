@@ -729,7 +729,8 @@ public class CarUiRecyclerViewTest {
 
     @Test
     public void testPageUpScrollsWithoutSnap() {
-        RecyclerView.OnScrollListener scrollListener = mock(RecyclerView.OnScrollListener.class);
+        CarUiRecyclerView.OnScrollListener scrollListener =
+                mock(CarUiRecyclerView.OnScrollListener.class);
 
         CarUiRecyclerView carUiRecyclerView = CarUiRecyclerView.create(mTestableContext);
         ViewGroup container = mActivity.findViewById(R.id.test_container);
@@ -755,18 +756,19 @@ public class CarUiRecyclerViewTest {
         // smooth scroll to the destination. If the scroll includes a secondary snap after an
         // initial scroll, this callback will have more than one invocation.
         verify(scrollListener, times(1)).onScrollStateChanged(
-                carUiRecyclerView.getRecyclerView(), SCROLL_STATE_SETTLING);
+                carUiRecyclerView, SCROLL_STATE_SETTLING);
 
         onView(withId(R.id.car_ui_scrollbar_page_up)).perform(click());
 
         // Make same verification as above for a second page up operation.
         verify(scrollListener, times(2)).onScrollStateChanged(
-                carUiRecyclerView.getRecyclerView(), SCROLL_STATE_SETTLING);
+                carUiRecyclerView, SCROLL_STATE_SETTLING);
     }
 
     @Test
     public void testPageDownScrollsWithoutSnap() {
-        RecyclerView.OnScrollListener scrollListener = mock(RecyclerView.OnScrollListener.class);
+        CarUiRecyclerView.OnScrollListener scrollListener =
+                mock(CarUiRecyclerView.OnScrollListener.class);
 
         CarUiRecyclerView carUiRecyclerView = CarUiRecyclerView.create(mTestableContext);
         ViewGroup container = mActivity.findViewById(R.id.test_container);
@@ -786,13 +788,13 @@ public class CarUiRecyclerViewTest {
         // smooth scroll to the destination. If the scroll includes a secondary snap after an
         // initial scroll, this callback will have more than one invocation.
         verify(scrollListener, times(1)).onScrollStateChanged(
-                carUiRecyclerView.getRecyclerView(), SCROLL_STATE_SETTLING);
+                carUiRecyclerView, SCROLL_STATE_SETTLING);
 
         onView(withId(R.id.car_ui_scrollbar_page_down)).perform(click());
 
         // Make same verification as above for a second page down operation.
         verify(scrollListener, times(2)).onScrollStateChanged(
-                carUiRecyclerView.getRecyclerView(), SCROLL_STATE_SETTLING);
+                carUiRecyclerView, SCROLL_STATE_SETTLING);
     }
 
     @Test
@@ -2324,11 +2326,11 @@ public class CarUiRecyclerViewTest {
         ScrollIdlingResource(CarUiRecyclerView recyclerView) {
             recyclerView
                     .addOnScrollListener(
-                            new RecyclerView.OnScrollListener() {
+                            new CarUiRecyclerView.OnScrollListener() {
                                 @Override
-                                public void onScrollStateChanged(@NonNull RecyclerView recyclerView,
+                                public void onScrollStateChanged(
+                                        @NonNull CarUiRecyclerView recyclerView,
                                         int newState) {
-                                    super.onScrollStateChanged(recyclerView, newState);
                                     mIdle = (newState == SCROLL_STATE_IDLE
                                             // Treat dragging as idle, or Espresso will
                                             // block itself when swiping.
@@ -2339,8 +2341,9 @@ public class CarUiRecyclerViewTest {
                                 }
 
                                 @Override
-                                public void onScrolled(@NonNull RecyclerView recyclerView, int dx,
-                                        int dy) {
+                                public void onScrolled(@NonNull CarUiRecyclerView recyclerView,
+                                                       int dx,
+                                                       int dy) {
                                 }
                             });
         }

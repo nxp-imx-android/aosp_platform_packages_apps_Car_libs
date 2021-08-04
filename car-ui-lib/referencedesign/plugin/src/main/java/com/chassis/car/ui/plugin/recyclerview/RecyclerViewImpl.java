@@ -71,7 +71,8 @@ public final class RecyclerViewImpl extends FrameLayout implements RecyclerViewO
         @Override
         public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
             for (OnScrollListenerOEMV1 listener: mScrollListeners) {
-                listener.onScrollStateChanged(RecyclerViewImpl.this, newState);
+                listener.onScrollStateChanged(RecyclerViewImpl.this,
+                        toInternalScrollState(newState));
             }
         }
     };
@@ -268,5 +269,24 @@ public final class RecyclerViewImpl extends FrameLayout implements RecyclerViewO
                 }
             });
         }
+    }
+
+    private static int toInternalScrollState(int state) {
+        /* default to RecyclerView.SCROLL_STATE_IDLE */
+        int internalState = RecyclerViewOEMV1.SCROLL_STATE_IDLE;
+        switch (state) {
+            case RecyclerView.SCROLL_STATE_DRAGGING:
+                internalState = RecyclerViewOEMV1.SCROLL_STATE_DRAGGING;
+                break;
+            case RecyclerView.SCROLL_STATE_SETTLING:
+                internalState = RecyclerViewOEMV1.SCROLL_STATE_SETTLING;
+                break;
+        }
+        return internalState;
+    }
+
+    @Override
+    public int getScrollState() {
+        return toInternalScrollState(mRecyclerView.getScrollState());
     }
 }

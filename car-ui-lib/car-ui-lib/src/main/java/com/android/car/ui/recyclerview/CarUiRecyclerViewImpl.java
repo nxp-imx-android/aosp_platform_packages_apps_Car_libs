@@ -48,7 +48,6 @@ import androidx.recyclerview.widget.RecyclerView.ItemAnimator;
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration;
 import androidx.recyclerview.widget.RecyclerView.LayoutManager;
 import androidx.recyclerview.widget.RecyclerView.OnFlingListener;
-import androidx.recyclerview.widget.RecyclerView.OnScrollListener;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import com.android.car.ui.R;
@@ -61,7 +60,9 @@ import com.android.car.ui.utils.CarUxRestrictionsUtil;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -118,6 +119,28 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
 
     @Nullable
     private CarUiLayoutStyle mLayoutStyle;
+
+    @NonNull
+    private final List<OnScrollListener> mScrollListeners = new ArrayList<>();
+
+    @NonNull
+    private final RecyclerView.OnScrollListener mOnScrollListener =
+            new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+            for (OnScrollListener listener : mScrollListeners) {
+                listener.onScrollStateChanged(CarUiRecyclerViewImpl.this,
+                        toInternalScrollState(newState));
+            }
+        }
+
+        @Override
+        public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+            for (OnScrollListener listener : mScrollListeners) {
+                listener.onScrolled(CarUiRecyclerViewImpl.this, dx, dy);
+            }
+        }
+    };
 
     public CarUiRecyclerViewImpl(@NonNull Context context) {
         this(context, null);
@@ -371,19 +394,37 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
         return mRecyclerView;
     }
 
+    private static int toInternalScrollState(int state) {
+        /* default to RecyclerView.SCROLL_STATE_IDLE */
+        int internalState = SCROLL_STATE_IDLE;
+        switch (state) {
+            case RecyclerView.SCROLL_STATE_DRAGGING:
+                internalState = SCROLL_STATE_DRAGGING;
+                break;
+            case RecyclerView.SCROLL_STATE_SETTLING:
+                internalState = SCROLL_STATE_SETTLING;
+                break;
+        }
+        return internalState;
+    }
+
     @Override
     public int getScrollState() {
-        return mRecyclerView.getScrollState();
+        return toInternalScrollState(mRecyclerView.getScrollState());
     }
 
     @Override
     public void addOnScrollListener(OnScrollListener scrollListener) {
-        mRecyclerView.addOnScrollListener(scrollListener);
+        if (mScrollListeners.isEmpty()) {
+            mRecyclerView.addOnScrollListener(mOnScrollListener);
+        }
+        mScrollListeners.add(scrollListener);
     }
 
     @Override
     public void clearOnScrollListeners() {
-        mRecyclerView.clearOnScrollListeners();
+        mScrollListeners.clear();
+        mRecyclerView.removeOnScrollListener(mOnScrollListener);
     }
 
     @Override
@@ -557,7 +598,10 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
 
     @Override
     public void removeOnScrollListener(OnScrollListener scrollListener) {
-        mRecyclerView.removeOnScrollListener(scrollListener);
+        mScrollListeners.remove(scrollListener);
+        if (mScrollListeners.isEmpty()) {
+            mRecyclerView.removeOnScrollListener(mOnScrollListener);
+        }
     }
 
     /**

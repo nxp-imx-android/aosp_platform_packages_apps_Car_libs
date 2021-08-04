@@ -30,7 +30,6 @@ import androidx.recyclerview.widget.RecyclerView.Adapter;
 import androidx.recyclerview.widget.RecyclerView.ItemAnimator;
 import androidx.recyclerview.widget.RecyclerView.LayoutManager;
 import androidx.recyclerview.widget.RecyclerView.OnFlingListener;
-import androidx.recyclerview.widget.RecyclerView.OnScrollListener;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import com.android.car.ui.R;
@@ -51,14 +50,12 @@ public final class RecyclerViewAdapterV1 extends FrameLayout
             implements CarUiRecyclerView, OnScrollListenerOEMV1 {
 
     @Nullable
-    private final AttributeSet mAttributes;
-    private final int mDefStyle;
-    @Nullable
     private RecyclerViewOEMV1 mOEMRecyclerView;
     @Nullable
     private AdapterOEMV1 mOEMAdapter;
 
-    private List<OnScrollListener> mScrollListeners = new ArrayList<>();
+    @NonNull
+    private final List<OnScrollListener> mScrollListeners = new ArrayList<>();
     @Nullable
     private ProxyRecyclerView mRecyclerView;
     @Nullable
@@ -75,9 +72,6 @@ public final class RecyclerViewAdapterV1 extends FrameLayout
     public RecyclerViewAdapterV1(@NonNull Context context, @Nullable AttributeSet attrs,
             int defStyle) {
         super(context, attrs, defStyle, 0);
-
-        mAttributes = attrs;
-        mDefStyle = defStyle;
     }
 
     /**
@@ -115,10 +109,23 @@ public final class RecyclerViewAdapterV1 extends FrameLayout
         return mRecyclerView;
     }
 
+    private static int toInternalScrollState(int state) {
+        /* default to RecyclerViewOEMV1.SCROLL_STATE_IDLE */
+        int internalState = SCROLL_STATE_IDLE;
+        switch (state) {
+            case RecyclerViewOEMV1.SCROLL_STATE_DRAGGING:
+                internalState = SCROLL_STATE_DRAGGING;
+                break;
+            case RecyclerViewOEMV1.SCROLL_STATE_SETTLING:
+                internalState = SCROLL_STATE_SETTLING;
+                break;
+        }
+        return internalState;
+    }
+
     @Override
     public int getScrollState() {
-        // TODO
-        return 0;
+        return toInternalScrollState(mOEMRecyclerView.getScrollState());
     }
 
     @NonNull
@@ -164,42 +171,32 @@ public final class RecyclerViewAdapterV1 extends FrameLayout
     public void addItemDecoration(@NonNull RecyclerView.ItemDecoration decor, int index) {}
 
     @Override
-    public void addOnScrollListener(@NonNull RecyclerView.OnScrollListener listener) {
+    public void addOnScrollListener(@NonNull OnScrollListener listener) {
         mScrollListeners.add(listener);
     }
 
     @Override
-    public void removeOnScrollListener(@NonNull RecyclerView.OnScrollListener listener) {
-        if (mScrollListeners != null) {
-            mScrollListeners.remove(listener);
-        }
+    public void removeOnScrollListener(@NonNull OnScrollListener listener) {
+        mScrollListeners.remove(listener);
     }
 
     @Override
     public void clearOnScrollListeners() {
-        if (mScrollListeners != null) {
-            mScrollListeners.clear();
-        }
+        mScrollListeners.clear();
         mOEMRecyclerView.clearOnScrollListeners();
     }
 
     @Override
     public void onScrollStateChanged(@NonNull RecyclerViewOEMV1 recyclerView, int newState) {
-        if (mScrollListeners != null) {
-            for (RecyclerView.OnScrollListener listener: mScrollListeners) {
-                // TODO: can we return something other than null here?
-                listener.onScrollStateChanged(null, newState);
-            }
+        for (OnScrollListener listener: mScrollListeners) {
+            listener.onScrollStateChanged(this, toInternalScrollState(newState));
         }
     }
 
     @Override
     public void onScrolled(@NonNull RecyclerViewOEMV1 recyclerView, int dx, int dy) {
-        if (mScrollListeners != null) {
-            for (RecyclerView.OnScrollListener listener: mScrollListeners) {
-                // TODO: can we return something other than null here?
-                listener.onScrolled(null, dx, dy);
-            }
+        for (OnScrollListener listener: mScrollListeners) {
+            listener.onScrolled(this, dx, dy);
         }
     }
 
