@@ -40,7 +40,6 @@ import androidx.recyclerview.widget.RecyclerView.ItemAnimator;
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration;
 import androidx.recyclerview.widget.RecyclerView.LayoutManager;
 import androidx.recyclerview.widget.RecyclerView.OnFlingListener;
-import androidx.recyclerview.widget.RecyclerView.OnScrollListener;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import com.android.car.ui.pluginsupport.PluginFactorySingleton;
@@ -115,6 +114,36 @@ public interface CarUiRecyclerView {
          * A value to pass to {@link #setMaxItems(int)} that indicates there should be no limit.
          */
         int UNLIMITED = -1;
+    }
+
+    /**
+     * The RecyclerView is not currently scrolling.
+     *
+     * @see #getScrollState()
+     */
+    int SCROLL_STATE_IDLE = 0;
+
+    /**
+     * The RecyclerView is currently being dragged by outside input such as user touch input.
+     *
+     * @see #getScrollState()
+     */
+    int SCROLL_STATE_DRAGGING = 1;
+
+    /**
+     * The RecyclerView is currently animating to a final position while not under
+     * outside control.
+     *
+     * @see #getScrollState()
+     */
+    int SCROLL_STATE_SETTLING = 2;
+
+    /**
+     * Equivalent of {@link RecyclerView.OnScrollListener}
+     */
+    interface OnScrollListener {
+        void onScrolled(CarUiRecyclerView recyclerView, int dx, int dy);
+        void onScrollStateChanged(CarUiRecyclerView recyclerView, int newState);
     }
 
     /**

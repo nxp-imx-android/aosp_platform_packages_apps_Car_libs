@@ -22,6 +22,28 @@ import android.view.View;
  */
 public interface RecyclerViewOEMV1 {
 
+    /**
+     * The RecyclerView is not currently scrolling.
+     *
+     * @see #getScrollState()
+     */
+    int SCROLL_STATE_IDLE = 0;
+
+    /**
+     * The RecyclerView is currently being dragged by outside input such as user touch input.
+     *
+     * @see #getScrollState()
+     */
+    int SCROLL_STATE_DRAGGING = 1;
+
+    /**
+     * The RecyclerView is currently animating to a final position while not under
+     * outside control.
+     *
+     * @see #getScrollState()
+     */
+    int SCROLL_STATE_SETTLING = 2;
+
     /** {@link androidx.recyclerview.widget.RecyclerView#setAdapter(Adapter)} */
     <V extends ViewHolderOEMV1> void setAdapter(AdapterOEMV1<V> adapter);
 
@@ -89,4 +111,7 @@ public interface RecyclerViewOEMV1 {
 
     /** see {@link LinearLayoutManager#findLastVisibleItemPosition()} */
     int findLastVisibleItemPosition();
+
+    /** see {@link RecyclerView#getScrollState()} */
+    int getScrollState();
 }
