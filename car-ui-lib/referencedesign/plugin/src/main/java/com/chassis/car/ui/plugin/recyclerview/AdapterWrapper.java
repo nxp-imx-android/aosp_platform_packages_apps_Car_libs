@@ -114,6 +114,7 @@ public final class AdapterWrapper extends RecyclerView.Adapter<ViewHolderWrapper
 
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        mAdapter.onAttachedToRecyclerView(null);
     }
 
     @Override
@@ -128,6 +129,7 @@ public final class AdapterWrapper extends RecyclerView.Adapter<ViewHolderWrapper
 
     @Override
     public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+        mAdapter.onDetachedFromRecyclerView(null);
     }
 
     @Override
