@@ -15,6 +15,7 @@
  */
 package com.chassis.car.ui.plugin.recyclerview;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -55,6 +56,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.BaseVi
     static final int VIEW_TYPE_LIST_ITEM = 1;
     static final int VIEW_TYPE_LIST_HEADER = 2;
 
+    private final Context mContext;
     private final List<? extends ListItemOEMV1> mItems;
     @NonNull
     private final List<AdapterDataObserverOEMV1> mAdapterDataObservers = new ArrayList<>();
@@ -113,7 +115,8 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.BaseVi
                 }
             };
 
-    public ListItemAdapter(List<? extends ListItemOEMV1> items) {
+    public ListItemAdapter(Context context, List<? extends ListItemOEMV1> items) {
+        mContext = context;
         mItems = items;
     }
 
@@ -121,7 +124,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.BaseVi
     @Override
     public ListItemAdapter.BaseViewHolder onCreateViewHolder(
             @NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        LayoutInflater inflater = LayoutInflater.from(mContext);
 
         switch (viewType) {
             case VIEW_TYPE_LIST_ITEM:
@@ -167,16 +170,6 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.BaseVi
     @Override
     public void onDetachedFromRecyclerView(RecyclerViewOEMV1 recyclerView) {
         //  Do nothing. This method will never be invoked.
-    }
-
-    @Override
-    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
-        registerAdapterDataObserver(mAdapterDataObserver);
-    }
-
-    @Override
-    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
-        unregisterAdapterDataObserver(mAdapterDataObserver);
     }
 
     @Override
