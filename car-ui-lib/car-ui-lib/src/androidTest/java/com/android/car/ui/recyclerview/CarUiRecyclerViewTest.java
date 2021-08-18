@@ -147,7 +147,7 @@ public class CarUiRecyclerViewTest {
     private Resources mTestableResources;
 
     public CarUiRecyclerViewTest(boolean pluginEnabled) {
-        PluginFactorySingleton.setPluginEnabled(pluginEnabled);
+        PluginFactorySingleton.setPluginEnabledForTesting(pluginEnabled);
     }
 
     @Before
