@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 The Android Open Source Project
+ * Copyright (C) 2021 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,40 +26,41 @@ import android.util.AttributeSet;
 import android.view.FocusFinder;
 import android.view.View;
 import android.view.accessibility.AccessibilityNodeInfo;
-import android.widget.LinearLayout;
+import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 
 /**
- * A {@link LinearLayout} used as a navigation block for the rotary controller.
+ * A {@link FrameLayout} used as a navigation block for the rotary controller.
  * <p>
- * When creating a navigation block in the layout file, if you intend to use a LinearLayout as a
- * container for that block, just use a FocusArea instead; otherwise use other {@link IFocusArea}
- * implementations, such as {@link FrameFocusArea} which extends {@link android.widget.FrameLayout}.
+ * When creating a navigation block in the layout file, if you intend to use a FrameLayout as a
+ * container for that block, just use a FrameFocusArea instead; otherwise use other
+ * {@link IFocusArea} implementations, such as {@link FocusArea} which extends
+ * {@link android.widget.LinearLayout}.
  * <p>
  * DO NOT nest an IFocusArea inside another IFocusArea because it will result in undefined
  * navigation behavior.
  */
-public class FocusArea extends LinearLayout implements IFocusArea {
+public class FrameFocusArea extends FrameLayout implements IFocusArea {
 
     @NonNull
     private final FocusAreaHelper mFocusAreaHelper;
 
-    public FocusArea(Context context) {
+    public FrameFocusArea(Context context) {
         this(context, null);
     }
 
-    public FocusArea(Context context, @Nullable AttributeSet attrs) {
+    public FrameFocusArea(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public FocusArea(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public FrameFocusArea(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         this(context, attrs, defStyleAttr, 0);
     }
 
-    public FocusArea(Context context, @Nullable AttributeSet attrs, int defStyleAttr,
+    public FrameFocusArea(Context context, @Nullable AttributeSet attrs, int defStyleAttr,
             int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         mFocusAreaHelper = new FocusAreaHelper(this, attrs);
@@ -144,7 +145,7 @@ public class FocusArea extends LinearLayout implements IFocusArea {
      * @inheritDoc
      * <p>
      * When wrap-around is allowed, the search is restricted to descendants of this
-     * {@link FocusArea}.
+     * {@link FrameFocusArea}.
      */
     @Override
     public View focusSearch(View focused, int direction) {

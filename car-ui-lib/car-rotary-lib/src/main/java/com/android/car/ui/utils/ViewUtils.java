@@ -33,18 +33,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 
-import com.android.car.ui.FocusArea;
+import com.android.car.ui.IFocusArea;
 import com.android.car.ui.FocusParkingView;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-/**
- * Utility class used by {@link com.android.car.ui.FocusArea} and {@link
- * com.android.car.ui.FocusParkingView}.
- *
- * @hide
- */
+/** Utility class for helpful methods related to {@link View} objects. */
 public final class ViewUtils {
 
     /**
@@ -122,7 +117,7 @@ public final class ViewUtils {
     public interface LazyLayoutView {
 
         /**
-         * Returnes whether the view's layout is completed and ready to restore focus inside it.
+         * Returns whether the view's layout is completed and ready to restore focus inside it.
          */
         boolean isLayoutCompleted();
 
@@ -173,13 +168,13 @@ public final class ViewUtils {
         return fpv.performAccessibilityAction(ACTION_FOCUS, /* arguments= */ null);
     }
 
-    /** Gets the ancestor FocusArea of the {@code view}, if any. Returns null if not found. */
+    /** Gets the ancestor IFocusArea of the {@code view}, if any. Returns null if not found. */
     @Nullable
-    public static FocusArea getAncestorFocusArea(@NonNull View view) {
+    public static IFocusArea getAncestorFocusArea(@NonNull View view) {
         ViewParent parent = view.getParent();
         while (parent != null) {
-            if (parent instanceof FocusArea) {
-                return (FocusArea) parent;
+            if (parent instanceof IFocusArea) {
+                return (IFocusArea) parent;
             }
             parent = parent.getParent();
         }
@@ -196,9 +191,9 @@ public final class ViewUtils {
             return null;
         }
         ViewParent parent = view.getParent();
-        // A scrollable container can't contain a FocusArea, so let's return earlier if we found
-        // a FocusArea.
-        while (parent != null && parent instanceof ViewGroup && !(parent instanceof FocusArea)) {
+        // A scrollable container can't contain an IFocusArea, so let's return earlier if we found
+        // an IFocusArea.
+        while (parent != null && parent instanceof ViewGroup && !(parent instanceof IFocusArea)) {
             ViewGroup viewGroup = (ViewGroup) parent;
             if (isScrollableContainer(viewGroup)) {
                 return viewGroup;
@@ -293,7 +288,7 @@ public final class ViewUtils {
             @Nullable View cachedFocusedView,
             boolean defaultFocusOverridesHistory) {
         return adjustFocus(root, currentLevel, cachedFocusedView, defaultFocusOverridesHistory,
-                /* delayed= */true);
+                /* delayed= */ true);
     }
 
     /**
@@ -329,7 +324,7 @@ public final class ViewUtils {
         }
 
         // When delayed is true, if there is a LazyLayoutView but it failed to adjust focus
-        // inside it because it is not loaded yet or it's loaded but has no descendnats, request to
+        // inside it because it hasn't loaded yet or it's loaded but has no descendants, request to
         // restore focus inside it later, and return false for now.
         if (delayed && currentLevel < IMPLICIT_DEFAULT_FOCUS) {
             LazyLayoutView lazyLayoutView = findLazyLayoutView(root);
@@ -380,9 +375,9 @@ public final class ViewUtils {
         onLayoutCompleteListener[0] = () -> {
             if (initFocusImmediately(lazyLayoutView)) {
                 // Remove the delayedTask only when onLayoutCompleteListener has initialized the
-                // focus succefully, because the delayedTask needs to kick in when it fails, such
-                // as the lazyLayoutView is still loading after a timeout, or it's loaded but has
-                // no descendants to take focus.
+                // focus successfully, because the delayedTask needs to kick in when it fails, such
+                // as when the lazyLayoutView is still loading after a timeout, or when it's loaded
+                // but has no descendants to take focus.
                 lazyView.removeCallbacks(delayedTask);
                 lazyLayoutView.removeOnLayoutCompleteListener(onLayoutCompleteListener[0]);
             }
@@ -434,7 +429,7 @@ public final class ViewUtils {
 
     /** Returns whether the {@code view} is a {@code app:defaultFocus} view. */
     private static boolean isDefaultFocus(@NonNull View view) {
-        FocusArea parent = getAncestorFocusArea(view);
+        IFocusArea parent = getAncestorFocusArea(view);
         return parent != null && view == parent.getDefaultFocusView();
     }
 
@@ -569,8 +564,8 @@ public final class ViewUtils {
         if (!view.isShown()) {
             return null;
         }
-        if (view instanceof FocusArea) {
-            FocusArea focusArea = (FocusArea) view;
+        if (view instanceof IFocusArea) {
+            IFocusArea focusArea = (IFocusArea) view;
             View defaultFocus = focusArea.getDefaultFocusView();
             if (defaultFocus != null && canTakeFocus(defaultFocus)) {
                 return defaultFocus;
