@@ -192,7 +192,11 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
             mRecyclerView = (RecyclerView) recyclerViewContainer;
         }
 
-        initRotaryScroll(a);
+        boolean rotaryScrollEnabled = a.getBoolean(
+                R.styleable.CarUiRecyclerView_rotaryScrollEnabled, /* defValue=*/ false);
+        int orientation = a.getInt(R.styleable.CarUiRecyclerView_android_orientation,
+                                   LinearLayout.VERTICAL);
+        initRotaryScroll(mRecyclerView, rotaryScrollEnabled, orientation);
 
         mScrollBarPaddingTop = context.getResources()
                 .getDimensionPixelSize(R.dimen.car_ui_scrollbar_padding_top);
@@ -528,31 +532,23 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
      * description so that the {@code RotaryService} will treat it as a scrollable container and
      * initializes this view accordingly.
      */
-    private void initRotaryScroll(@Nullable TypedArray styledAttributes) {
-        boolean rotaryScrollEnabled = styledAttributes != null && styledAttributes.getBoolean(
-                R.styleable.CarUiRecyclerView_rotaryScrollEnabled, /* defValue=*/ false);
+    private void initRotaryScroll(@NonNull ViewGroup recyclerView,
+                                   boolean rotaryScrollEnabled,
+                                   int orientation) {
         if (rotaryScrollEnabled) {
-            int orientation = styledAttributes
-                    .getInt(R.styleable.CarUiRecyclerView_android_orientation,
-                            LinearLayout.VERTICAL);
             setRotaryScrollEnabled(
-                    this, /* isVertical= */ orientation == LinearLayout.VERTICAL);
-        } else {
-            CharSequence contentDescription = getContentDescription();
-            rotaryScrollEnabled = contentDescription != null
-                    && (ROTARY_HORIZONTALLY_SCROLLABLE.contentEquals(contentDescription)
-                    || ROTARY_VERTICALLY_SCROLLABLE.contentEquals(contentDescription));
+                    recyclerView, /* isVertical= */ orientation == LinearLayout.VERTICAL);
         }
 
         // If rotary scrolling is enabled, set a generic motion event listener to convert
         // SOURCE_ROTARY_ENCODER scroll events into SOURCE_MOUSE scroll events that RecyclerView
         // knows how to handle.
-        setOnGenericMotionListener(rotaryScrollEnabled ? (v, event) -> {
+        recyclerView.setOnGenericMotionListener(rotaryScrollEnabled ? (v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_SCROLL) {
                 if (event.getSource() == InputDevice.SOURCE_ROTARY_ENCODER) {
                     MotionEvent mouseEvent = MotionEvent.obtain(event);
                     mouseEvent.setSource(InputDevice.SOURCE_MOUSE);
-                    CarUiRecyclerViewImpl.super.onGenericMotionEvent(mouseEvent);
+                    recyclerView.onGenericMotionEvent(mouseEvent);
                     return true;
                 }
             }
@@ -561,19 +557,19 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
 
         // If rotary scrolling is enabled, mark this view as focusable. This view will be focused
         // when no focusable elements are visible.
-        setFocusable(rotaryScrollEnabled);
+        recyclerView.setFocusable(rotaryScrollEnabled);
 
         // Focus this view before descendants so that the RotaryService can focus this view when it
         // wants to.
-        setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
+        recyclerView.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
 
         // Disable the default focus highlight. No highlight should appear when this view is
         // focused.
-        setDefaultFocusHighlightEnabled(false);
+        recyclerView.setDefaultFocusHighlightEnabled(false);
 
         // If rotary scrolling is enabled, set a focus change listener to highlight the scrollbar
         // thumb when this recycler view is focused, i.e. when no focusable descendant is visible.
-        setOnFocusChangeListener(rotaryScrollEnabled ? (v, hasFocus) -> {
+        recyclerView.setOnFocusChangeListener(rotaryScrollEnabled ? (v, hasFocus) -> {
             if (mScrollBar != null) mScrollBar.setHighlightThumb(hasFocus);
         } : null);
 
@@ -695,7 +691,13 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
     @Override
     public void setContentDescription(CharSequence contentDescription) {
         super.setContentDescription(contentDescription);
-        initRotaryScroll(/* styledAttributes= */ null);
+        boolean rotaryScrollEnabled = contentDescription != null
+                && (ROTARY_HORIZONTALLY_SCROLLABLE.contentEquals(contentDescription)
+                || ROTARY_VERTICALLY_SCROLLABLE.contentEquals(contentDescription));
+        int orientation = getLayoutStyle() == null ? LinearLayout.VERTICAL
+                : getLayoutStyle().getOrientation();
+
+        initRotaryScroll(mRecyclerView, rotaryScrollEnabled, orientation);
     }
 
     @Override

@@ -22,9 +22,13 @@ import static com.android.car.ui.plugin.oemapis.recyclerview.RecyclerViewAttribu
 import static com.android.car.ui.plugin.oemapis.recyclerview.RecyclerViewAttributesOEMV1.SIZE_SMALL;
 
 import android.content.Context;
+import android.view.InputDevice;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
@@ -52,8 +56,21 @@ import java.util.List;
  */
 public final class RecyclerViewImpl extends FrameLayout implements RecyclerViewOEMV1 {
 
+    /** {@link com.android.car.ui.utils.RotaryConstants#ROTARY_CONTAINER} */
+    private static final String ROTARY_CONTAINER =
+            "com.android.car.ui.utils.ROTARY_CONTAINER";
+    /** {@link com.android.car.ui.utils.RotaryConstants#ROTARY_HORIZONTALLY_SCROLLABLE} */
+    private static final String ROTARY_HORIZONTALLY_SCROLLABLE =
+            "com.android.car.ui.utils.HORIZONTALLY_SCROLLABLE";
+    /** {@link com.android.car.ui.utils.RotaryConstants#ROTARY_VERTICALLY_SCROLLABLE} */
+    private static final String ROTARY_VERTICALLY_SCROLLABLE =
+            "com.android.car.ui.utils.VERTICALLY_SCROLLABLE";
+
     @NonNull
     private final RecyclerView mRecyclerView;
+
+    @Nullable
+    private final DefaultScrollBar mScrollBar;
 
     @NonNull
     private final List<OnScrollListenerOEMV1> mScrollListeners = new ArrayList<>();
@@ -88,9 +105,9 @@ public final class RecyclerViewImpl extends FrameLayout implements RecyclerViewO
                             @Nullable RecyclerViewAttributesOEMV1 attrs) {
         super(context);
 
-        boolean mScrollBarEnabled = context.getResources().getBoolean(R.bool.scrollbar_enable);
+        boolean scrollBarEnabled = context.getResources().getBoolean(R.bool.scrollbar_enable);
         @LayoutRes int layout = R.layout.recycler_view_no_scrollbar;
-        if (mScrollBarEnabled && attrs != null) {
+        if (scrollBarEnabled && attrs != null) {
             switch (attrs.getSize()) {
                 case SIZE_SMALL:
                     layout = R.layout.recycler_view_small;
@@ -112,14 +129,20 @@ public final class RecyclerViewImpl extends FrameLayout implements RecyclerViewO
 
         setLayoutStyle(attrs == null ? null : attrs.getLayoutStyle());
 
-        if (!mScrollBarEnabled) {
+        boolean rotaryScrollEnabled = attrs != null && attrs.isRotaryScrollEnabled();
+        int orientation = getLayoutStyle() == null ? LinearLayout.VERTICAL
+                : getLayoutStyle().getOrientation();
+        initRotaryScroll(mRecyclerView, rotaryScrollEnabled, orientation);
+
+        if (!scrollBarEnabled) {
+            mScrollBar = null;
             return;
         }
 
         mRecyclerView.setVerticalScrollBarEnabled(false);
         mRecyclerView.setHorizontalScrollBarEnabled(false);
 
-        DefaultScrollBar mScrollBar = new DefaultScrollBar();
+        mScrollBar = new DefaultScrollBar();
         mScrollBar.initialize(context, mRecyclerView, rootView.requireViewById(R.id.scroll_bar));
     }
 
@@ -286,5 +309,73 @@ public final class RecyclerViewImpl extends FrameLayout implements RecyclerViewO
     @Override
     public int getScrollState() {
         return toInternalScrollState(mRecyclerView.getScrollState());
+    }
+
+    @Override
+    public void setContentDescription(CharSequence contentDescription) {
+        super.setContentDescription(contentDescription);
+        boolean rotaryScrollEnabled = contentDescription != null
+                && (ROTARY_HORIZONTALLY_SCROLLABLE.contentEquals(contentDescription)
+                || ROTARY_VERTICALLY_SCROLLABLE.contentEquals(contentDescription));
+        int orientation = getLayoutStyle() == null ? LinearLayout.VERTICAL
+                : getLayoutStyle().getOrientation();
+        initRotaryScroll(mRecyclerView, rotaryScrollEnabled, orientation);
+    }
+
+    /**
+     * If this view's {@code rotaryScrollEnabled} attribute is set to true, sets the content
+     * description so that the {@code RotaryService} will treat it as a scrollable container and
+     * initializes this view accordingly.
+     */
+    private void initRotaryScroll(@NonNull ViewGroup recyclerView,
+                                  boolean rotaryScrollEnabled,
+                                  int orientation) {
+        if (rotaryScrollEnabled) {
+            setRotaryScrollEnabled(
+                    recyclerView, /* isVertical= */ orientation == LinearLayout.VERTICAL);
+        }
+
+        // If rotary scrolling is enabled, set a generic motion event listener to convert
+        // SOURCE_ROTARY_ENCODER scroll events into SOURCE_MOUSE scroll events that RecyclerView
+        // knows how to handle.
+        recyclerView.setOnGenericMotionListener(rotaryScrollEnabled ? (v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_SCROLL) {
+                if (event.getSource() == InputDevice.SOURCE_ROTARY_ENCODER) {
+                    MotionEvent mouseEvent = MotionEvent.obtain(event);
+                    mouseEvent.setSource(InputDevice.SOURCE_MOUSE);
+                    recyclerView.onGenericMotionEvent(mouseEvent);
+                    return true;
+                }
+            }
+            return false;
+        } : null);
+
+        // If rotary scrolling is enabled, mark this view as focusable. This view will be focused
+        // when no focusable elements are visible.
+        recyclerView.setFocusable(rotaryScrollEnabled);
+
+        // Focus this view before descendants so that the RotaryService can focus this view when it
+        // wants to.
+        recyclerView.setDescendantFocusability(ViewGroup.FOCUS_BEFORE_DESCENDANTS);
+
+        // Disable the default focus highlight. No highlight should appear when this view is
+        // focused.
+        recyclerView.setDefaultFocusHighlightEnabled(false);
+
+        // If rotary scrolling is enabled, set a focus change listener to highlight the scrollbar
+        // thumb when this recycler view is focused, i.e. when no focusable descendant is visible.
+        recyclerView.setOnFocusChangeListener(rotaryScrollEnabled ? (v, hasFocus) -> {
+            if (mScrollBar != null) mScrollBar.setHighlightThumb(hasFocus);
+        } : null);
+
+        // This view is a rotary container if it's not a scrollable container.
+        if (!rotaryScrollEnabled) {
+            super.setContentDescription(ROTARY_CONTAINER);
+        }
+    }
+
+    private static void setRotaryScrollEnabled(@NonNull View view, boolean isVertical) {
+        view.setContentDescription(
+                isVertical ? ROTARY_VERTICALLY_SCROLLABLE : ROTARY_HORIZONTALLY_SCROLLABLE);
     }
 }

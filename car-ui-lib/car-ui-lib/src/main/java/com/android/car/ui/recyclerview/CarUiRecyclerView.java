@@ -373,6 +373,9 @@ public interface CarUiRecyclerView {
     /** see {@link RecyclerView#setClipToPadding(boolean)} */
     void setClipToPadding(boolean enabled);
 
+    /** see {@link View#setContentDescription(CharSequence)} */
+    void setContentDescription(CharSequence contentDescription);
+
     /** see {@link RecyclerView#setHasFixedSize(boolean)} */
     void setHasFixedSize(boolean hasFixedSize);
 

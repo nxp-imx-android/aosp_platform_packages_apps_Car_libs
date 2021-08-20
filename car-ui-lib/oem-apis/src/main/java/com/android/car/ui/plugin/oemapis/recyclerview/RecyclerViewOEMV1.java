@@ -114,4 +114,7 @@ public interface RecyclerViewOEMV1 {
 
     /** see {@link RecyclerView#getScrollState()} */
     int getScrollState();
+
+    /** see {@link View#setContentDescription(CharSequence)} */
+    void setContentDescription(CharSequence contentDescription);
 }
