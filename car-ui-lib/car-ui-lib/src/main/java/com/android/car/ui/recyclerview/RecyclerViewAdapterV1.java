@@ -155,6 +155,12 @@ public final class RecyclerViewAdapterV1 extends FrameLayout
     }
 
     @Override
+    public void setContentDescription(CharSequence contentDescription) {
+        super.setContentDescription(contentDescription);
+        mOEMRecyclerView.setContentDescription(contentDescription);
+    }
+
+    @Override
     public void setAdapter(RecyclerView.Adapter<?> adapter) {
         if (adapter == null) {
             mOEMRecyclerView.setAdapter(null);
