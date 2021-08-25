@@ -82,7 +82,7 @@ public final class CarUiGridLayoutStyle implements CarUiLayoutStyle {
         return mLayoutOrientation;
     }
 
-    /** sets layout direction {@link Orientation} */
+    /** sets layout direction {@link CarUiLayoutStyle.Orientation} */
     public void setOrientation(@Orientation int orientation) {
         mLayoutOrientation = orientation;
     }
