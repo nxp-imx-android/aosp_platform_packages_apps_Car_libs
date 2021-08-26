@@ -52,10 +52,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import com.android.car.ui.R;
 import com.android.car.ui.recyclerview.decorations.grid.GridDividerItemDecoration;
-import com.android.car.ui.recyclerview.decorations.grid.GridOffsetItemDecoration;
 import com.android.car.ui.recyclerview.decorations.linear.LinearDividerItemDecoration;
-import com.android.car.ui.recyclerview.decorations.linear.LinearOffsetItemDecoration;
-import com.android.car.ui.recyclerview.decorations.linear.LinearOffsetItemDecoration.OffsetPosition;
 import com.android.car.ui.utils.CarUxRestrictionsUtil;
 
 import java.lang.reflect.Constructor;
@@ -94,14 +91,6 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
     private int mScrollBarPaddingBottom;
     @Nullable
     private ScrollBar mScrollBar;
-    @Nullable
-    private GridOffsetItemDecoration mTopOffsetItemDecorationGrid;
-    @Nullable
-    private GridOffsetItemDecoration mBottomOffsetItemDecorationGrid;
-    @Nullable
-    private ItemDecoration mTopOffsetItemDecorationLinear;
-    @Nullable
-    private ItemDecoration mBottomOffsetItemDecorationLinear;
     @Nullable
     private GridDividerItemDecoration mDividerItemDecorationGrid;
     @Nullable
@@ -217,17 +206,6 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
                         ContextCompat.getDrawable(context, R.drawable.car_ui_divider),
                         ContextCompat.getDrawable(context, R.drawable.car_ui_divider),
                         mNumOfColumns);
-
-        mTopOffsetItemDecorationLinear =
-                new LinearOffsetItemDecoration(0, OffsetPosition.START);
-        mBottomOffsetItemDecorationLinear =
-                new LinearOffsetItemDecoration(0, OffsetPosition.END);
-        mTopOffsetItemDecorationGrid =
-                new GridOffsetItemDecoration(0, mNumOfColumns,
-                        OffsetPosition.START);
-        mBottomOffsetItemDecorationGrid =
-                new GridOffsetItemDecoration(0, mNumOfColumns,
-                        OffsetPosition.END);
 
         mIsInitialized = true;
 
@@ -500,30 +478,19 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
     private void addItemDecorations(LayoutManager layoutManager) {
         // remove existing Item decorations.
         mRecyclerView.removeItemDecoration(Objects.requireNonNull(mDividerItemDecorationGrid));
-        mRecyclerView.removeItemDecoration(Objects.requireNonNull(mTopOffsetItemDecorationGrid));
-        mRecyclerView.removeItemDecoration(Objects.requireNonNull(mBottomOffsetItemDecorationGrid));
         mRecyclerView.removeItemDecoration(Objects.requireNonNull(mDividerItemDecorationLinear));
-        mRecyclerView.removeItemDecoration(Objects.requireNonNull(mTopOffsetItemDecorationLinear));
-        mRecyclerView.removeItemDecoration(
-                Objects.requireNonNull(mBottomOffsetItemDecorationLinear));
 
         if (layoutManager instanceof GridLayoutManager) {
             if (mEnableDividers) {
                 mRecyclerView.addItemDecoration(
                         Objects.requireNonNull(mDividerItemDecorationGrid));
             }
-            mRecyclerView.addItemDecoration(Objects.requireNonNull(mTopOffsetItemDecorationGrid));
-            mRecyclerView.addItemDecoration(
-                    Objects.requireNonNull(mBottomOffsetItemDecorationGrid));
             setNumOfColumns(((GridLayoutManager) layoutManager).getSpanCount());
         } else {
             if (mEnableDividers) {
                 mRecyclerView.addItemDecoration(
                         Objects.requireNonNull(mDividerItemDecorationLinear));
             }
-            mRecyclerView.addItemDecoration(Objects.requireNonNull(mTopOffsetItemDecorationLinear));
-            mRecyclerView.addItemDecoration(
-                    Objects.requireNonNull(mBottomOffsetItemDecorationLinear));
         }
     }
 
@@ -603,9 +570,6 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
      */
     private void setNumOfColumns(int numberOfColumns) {
         mNumOfColumns = numberOfColumns;
-        if (mTopOffsetItemDecorationGrid != null) {
-            mTopOffsetItemDecorationGrid.setNumOfColumns(mNumOfColumns);
-        }
         if (mDividerItemDecorationGrid != null) {
             mDividerItemDecorationGrid.setNumOfColumns(mNumOfColumns);
         }
