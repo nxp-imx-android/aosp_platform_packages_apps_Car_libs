@@ -147,7 +147,7 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
     }
 
     public CarUiRecyclerViewImpl(@NonNull Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs, R.attr.carUiRecyclerViewStyle);
+        this(context, attrs, 0);
     }
 
     public CarUiRecyclerViewImpl(@NonNull Context context, @Nullable AttributeSet attrs,
@@ -162,7 +162,7 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
                 attrs,
                 R.styleable.CarUiRecyclerView,
                 defStyleAttr,
-                R.style.Widget_CarUi_CarUiRecyclerView);
+                0);
 
         mScrollBarEnabled = context.getResources().getBoolean(R.bool.car_ui_scrollbar_enable);
         @LayoutRes int layout = R.layout.car_ui_recycler_view_no_scrollbar;

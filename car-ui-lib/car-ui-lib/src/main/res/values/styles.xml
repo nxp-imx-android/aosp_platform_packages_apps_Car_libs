@@ -132,10 +132,6 @@
         <item name="android:textAppearance">@style/TextAppearance.CarUi.Widget.Toolbar.Tab</item>
     </style>
 
-    <style name="Widget.CarUi.CarUiRecyclerView">
-        <item name="android:scrollbars">vertical</item>
-    </style>
-
     <style name="Widget.CarUi.AlertDialog"/>
 
     <style name="Widget.CarUi.AlertDialog.HeaderContainer">

@@ -134,8 +134,7 @@ public final class PluginFactoryAdapterV2 implements PluginFactory {
         RecyclerViewAttributesOEMV1 oemAttrs = from(context, attrs);
         RecyclerViewOEMV1 oemRecyclerView = mOem.createRecyclerView(context, oemAttrs);
         if (oemRecyclerView != null) {
-            RecyclerViewAdapterV1 rv = new RecyclerViewAdapterV1(context, attrs,
-                    R.attr.carUiRecyclerViewStyle);
+            RecyclerViewAdapterV1 rv = new RecyclerViewAdapterV1(context, attrs, 0);
             rv.setRecyclerViewOEMV1(oemRecyclerView);
             return rv;
         } else {
@@ -215,7 +214,7 @@ public final class PluginFactoryAdapterV2 implements PluginFactory {
                     attrs,
                     R.styleable.CarUiRecyclerView,
                     0,
-                    R.style.Widget_CarUi_CarUiRecyclerView);
+                    0);
             final int carUiRecyclerViewLayout = a.getInt(
                     R.styleable.CarUiRecyclerView_layoutStyle,
                     CarUiRecyclerViewLayout.LINEAR);
