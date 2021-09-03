@@ -15,13 +15,13 @@
  */
 package com.android.car.ui.recyclerview;
 
-import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.android.car.ui.R;
 
 /**
  * @deprecated Only maintained for legacy reasons.
@@ -44,6 +44,8 @@ public class CarUiRecyclerViewContainer extends FrameLayout {
 
     public CarUiRecyclerViewContainer(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        addView(new RecyclerView(context), MATCH_PARENT, MATCH_PARENT);
+        // We have to inflate this from layout because some of the attributes e.g.
+        // android:scrollbars can't be set from code.
+        inflate(context, R.layout.car_ui_recycler_view_only, this);
     }
 }

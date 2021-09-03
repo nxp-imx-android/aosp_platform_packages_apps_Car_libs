@@ -32,7 +32,6 @@ import androidx.recyclerview.widget.RecyclerView.LayoutManager;
 import androidx.recyclerview.widget.RecyclerView.OnFlingListener;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
-import com.android.car.ui.R;
 import com.android.car.ui.plugin.oemapis.recyclerview.AdapterOEMV1;
 import com.android.car.ui.plugin.oemapis.recyclerview.LayoutStyleOEMV1;
 import com.android.car.ui.plugin.oemapis.recyclerview.OnScrollListenerOEMV1;
@@ -66,7 +65,7 @@ public final class RecyclerViewAdapterV1 extends FrameLayout
     }
 
     public RecyclerViewAdapterV1(@NonNull Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs, R.attr.carUiRecyclerViewStyle);
+        this(context, attrs, 0);
     }
 
     public RecyclerViewAdapterV1(@NonNull Context context, @Nullable AttributeSet attrs,

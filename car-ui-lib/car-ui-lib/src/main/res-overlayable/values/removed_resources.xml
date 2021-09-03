@@ -19,6 +19,7 @@
     <!-- These resources are considered deprecated, and shouldn't be overlaid in any RROs. -->
     <item type="id" name="nested_recycler_view_layout"/>
     <item type="layout" name="car_ui_recycler_view_item"/>
-
+    <item type="attr" name="carUiRecyclerViewStyle"/>
+    <item type="style" name="Widget.CarUi.CarUiRecyclerView"/>
 
 </resources>
