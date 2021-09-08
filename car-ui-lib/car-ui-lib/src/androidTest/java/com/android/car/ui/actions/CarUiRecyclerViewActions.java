@@ -26,7 +26,9 @@ import androidx.test.espresso.util.HumanReadables;
 import com.android.car.ui.matchers.ViewHolderMatcher;
 import com.android.car.ui.recyclerview.CarUiRecyclerView;
 
+import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeMatcher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +36,13 @@ import java.util.List;
 public class CarUiRecyclerViewActions {
     public static ViewAction scrollToPosition(int position) {
         return new ScrollToPositionViewAction(position);
+    }
+
+    public static <VH extends RecyclerView.ViewHolder>
+            RecyclerViewActions.PositionableRecyclerViewAction scrollTo(
+                final Matcher<View> itemViewMatcher) {
+        Matcher<VH> viewHolderMatcher = viewHolderMatcher(itemViewMatcher);
+        return new ScrollToViewAction<VH>(viewHolderMatcher);
     }
 
     public static <VH extends RecyclerView.ViewHolder>
@@ -103,5 +112,23 @@ public class CarUiRecyclerViewActions {
         public String toString() {
             return description;
         }
+    }
+
+    /**
+     * Adapted from {@link androidx.test.espresso.contrib.RecyclerViewActions.viewHolderMatcher}
+     */
+    private static <VH extends RecyclerView.ViewHolder> Matcher<VH> viewHolderMatcher(
+            final Matcher<View> itemViewMatcher) {
+        return new TypeSafeMatcher<VH>() {
+            @Override
+            public boolean matchesSafely(RecyclerView.ViewHolder viewHolder) {
+                return itemViewMatcher.matches(viewHolder.itemView);
+            }
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("holder with view: ");
+                itemViewMatcher.describeTo(description);
+            }
+        };
     }
 }
