@@ -56,13 +56,19 @@ import java.util.List;
  */
 public final class RecyclerViewImpl extends FrameLayout implements RecyclerViewOEMV1 {
 
-    /** {@link com.android.car.ui.utils.RotaryConstants#ROTARY_CONTAINER} */
+    /**
+     * {@link com.android.car.ui.utils.RotaryConstants#ROTARY_CONTAINER}
+     */
     private static final String ROTARY_CONTAINER =
             "com.android.car.ui.utils.ROTARY_CONTAINER";
-    /** {@link com.android.car.ui.utils.RotaryConstants#ROTARY_HORIZONTALLY_SCROLLABLE} */
+    /**
+     * {@link com.android.car.ui.utils.RotaryConstants#ROTARY_HORIZONTALLY_SCROLLABLE}
+     */
     private static final String ROTARY_HORIZONTALLY_SCROLLABLE =
             "com.android.car.ui.utils.HORIZONTALLY_SCROLLABLE";
-    /** {@link com.android.car.ui.utils.RotaryConstants#ROTARY_VERTICALLY_SCROLLABLE} */
+    /**
+     * {@link com.android.car.ui.utils.RotaryConstants#ROTARY_VERTICALLY_SCROLLABLE}
+     */
     private static final String ROTARY_VERTICALLY_SCROLLABLE =
             "com.android.car.ui.utils.VERTICALLY_SCROLLABLE";
 
@@ -78,21 +84,21 @@ public final class RecyclerViewImpl extends FrameLayout implements RecyclerViewO
     @NonNull
     private final RecyclerView.OnScrollListener mOnScrollListener =
             new RecyclerView.OnScrollListener() {
-        @Override
-        public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-            for (OnScrollListenerOEMV1 listener: mScrollListeners) {
-                listener.onScrolled(RecyclerViewImpl.this, dx, dy);
-            }
-        }
+                @Override
+                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                    for (OnScrollListenerOEMV1 listener : mScrollListeners) {
+                        listener.onScrolled(RecyclerViewImpl.this, dx, dy);
+                    }
+                }
 
-        @Override
-        public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-            for (OnScrollListenerOEMV1 listener: mScrollListeners) {
-                listener.onScrollStateChanged(RecyclerViewImpl.this,
-                        toInternalScrollState(newState));
-            }
-        }
-    };
+                @Override
+                public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                    for (OnScrollListenerOEMV1 listener : mScrollListeners) {
+                        listener.onScrollStateChanged(RecyclerViewImpl.this,
+                                toInternalScrollState(newState));
+                    }
+                }
+            };
 
     @Nullable
     private LayoutStyleOEMV1 mLayoutStyle;
@@ -102,9 +108,8 @@ public final class RecyclerViewImpl extends FrameLayout implements RecyclerViewO
     }
 
     public RecyclerViewImpl(@NonNull Context context,
-                            @Nullable RecyclerViewAttributesOEMV1 attrs) {
+            @Nullable RecyclerViewAttributesOEMV1 attrs) {
         super(context);
-
         boolean scrollBarEnabled = context.getResources().getBoolean(R.bool.scrollbar_enable);
         @LayoutRes int layout = R.layout.recycler_view_no_scrollbar;
         if (scrollBarEnabled && attrs != null) {
@@ -127,7 +132,19 @@ public final class RecyclerViewImpl extends FrameLayout implements RecyclerViewO
         // Set to false so the items below the toolbar are visible.
         mRecyclerView.setClipToPadding(false);
 
-        setLayoutStyle(attrs == null ? null : attrs.getLayoutStyle());
+        if (attrs != null) {
+            setLayoutStyle(attrs.getLayoutStyle());
+            setBackground(attrs.getBackground());
+            setPadding(attrs.getPaddingLeft(), attrs.getPaddingTop(), attrs.getPaddingRight(),
+                    attrs.getPaddingBottom());
+            setMinimumHeight(attrs.getMinHeight());
+            setMinimumWidth(attrs.geMinWidth());
+
+            LayoutParams params = new LayoutParams(attrs.getLayoutWidth(), attrs.getLayoutHeight());
+            params.setMargins(attrs.getMarginLeft(), attrs.getMarginTop(), attrs.getMarginRight(),
+                    attrs.getMarginBottom());
+            setLayoutParams(params);
+        }
 
         boolean rotaryScrollEnabled = attrs != null && attrs.isRotaryScrollEnabled();
         int orientation = getLayoutStyle() == null ? LinearLayout.VERTICAL
@@ -215,7 +232,7 @@ public final class RecyclerViewImpl extends FrameLayout implements RecyclerViewO
         mLayoutStyle = layoutStyle;
 
         int orientation = layoutStyle == null ? VERTICAL : layoutStyle.getOrientation();
-        boolean reverseLayout  = layoutStyle != null && layoutStyle.getReverseLayout();
+        boolean reverseLayout = layoutStyle != null && layoutStyle.getReverseLayout();
 
         if (layoutStyle == null
                 || layoutStyle.getLayoutType() == LayoutStyleOEMV1.LAYOUT_TYPE_LINEAR) {
@@ -328,8 +345,8 @@ public final class RecyclerViewImpl extends FrameLayout implements RecyclerViewO
      * initializes this view accordingly.
      */
     private void initRotaryScroll(@NonNull ViewGroup recyclerView,
-                                  boolean rotaryScrollEnabled,
-                                  int orientation) {
+            boolean rotaryScrollEnabled,
+            int orientation) {
         if (rotaryScrollEnabled) {
             setRotaryScrollEnabled(
                     recyclerView, /* isVertical= */ orientation == LinearLayout.VERTICAL);
