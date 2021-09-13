@@ -16,6 +16,8 @@
 package com.android.car.ui.recyclerview;
 
 import android.content.Context;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,11 +44,11 @@ import java.util.List;
 
 /**
  * AdapterV1 class for making oem implementation available for UI
- *
+ * <p>
  * For CarUi internal usage only.
  */
 public final class RecyclerViewAdapterV1 extends FrameLayout
-            implements CarUiRecyclerView, OnScrollListenerOEMV1 {
+        implements CarUiRecyclerView, OnScrollListenerOEMV1 {
 
     @Nullable
     private RecyclerViewOEMV1 mOEMRecyclerView;
@@ -59,6 +61,8 @@ public final class RecyclerViewAdapterV1 extends FrameLayout
     private ProxyRecyclerView mRecyclerView;
     @Nullable
     private CarUiLayoutStyle mLayoutStyle;
+    private int mHeight;
+    private int mWidth;
 
     public RecyclerViewAdapterV1(@NonNull Context context) {
         this(context, null);
@@ -71,10 +75,14 @@ public final class RecyclerViewAdapterV1 extends FrameLayout
     public RecyclerViewAdapterV1(@NonNull Context context, @Nullable AttributeSet attrs,
             int defStyle) {
         super(context, attrs, defStyle, 0);
+        // Background and padding to be handled by plugin implementation
+        setBackground(null);
+        setPadding(0, 0, 0, 0);
     }
 
     /**
      * Called to pass the oem recyclerview implementation.
+     *
      * @param oemRecyclerView
      */
     public void setRecyclerViewOEMV1(@NonNull RecyclerViewOEMV1 oemRecyclerView) {
@@ -88,8 +96,7 @@ public final class RecyclerViewAdapterV1 extends FrameLayout
 
         mOEMRecyclerView.addOnScrollListener(this);
 
-        ViewGroup.LayoutParams params = new MarginLayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
+        ViewGroup.LayoutParams params = new MarginLayoutParams(mWidth, mHeight);
         addView(mOEMRecyclerView.getView(), params);
     }
 
@@ -99,6 +106,74 @@ public final class RecyclerViewAdapterV1 extends FrameLayout
             setLayoutStyle(CarUiGridLayoutStyle.from(layoutManager));
         } else {
             setLayoutStyle(CarUiLinearLayoutStyle.from(layoutManager));
+        }
+    }
+
+    @Override
+    public void setLayoutParams(ViewGroup.LayoutParams params) {
+        // Margin should be set by plugin implementation only
+        Rect marginRect = null;
+        if (params instanceof MarginLayoutParams) {
+            MarginLayoutParams marginLayoutParams = (MarginLayoutParams) params;
+            marginRect = new Rect(
+                    Math.max(marginLayoutParams.leftMargin, marginLayoutParams.getMarginStart()),
+                    marginLayoutParams.topMargin, marginLayoutParams.rightMargin,
+                    Math.max(marginLayoutParams.bottomMargin, marginLayoutParams.getMarginEnd()));
+            marginLayoutParams.setMargins(0, 0, 0, 0);
+            marginLayoutParams.setMarginStart(0);
+            marginLayoutParams.setMarginEnd(0);
+        }
+
+        if (mOEMRecyclerView != null) {
+            ViewGroup.LayoutParams pluginLayoutParams =
+                    mOEMRecyclerView.getView().getLayoutParams();
+            // Account for 0dp in ConstraintLayout by swapping to MATCH_PARENT. If intentionally
+            // set to size of 0dp, this FrameLayout will have a 0dp size so MATCH_PARENT will
+            // still result in correct size
+            pluginLayoutParams.width =
+                    params.width == 0 ? ViewGroup.LayoutParams.MATCH_PARENT : params.width;
+            pluginLayoutParams.height =
+                    params.height == 0 ? ViewGroup.LayoutParams.MATCH_PARENT : params.height;
+
+            // Apply requested margins to plugin implementation layout
+            if (marginRect != null && pluginLayoutParams instanceof MarginLayoutParams) {
+                MarginLayoutParams rvMarginParams = (MarginLayoutParams) pluginLayoutParams;
+                rvMarginParams.setMargins(marginRect.left, marginRect.top, marginRect.right,
+                        marginRect.bottom);
+            }
+        }
+
+        mWidth = params.width;
+        mHeight = params.height;
+        super.setLayoutParams(params);
+    }
+
+    @Override
+    public void setAlpha(float alpha) {
+        if (mOEMRecyclerView != null) {
+            mOEMRecyclerView.setAlpha(alpha);
+        }
+    }
+
+    @Override
+    public void setBackground(Drawable background) {
+        if (mOEMRecyclerView != null) {
+            mOEMRecyclerView.getView().setBackground(background);
+        }
+    }
+
+    @Override
+    public void setBackgroundColor(int color) {
+        if (mOEMRecyclerView != null) {
+            mOEMRecyclerView.getView().setBackgroundColor(color);
+        }
+    }
+
+    @Override
+    public void setBackgroundResource(int resid) {
+        if (mOEMRecyclerView != null) {
+            Drawable background = getResources().getDrawable(resid);
+            mOEMRecyclerView.getView().setBackground(background);
         }
     }
 
@@ -134,13 +209,16 @@ public final class RecyclerViewAdapterV1 extends FrameLayout
     }
 
     @Override
-    public void invalidateItemDecorations() {}
+    public void invalidateItemDecorations() {
+    }
 
     @Override
-    public void removeItemDecoration(@NonNull RecyclerView.ItemDecoration decor) {}
+    public void removeItemDecoration(@NonNull RecyclerView.ItemDecoration decor) {
+    }
 
     @Override
-    public void removeItemDecorationAt(int index) {}
+    public void removeItemDecorationAt(int index) {
+    }
 
     @Nullable
     @Override
@@ -170,10 +248,12 @@ public final class RecyclerViewAdapterV1 extends FrameLayout
     }
 
     @Override
-    public void addItemDecoration(@NonNull RecyclerView.ItemDecoration decor) {}
+    public void addItemDecoration(@NonNull RecyclerView.ItemDecoration decor) {
+    }
 
     @Override
-    public void addItemDecoration(@NonNull RecyclerView.ItemDecoration decor, int index) {}
+    public void addItemDecoration(@NonNull RecyclerView.ItemDecoration decor, int index) {
+    }
 
     @Override
     public void addOnScrollListener(@NonNull OnScrollListener listener) {
@@ -193,14 +273,14 @@ public final class RecyclerViewAdapterV1 extends FrameLayout
 
     @Override
     public void onScrollStateChanged(@NonNull RecyclerViewOEMV1 recyclerView, int newState) {
-        for (OnScrollListener listener: mScrollListeners) {
+        for (OnScrollListener listener : mScrollListeners) {
             listener.onScrollStateChanged(this, toInternalScrollState(newState));
         }
     }
 
     @Override
     public void onScrolled(@NonNull RecyclerViewOEMV1 recyclerView, int dx, int dy) {
-        for (OnScrollListener listener: mScrollListeners) {
+        for (OnScrollListener listener : mScrollListeners) {
             listener.onScrolled(this, dx, dy);
         }
     }
@@ -254,9 +334,9 @@ public final class RecyclerViewAdapterV1 extends FrameLayout
     }
 
     /**
-     * @deprecated LayoutManager will be implemented by OEMs,
-     * use other available APIs to get the required data
      * @return null
+     * @deprecated LayoutManager will be implemented by OEMs, use other available APIs to get the
+     * required data
      */
     @Nullable
     @Override
@@ -330,7 +410,8 @@ public final class RecyclerViewAdapterV1 extends FrameLayout
     }
 
     @Override
-    public void setItemAnimator(ItemAnimator itemAnimator) {}
+    public void setItemAnimator(ItemAnimator itemAnimator) {
+    }
 
     @Override
     public int findFirstCompletelyVisibleItemPosition() {

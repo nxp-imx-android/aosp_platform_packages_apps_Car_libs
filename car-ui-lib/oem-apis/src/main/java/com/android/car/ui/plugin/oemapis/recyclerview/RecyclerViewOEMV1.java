@@ -117,4 +117,7 @@ public interface RecyclerViewOEMV1 {
 
     /** see {@link View#setContentDescription(CharSequence)} */
     void setContentDescription(CharSequence contentDescription);
+
+    /** see {@link View#setAlpha(float)} */
+    void setAlpha(float alpha);
 }
