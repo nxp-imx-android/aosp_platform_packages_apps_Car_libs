@@ -52,6 +52,7 @@ import androidx.annotation.ArrayRes;
 import androidx.annotation.AttrRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.annotation.StringRes;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -63,7 +64,7 @@ import com.android.car.ui.utils.CarUiUtils;
 /**
  * Wrapper for AlertDialog.Builder
  */
-@TargetApi(MIN_TARGET_API)
+@RequiresApi(MIN_TARGET_API)
 public class AlertDialogBuilder {
 
     private AlertDialog.Builder mBuilder;

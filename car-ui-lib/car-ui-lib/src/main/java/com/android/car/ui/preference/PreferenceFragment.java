@@ -16,6 +16,7 @@
 
 package com.android.car.ui.preference;
 
+import static com.android.car.ui.core.CarUi.MIN_TARGET_API;
 import static com.android.car.ui.utils.CarUiUtils.requireViewByRefId;
 import static com.android.car.ui.core.CarUi.MIN_TARGET_API;
 
