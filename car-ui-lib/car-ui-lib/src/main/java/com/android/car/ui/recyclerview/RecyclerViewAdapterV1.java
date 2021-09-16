@@ -15,6 +15,9 @@
  */
 package com.android.car.ui.recyclerview;
 
+import static com.android.car.ui.core.CarUi.MIN_TARGET_API;
+
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -47,6 +50,7 @@ import java.util.List;
  * <p>
  * For CarUi internal usage only.
  */
+@TargetApi(MIN_TARGET_API)
 public final class RecyclerViewAdapterV1 extends FrameLayout
         implements CarUiRecyclerView, OnScrollListenerOEMV1 {
 
