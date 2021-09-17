@@ -33,8 +33,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 
-import com.android.car.ui.IFocusArea;
 import com.android.car.ui.FocusParkingView;
+import com.android.car.ui.IFocusArea;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
