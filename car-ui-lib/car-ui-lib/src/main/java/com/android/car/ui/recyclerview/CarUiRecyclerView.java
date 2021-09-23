@@ -55,6 +55,9 @@ import java.lang.annotation.Retention;
  * customizable by OEM.
  * <p>
  * This is the base class for CarUiRecyclerView implementation.
+ * <p>
+ * Rendered views will comply with
+ * <a href="https://source.android.com/devices/automotive/hmi/car_ui/appendix_b">customization guardrails</a>
  */
 @SuppressLint("Instantiatable")
 @TargetApi(MIN_TARGET_API)
