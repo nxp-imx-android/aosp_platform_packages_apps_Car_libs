@@ -658,14 +658,8 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
      * padding of the RecyclerView.
      */
     private void setScrollBarPadding(int paddingTop, int paddingBottom) {
-        if (mScrollBarEnabled) {
-            mScrollBarPaddingTop = paddingTop;
-            mScrollBarPaddingBottom = paddingBottom;
-
-            if (mScrollBar != null) {
-                mScrollBar.setPadding(paddingTop + getPaddingTop(),
-                        paddingBottom + getPaddingBottom());
-            }
+        if (mScrollBarEnabled && mScrollBar != null) {
+            mScrollBar.setPadding(paddingTop, paddingBottom);
         }
     }
 
@@ -727,7 +721,8 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
 
         mScrollBar.initialize(context, mRecyclerView, scrollView);
 
-        setScrollBarPadding(mScrollBarPaddingTop, mScrollBarPaddingBottom);
+        setScrollBarPadding(mScrollBarPaddingTop + getPaddingTop(),
+                mScrollBarPaddingBottom + getPaddingBottom());
     }
 
     private class UxRestrictionChangedListener implements
