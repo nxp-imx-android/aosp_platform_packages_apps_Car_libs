@@ -1,0 +1,5 @@
+
+python_binary_host {
+    name: "make_slim_aar",
+    srcs: ["make_slim_aar.py"],
+}
