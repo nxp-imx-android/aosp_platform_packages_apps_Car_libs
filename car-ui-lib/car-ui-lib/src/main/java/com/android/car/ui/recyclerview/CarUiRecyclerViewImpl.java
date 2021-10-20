@@ -377,7 +377,6 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
         return mRecyclerView.getAdapter();
     }
 
-    @Override
     public RecyclerView getRecyclerView() {
         return mRecyclerView;
     }
