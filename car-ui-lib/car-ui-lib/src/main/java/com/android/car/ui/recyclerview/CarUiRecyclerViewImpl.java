@@ -55,6 +55,7 @@ import androidx.recyclerview.widget.RecyclerView.OnFlingListener;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import com.android.car.ui.R;
+import com.android.car.ui.preference.PreferenceFragment.AndroidxRecyclerViewProvider;
 import com.android.car.ui.recyclerview.decorations.grid.GridDividerItemDecoration;
 import com.android.car.ui.recyclerview.decorations.linear.LinearDividerItemDecoration;
 import com.android.car.ui.utils.CarUxRestrictionsUtil;
@@ -75,7 +76,7 @@ import java.util.Set;
 @SuppressLint("CustomViewStyleable")
 @RequiresApi(MIN_TARGET_API)
 public final class CarUiRecyclerViewImpl extends FrameLayout
-        implements CarUiRecyclerView, LazyLayoutView {
+        implements CarUiRecyclerView, LazyLayoutView, AndroidxRecyclerViewProvider {
 
     private static final String TAG = "CarUiRecyclerView";
     /**
@@ -379,6 +380,7 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
         return mRecyclerView.getAdapter();
     }
 
+    @Override
     public RecyclerView getRecyclerView() {
         return mRecyclerView;
     }
