@@ -131,8 +131,8 @@ import java.util.Objects;
 /**
  * Unit tests for {@link CarUiRecyclerView}.
  */
-@RunWith(Parameterized.class)
 @TargetApi(MIN_TARGET_API)
+@RunWith(Parameterized.class)
 public class CarUiRecyclerViewTest {
 
     @Parameterized.Parameters

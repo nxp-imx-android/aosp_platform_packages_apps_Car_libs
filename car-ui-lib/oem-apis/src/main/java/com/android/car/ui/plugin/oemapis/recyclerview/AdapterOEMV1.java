@@ -93,10 +93,14 @@ public interface AdapterOEMV1<V extends ViewHolderOEMV1> {
      */
     void onViewRecycled(V holder);
 
-    /** See {@link androidx.recyclerview.widget.RecyclerView.Adapter#registerAdapterDataObserver} */
+    /**
+     * See {@link androidx.recyclerview.widget.RecyclerView.Adapter#registerAdapterDataObserver}
+     */
     void registerAdapterDataObserver(AdapterDataObserverOEMV1 observer);
 
-    /** See {@link androidx.recyclerview.widget.RecyclerView.Adapter#unregisterAdapterDataObserver} */
+    /**
+     * See {@link androidx.recyclerview.widget.RecyclerView.Adapter#unregisterAdapterDataObserver}
+     */
     void unregisterAdapterDataObserver(AdapterDataObserverOEMV1 observer);
 
     /**

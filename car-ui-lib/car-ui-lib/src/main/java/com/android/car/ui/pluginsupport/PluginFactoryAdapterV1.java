@@ -59,7 +59,7 @@ public final class PluginFactoryAdapterV1 implements PluginFactory {
     @NonNull
     private final PluginFactoryStub mFactoryStub = new PluginFactoryStub();
 
-    public PluginFactoryAdapterV1(PluginFactoryOEMV1 oem) {
+    public PluginFactoryAdapterV1(@NonNull PluginFactoryOEMV1 oem) {
         mOem = oem;
 
         mOem.setRotaryFactories(

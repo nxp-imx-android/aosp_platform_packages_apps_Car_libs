@@ -59,10 +59,9 @@ import java.lang.annotation.Retention;
  * Rendered views will comply with
  * <a href="https://source.android.com/devices/automotive/hmi/car_ui/appendix_b">customization guardrails</a>
  */
-@SuppressLint("Instantiatable")
 @TargetApi(MIN_TARGET_API)
+@SuppressLint("Instantiatable")
 public interface CarUiRecyclerView {
-
     int SIZE_SMALL = 0;
     int SIZE_MEDIUM = 1;
     int SIZE_LARGE = 2;

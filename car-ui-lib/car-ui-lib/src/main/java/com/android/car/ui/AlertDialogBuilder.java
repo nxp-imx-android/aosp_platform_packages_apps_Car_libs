@@ -52,7 +52,6 @@ import androidx.annotation.ArrayRes;
 import androidx.annotation.AttrRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.annotation.StringRes;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -67,7 +66,7 @@ import com.android.car.ui.utils.CarUiUtils;
  * Rendered views will comply with
  * <a href="https://source.android.com/devices/automotive/hmi/car_ui/appendix_b">customization guardrails</a>
  */
-@RequiresApi(MIN_TARGET_API)
+@TargetApi(MIN_TARGET_API)
 public class AlertDialogBuilder {
 
     private AlertDialog.Builder mBuilder;
