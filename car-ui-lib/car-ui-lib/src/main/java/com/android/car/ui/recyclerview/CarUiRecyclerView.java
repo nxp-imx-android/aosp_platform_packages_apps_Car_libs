@@ -16,9 +16,12 @@
 
 package com.android.car.ui.recyclerview;
 
+import static com.android.car.ui.core.CarUi.MIN_TARGET_API;
+
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
@@ -34,6 +37,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.OrientationHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.Adapter;
 import androidx.recyclerview.widget.RecyclerView.ItemAnimator;
@@ -51,10 +55,13 @@ import java.lang.annotation.Retention;
  * customizable by OEM.
  * <p>
  * This is the base class for CarUiRecyclerView implementation.
+ * <p>
+ * Rendered views will comply with
+ * <a href="https://source.android.com/devices/automotive/hmi/car_ui/appendix_b">customization guardrails</a>
  */
+@TargetApi(MIN_TARGET_API)
 @SuppressLint("Instantiatable")
 public interface CarUiRecyclerView {
-
     int SIZE_SMALL = 0;
     int SIZE_MEDIUM = 1;
     int SIZE_LARGE = 2;
@@ -144,6 +151,14 @@ public interface CarUiRecyclerView {
     interface OnScrollListener {
         void onScrolled(CarUiRecyclerView recyclerView, int dx, int dy);
         void onScrollStateChanged(CarUiRecyclerView recyclerView, int newState);
+    }
+
+    /**
+     * Adapters that implement this interface will receive the calls
+     */
+    interface OnAttachListener {
+        void onAttachedToCarUiRecyclerView(@NonNull CarUiRecyclerView carUiRecyclerView);
+        void onDetachedFromCarUiRecyclerView(@NonNull CarUiRecyclerView carUiRecyclerView);
     }
 
     /**
@@ -240,6 +255,9 @@ public interface CarUiRecyclerView {
     /** see {@link View#getContext()} */
     Context getContext();
 
+    /** see {@link OrientationHelper#getEndAfterPadding()} */
+    int getEndAfterPadding();
+
     /** see {@link View#getHeight()} */
     int getHeight();
 
@@ -299,19 +317,29 @@ public interface CarUiRecyclerView {
     ViewParent getParent();
 
     /**
-     * Only for car-ui-lib internal usage. Will return null when there is an oem implementation.
-     * @return internal instance of {@link RecyclerView}
-     * @deprecated this will fail when there is a oem implementation
+     * see {@link LayoutManager#getChildCount()}
+     * Prefer this method over {@link #getChildCount()}
      */
-    @Deprecated
+    int getRecyclerViewChildCount();
+
+    /**
+     * see {@link LayoutManager#getChildAt(int)}
+     * Prefer this method over {@link #getChildAt(int)}
+     */
     @Nullable
-    RecyclerView getRecyclerView();
+    View getRecyclerViewChildAt(int index);
 
     /** see {@link RecyclerView#getScrollState()} */
     int getScrollState();
 
+    /** see {@link OrientationHelper#getStartAfterPadding()} */
+    int getStartAfterPadding();
+
     /** see {@link View#getTag()} */
     Object getTag();
+
+    /** see {@link OrientationHelper#getTotalSpace()} */
+    int getTotalSpace();
 
     /**
      * Returns a view that will be attached to the view hierarchy.

@@ -15,6 +15,9 @@
  */
 package com.android.car.ui.recyclerview;
 
+import static com.android.car.ui.core.CarUi.MIN_TARGET_API;
+
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -37,7 +40,11 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 import com.android.car.ui.plugin.oemapis.recyclerview.AdapterOEMV1;
 import com.android.car.ui.plugin.oemapis.recyclerview.LayoutStyleOEMV1;
 import com.android.car.ui.plugin.oemapis.recyclerview.OnScrollListenerOEMV1;
+import com.android.car.ui.plugin.oemapis.recyclerview.RecyclerViewAttributesOEMV1;
 import com.android.car.ui.plugin.oemapis.recyclerview.RecyclerViewOEMV1;
+import com.android.car.ui.plugin.oemapis.recyclerview.ViewHolderOEMV1;
+import com.android.car.ui.preference.PreferenceFragment.AndroidxRecyclerViewProvider;
+import com.android.car.ui.recyclerview.RecyclerViewAdapterAdapterV1.ViewHolderAdapterV1;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,13 +54,16 @@ import java.util.List;
  * <p>
  * For CarUi internal usage only.
  */
+@TargetApi(MIN_TARGET_API)
 public final class RecyclerViewAdapterV1 extends FrameLayout
-        implements CarUiRecyclerView, OnScrollListenerOEMV1 {
+        implements CarUiRecyclerView, OnScrollListenerOEMV1, AndroidxRecyclerViewProvider {
 
     @Nullable
     private RecyclerViewOEMV1 mOEMRecyclerView;
     @Nullable
     private AdapterOEMV1 mOEMAdapter;
+    @Nullable
+    private Adapter<?> mAdapter;
 
     @NonNull
     private final List<OnScrollListener> mScrollListeners = new ArrayList<>();
@@ -83,10 +93,29 @@ public final class RecyclerViewAdapterV1 extends FrameLayout
     /**
      * Called to pass the oem recyclerview implementation.
      *
-     * @param oemRecyclerView
+     * @param oemRecyclerView plugin implementation of {@link CarUiRecyclerView}
      */
-    public void setRecyclerViewOEMV1(@NonNull RecyclerViewOEMV1 oemRecyclerView) {
+    public void setRecyclerViewOEMV1(@NonNull RecyclerViewOEMV1 oemRecyclerView,
+            @Nullable RecyclerViewAttributesOEMV1 oemAttrs) {
         mOEMRecyclerView = oemRecyclerView;
+
+        LayoutStyleOEMV1 oemLayoutStyle = mOEMRecyclerView.getLayoutStyle();
+        if (oemLayoutStyle.getLayoutType() == LayoutStyleOEMV1.LAYOUT_TYPE_GRID) {
+            CarUiGridLayoutStyle layoutStyle = new CarUiGridLayoutStyle();
+            layoutStyle.setReverseLayout(oemLayoutStyle.getReverseLayout());
+            layoutStyle.setSpanCount(oemLayoutStyle.getSpanCount());
+            layoutStyle.setOrientation(oemLayoutStyle.getOrientation());
+            layoutStyle.setSize(oemAttrs == null
+                    ? RecyclerViewAttributesOEMV1.SIZE_LARGE : oemAttrs.getSize());
+            mLayoutStyle = layoutStyle;
+        } else {
+            CarUiLinearLayoutStyle layoutStyle = new CarUiLinearLayoutStyle();
+            layoutStyle.setReverseLayout(oemLayoutStyle.getReverseLayout());
+            layoutStyle.setOrientation(oemLayoutStyle.getOrientation());
+            layoutStyle.setSize(oemAttrs == null
+                    ? RecyclerViewAttributesOEMV1.SIZE_LARGE : oemAttrs.getSize());
+            mLayoutStyle = layoutStyle;
+        }
 
         // Adding this parent so androidx PreferenceFragmentCompat doesn't add the ProxyRecyclerView
         // to the view hierarchy
@@ -183,6 +212,16 @@ public final class RecyclerViewAdapterV1 extends FrameLayout
         return mRecyclerView;
     }
 
+    @Override
+    public int getRecyclerViewChildCount() {
+        return mOEMRecyclerView.getRecyclerViewChildCount();
+    }
+
+    @Override
+    public View getRecyclerViewChildAt(int index) {
+        return mOEMRecyclerView.getRecyclerViewChildAt(index);
+    }
+
     private static int toInternalScrollState(int state) {
         /* default to RecyclerViewOEMV1.SCROLL_STATE_IDLE */
         int internalState = SCROLL_STATE_IDLE;
@@ -200,6 +239,21 @@ public final class RecyclerViewAdapterV1 extends FrameLayout
     @Override
     public int getScrollState() {
         return toInternalScrollState(mOEMRecyclerView.getScrollState());
+    }
+
+    @Override
+    public int getEndAfterPadding() {
+        return mOEMRecyclerView.getEndAfterPadding();
+    }
+
+    @Override
+    public int getStartAfterPadding() {
+        return mOEMRecyclerView.getStartAfterPadding();
+    }
+
+    @Override
+    public int getTotalSpace() {
+        return mOEMRecyclerView.getTotalSpace();
     }
 
     @NonNull
@@ -240,10 +294,19 @@ public final class RecyclerViewAdapterV1 extends FrameLayout
     @Override
     public void setAdapter(RecyclerView.Adapter<?> adapter) {
         if (adapter == null) {
+            mAdapter = null;
+            mOEMAdapter = null;
             mOEMRecyclerView.setAdapter(null);
         } else {
+            if (mAdapter instanceof OnAttachListener) {
+                ((OnAttachListener) mAdapter).onDetachedFromCarUiRecyclerView(this);
+            }
+            mAdapter = adapter;
             mOEMAdapter = new RecyclerViewAdapterAdapterV1(getContext(), adapter);
             mOEMRecyclerView.setAdapter(mOEMAdapter);
+            if (adapter instanceof OnAttachListener) {
+                ((OnAttachListener) adapter).onAttachedToCarUiRecyclerView(this);
+            }
         }
     }
 
@@ -302,20 +365,25 @@ public final class RecyclerViewAdapterV1 extends FrameLayout
 
     @Override
     public ViewHolder findViewHolderForAdapterPosition(int position) {
-        // TODO
+        ViewHolderOEMV1 viewHolder = mOEMRecyclerView.findViewHolderForAdapterPosition(position);
+        if (viewHolder instanceof ViewHolderAdapterV1) {
+            return ((ViewHolderAdapterV1) viewHolder).getViewHolder();
+        }
         return null;
     }
 
     @Override
     public ViewHolder findViewHolderForLayoutPosition(int position) {
-        // TODO
+        ViewHolderOEMV1 viewHolder = mOEMRecyclerView.findViewHolderForLayoutPosition(position);
+        if (viewHolder instanceof ViewHolderAdapterV1) {
+            return ((ViewHolderAdapterV1) viewHolder).getViewHolder();
+        }
         return null;
     }
 
     @Override
     public Adapter<?> getAdapter() {
-        // TODO
-        return null;
+        return mAdapter;
     }
 
     @Override
@@ -375,15 +443,18 @@ public final class RecyclerViewAdapterV1 extends FrameLayout
             public boolean getReverseLayout() {
                 return layoutStyle.getReverseLayout();
             }
+
+            @Override
+            public int getSpanSize(int position) {
+                if (layoutStyle instanceof CarUiGridLayoutStyle) {
+                    return ((CarUiGridLayoutStyle) layoutStyle).getSpanSizeLookup()
+                        .getSpanSize(position);
+                }
+                return 1;
+            }
         };
 
         if (mOEMRecyclerView != null) {
-            if (layoutStyle instanceof CarUiGridLayoutStyle) {
-                mOEMRecyclerView.setSpanSizeLookup(position ->
-                        ((CarUiGridLayoutStyle) layoutStyle).getSpanSizeLookup()
-                                .getSpanSize(position));
-            }
-
             mOEMRecyclerView.setLayoutStyle(oemLayoutStyle);
         }
     }
@@ -392,6 +463,60 @@ public final class RecyclerViewAdapterV1 extends FrameLayout
     public void setPadding(int left, int top, int right, int bottom) {
         if (mOEMRecyclerView != null) {
             mOEMRecyclerView.getView().setPadding(left, top, right, bottom);
+        }
+    }
+
+    @Override
+    public int getPaddingLeft() {
+        if (mOEMRecyclerView != null) {
+            return mOEMRecyclerView.getView().getPaddingLeft();
+        }
+        return super.getPaddingLeft();
+    }
+
+    @Override
+    public int getPaddingTop() {
+        if (mOEMRecyclerView != null) {
+            return mOEMRecyclerView.getView().getPaddingTop();
+        }
+        return super.getPaddingTop();
+    }
+
+    @Override
+    public int getPaddingRight() {
+        if (mOEMRecyclerView != null) {
+            return mOEMRecyclerView.getView().getPaddingRight();
+        }
+        return super.getPaddingRight();
+    }
+
+    @Override
+    public int getPaddingBottom() {
+        if (mOEMRecyclerView != null) {
+            return mOEMRecyclerView.getView().getPaddingBottom();
+        }
+        return super.getPaddingBottom();
+    }
+
+    @Override
+    public int getPaddingStart() {
+        boolean isLtr = getContext().getResources().getConfiguration().getLayoutDirection()
+                == View.LAYOUT_DIRECTION_LTR;
+        if (isLtr) {
+            return getPaddingLeft();
+        } else {
+            return getPaddingRight();
+        }
+    }
+
+    @Override
+    public int getPaddingEnd() {
+        boolean isLtr = getContext().getResources().getConfiguration().getLayoutDirection()
+                == View.LAYOUT_DIRECTION_LTR;
+        if (isLtr) {
+            return getPaddingRight();
+        } else {
+            return getPaddingLeft();
         }
     }
 

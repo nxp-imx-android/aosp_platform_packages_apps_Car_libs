@@ -15,23 +15,30 @@
  */
 package com.android.car.ui;
 
+import static com.android.car.ui.core.CarUi.MIN_TARGET_API;
+
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatViewInflater;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.car.ui.pluginsupport.PluginFactorySingleton;
 import com.android.car.ui.recyclerview.CarUiRecyclerView;
+import com.android.car.ui.widget.CarUiTextView;
 
 /**
  * A custom {@link LayoutInflater.Factory2} that will create CarUi components such as {@link
  * CarUiRecyclerView}. It extends AppCompatViewInflater so that it can still let AppCompat
  * components be created correctly.
  */
+@TargetApi(MIN_TARGET_API)
 public class CarUiLayoutInflaterFactory extends AppCompatViewInflater
         implements LayoutInflater.Factory2 {
 
@@ -54,9 +61,21 @@ public class CarUiLayoutInflaterFactory extends AppCompatViewInflater
             // here, but when car-ui-lib is included in one of those apps that uses the old package
             // name, the RecyclerView class is renamed.
             view = new RecyclerView(context, attrs);
+        } else if ("TextView".equals(name)) {
+            // Replace all TextView occurrences with CarUiTextView to support older RROs that still
+            // use TextView where CarUiTextView is now expected. ie. `car_ui_list_item.xml`.
+            view = PluginFactorySingleton.get(context).createTextView(context, attrs);
         }
 
         return view;
+    }
+
+    @NonNull
+    @Override
+    protected AppCompatTextView createTextView(Context context, AttributeSet attrs) {
+        // Replace all TextView occurrences with CarUiTextView to support older RROs that still
+        // use TextView where CarUiTextView is now expected. ie. `car_ui_list_item.xml`.
+        return CarUiTextView.create(context, attrs);
     }
 
     @Override

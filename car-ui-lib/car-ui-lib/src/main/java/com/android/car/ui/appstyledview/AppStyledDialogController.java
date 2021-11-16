@@ -16,6 +16,9 @@
 
 package com.android.car.ui.appstyledview;
 
+import static com.android.car.ui.core.CarUi.MIN_TARGET_API;
+
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.view.View;
 
@@ -29,7 +32,11 @@ import java.util.Objects;
 
 /**
  * Controller to interact with the app styled view UI.
+ * <p>
+ * Rendered views will comply with
+ * <a href="https://source.android.com/devices/automotive/hmi/car_ui/appendix_b">customization guardrails</a>
  */
+@TargetApi(MIN_TARGET_API)
 public final class AppStyledDialogController {
 
     @NonNull

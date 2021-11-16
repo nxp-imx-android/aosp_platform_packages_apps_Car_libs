@@ -97,9 +97,6 @@ public interface RecyclerViewOEMV1 {
     /** {@link androidx.recyclerview.widget.RecyclerView#setClipToPadding(boolean)} */
     void setClipToPadding(boolean clipToPadding);
 
-    /** setter for {@link androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup} */
-    void setSpanSizeLookup(SpanSizeLookupOEMV1 spanSizeLookup);
-
     /** see {@link LinearLayoutManager#findFirstCompletelyVisibleItemPosition()} */
     int findFirstCompletelyVisibleItemPosition();
 
@@ -120,4 +117,35 @@ public interface RecyclerViewOEMV1 {
 
     /** see {@link View#setAlpha(float)} */
     void setAlpha(float alpha);
+
+    /** see {@link OrientationHelper#getEndAfterPadding()} */
+    int getEndAfterPadding();
+
+    /** see {@link OrientationHelper#getStartAfterPadding()} */
+    int getStartAfterPadding();
+
+    /** see {@link OrientationHelper#getTotalSpace()} */
+    int getTotalSpace();
+
+    /**
+     * see {@link LayoutManager#getChildCount()}
+     * Prefer this method over {@link View#getChildCount()}
+     */
+    int getRecyclerViewChildCount();
+
+    /**
+     * see {@link LayoutManager#getChildAt(int)}
+     * Prefer this method over {@link View#getChildAt(int)}
+     */
+    View getRecyclerViewChildAt(int index);
+
+    /**
+     * see {@link RecyclerView#findViewHolderForAdapterPosition(int)}
+     */
+    ViewHolderOEMV1 findViewHolderForAdapterPosition(int position);
+
+    /**
+     * see {@link RecyclerView#findViewHolderForLayoutPosition(int)}
+     */
+    ViewHolderOEMV1 findViewHolderForLayoutPosition(int position);
 }

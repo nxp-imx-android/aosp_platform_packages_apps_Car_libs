@@ -16,6 +16,7 @@
 
 package com.android.car.ui.preference;
 
+import static com.android.car.ui.core.CarUi.MIN_TARGET_API;
 import static com.android.car.ui.utils.CarUiUtils.requireViewByRefId;
 
 import android.content.Context;
@@ -28,6 +29,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.preference.DialogPreference;
@@ -70,8 +72,23 @@ import java.util.Map;
  * defaultValue, and enabled state.
  */
 @SuppressWarnings("AndroidJdkLibsChecker")
+@RequiresApi(MIN_TARGET_API)
 public abstract class PreferenceFragment extends PreferenceFragmentCompat implements
         InsetsChangedListener {
+
+    /**
+     * Only for PreferenceFragment internal usage. Apps shouldn't use this as the
+     * {@link RecyclerView} that's provided here is not the real RecyclerView and has very limited
+     * functionality.
+     */
+    public interface AndroidxRecyclerViewProvider {
+
+        /**
+         * returns instance of {@link RecyclerView} that proxies PreferenceFragment calls to the
+         * real RecyclerView implementation.
+         */
+        RecyclerView getRecyclerView();
+    }
 
     private static final String TAG = "CarUiPreferenceFragment";
     private static final String DIALOG_FRAGMENT_TAG =
@@ -106,7 +123,7 @@ public abstract class PreferenceFragment extends PreferenceFragmentCompat implem
         if (preferenceScreen != null) {
             toolbar.setTitle(preferenceScreen.getTitle());
         } else {
-            toolbar.setTitle(null);
+            toolbar.setTitle("");
         }
     }
 
@@ -352,7 +369,10 @@ public abstract class PreferenceFragment extends PreferenceFragmentCompat implem
     public RecyclerView onCreateRecyclerView(LayoutInflater inflater, ViewGroup parent,
             Bundle savedInstanceState) {
         mCarUiRecyclerView = onCreateCarUiRecyclerView(inflater, parent, savedInstanceState);
-        RecyclerView recyclerView = mCarUiRecyclerView.getRecyclerView();
+        RecyclerView recyclerView = null;
+        if (mCarUiRecyclerView instanceof AndroidxRecyclerViewProvider) {
+            recyclerView = ((AndroidxRecyclerViewProvider) mCarUiRecyclerView).getRecyclerView();
+        }
         if (recyclerView != null) {
             return recyclerView;
         } else {

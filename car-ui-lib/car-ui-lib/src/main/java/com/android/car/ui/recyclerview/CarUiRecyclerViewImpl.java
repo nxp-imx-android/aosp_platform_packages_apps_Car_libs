@@ -15,6 +15,7 @@
  */
 package com.android.car.ui.recyclerview;
 
+import static com.android.car.ui.core.CarUi.MIN_TARGET_API;
 import static com.android.car.ui.utils.CarUiUtils.requireViewByRefId;
 import static com.android.car.ui.utils.RotaryConstants.ROTARY_CONTAINER;
 import static com.android.car.ui.utils.RotaryConstants.ROTARY_HORIZONTALLY_SCROLLABLE;
@@ -22,6 +23,7 @@ import static com.android.car.ui.utils.RotaryConstants.ROTARY_VERTICALLY_SCROLLA
 import static com.android.car.ui.utils.ViewUtils.LazyLayoutView;
 import static com.android.car.ui.utils.ViewUtils.setRotaryScrollEnabled;
 
+import android.annotation.SuppressLint;
 import android.car.drivingstate.CarUxRestrictions;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -38,10 +40,12 @@ import android.widget.LinearLayout;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.OrientationHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.Adapter;
 import androidx.recyclerview.widget.RecyclerView.ItemAnimator;
@@ -51,6 +55,7 @@ import androidx.recyclerview.widget.RecyclerView.OnFlingListener;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import com.android.car.ui.R;
+import com.android.car.ui.preference.PreferenceFragment.AndroidxRecyclerViewProvider;
 import com.android.car.ui.recyclerview.decorations.grid.GridDividerItemDecoration;
 import com.android.car.ui.recyclerview.decorations.linear.LinearDividerItemDecoration;
 import com.android.car.ui.utils.CarUxRestrictionsUtil;
@@ -68,14 +73,20 @@ import java.util.Set;
  * potentially include a scrollbar that has page up and down arrows. Interaction with this view is
  * similar to a {@code RecyclerView} as it takes the same adapter and the layout manager.
  */
+@SuppressLint("CustomViewStyleable")
+@RequiresApi(MIN_TARGET_API)
 public final class CarUiRecyclerViewImpl extends FrameLayout
-        implements CarUiRecyclerView, LazyLayoutView {
+        implements CarUiRecyclerView, LazyLayoutView, AndroidxRecyclerViewProvider {
 
     private static final String TAG = "CarUiRecyclerView";
-    /** exact copy of {@link Recyclerview#LAYOUT_MANAGER_CONSTRUCTOR_SIGNATURE}*/
+    /**
+     * exact copy of {@link Recyclerview#LAYOUT_MANAGER_CONSTRUCTOR_SIGNATURE}
+     */
     private static final Class<?>[] LAYOUT_MANAGER_CONSTRUCTOR_SIGNATURE =
             new Class<?>[]{Context.class, AttributeSet.class, int.class, int.class};
 
+    @Nullable
+    private Adapter<?> mAdapter;
     @NonNull
     private RecyclerView mRecyclerView;
 
@@ -115,21 +126,21 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
     @NonNull
     private final RecyclerView.OnScrollListener mOnScrollListener =
             new RecyclerView.OnScrollListener() {
-        @Override
-        public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-            for (OnScrollListener listener : mScrollListeners) {
-                listener.onScrollStateChanged(CarUiRecyclerViewImpl.this,
-                        toInternalScrollState(newState));
-            }
-        }
+                @Override
+                public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                    for (OnScrollListener listener : mScrollListeners) {
+                        listener.onScrollStateChanged(CarUiRecyclerViewImpl.this,
+                                toInternalScrollState(newState));
+                    }
+                }
 
-        @Override
-        public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-            for (OnScrollListener listener : mScrollListeners) {
-                listener.onScrolled(CarUiRecyclerViewImpl.this, dx, dy);
-            }
-        }
-    };
+                @Override
+                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                    for (OnScrollListener listener : mScrollListeners) {
+                        listener.onScrolled(CarUiRecyclerViewImpl.this, dx, dy);
+                    }
+                }
+            };
 
     public CarUiRecyclerViewImpl(@NonNull Context context) {
         this(context, null);
@@ -184,7 +195,7 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
         boolean rotaryScrollEnabled = a.getBoolean(
                 R.styleable.CarUiRecyclerView_rotaryScrollEnabled, /* defValue=*/ false);
         int orientation = a.getInt(R.styleable.CarUiRecyclerView_android_orientation,
-                                   LinearLayout.VERTICAL);
+                LinearLayout.VERTICAL);
         initRotaryScroll(mRecyclerView, rotaryScrollEnabled, orientation);
 
         mScrollBarPaddingTop = context.getResources()
@@ -238,7 +249,7 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
 
     @Override
     public void setLayoutManager(@Nullable LayoutManager layoutManager) {
-        if (layoutManager instanceof  GridLayoutManager) {
+        if (layoutManager instanceof GridLayoutManager) {
             setLayoutStyle(CarUiGridLayoutStyle.from(layoutManager));
         } else {
             setLayoutStyle(CarUiLinearLayoutStyle.from(layoutManager));
@@ -264,7 +275,7 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
     @Override
     public void setLayoutStyle(CarUiLayoutStyle layoutStyle) {
         mLayoutStyle = layoutStyle;
-        if (layoutStyle == null)  {
+        if (layoutStyle == null) {
             mRecyclerView.setLayoutManager(null);
             return;
         }
@@ -372,6 +383,24 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
     @Override
     public RecyclerView getRecyclerView() {
         return mRecyclerView;
+    }
+
+    @Override
+    public int getRecyclerViewChildCount() {
+        if (mRecyclerView.getLayoutManager() != null) {
+            return mRecyclerView.getLayoutManager().getChildCount();
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
+    public View getRecyclerViewChildAt(int index) {
+        if (mRecyclerView.getLayoutManager() != null) {
+            return mRecyclerView.getLayoutManager().getChildAt(index);
+        } else {
+            return null;
+        }
     }
 
     private static int toInternalScrollState(int state) {
@@ -500,8 +529,8 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
      * initializes this view accordingly.
      */
     private void initRotaryScroll(@NonNull ViewGroup recyclerView,
-                                   boolean rotaryScrollEnabled,
-                                   int orientation) {
+            boolean rotaryScrollEnabled,
+            int orientation) {
         if (rotaryScrollEnabled) {
             setRotaryScrollEnabled(
                     recyclerView, /* isVertical= */ orientation == LinearLayout.VERTICAL);
@@ -540,9 +569,9 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
             if (mScrollBar != null) mScrollBar.setHighlightThumb(hasFocus);
         } : null);
 
-        // This view is a rotary container if it's not a scrollable container.
+        // This recyclerView is a rotary container if it's not a scrollable container.
         if (!rotaryScrollEnabled) {
-            super.setContentDescription(ROTARY_CONTAINER);
+            recyclerView.setContentDescription(ROTARY_CONTAINER);
         }
     }
 
@@ -612,6 +641,16 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
     }
 
     @Override
+    public int getPaddingTop() {
+        return mRecyclerView.getPaddingTop();
+    }
+
+    @Override
+    public int getPaddingBottom() {
+        return mRecyclerView.getPaddingBottom();
+    }
+
+    @Override
     public void smoothScrollBy(int dx, int dy) {
         mRecyclerView.smoothScrollBy(dx, dy);
     }
@@ -641,27 +680,25 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
      * padding of the RecyclerView.
      */
     private void setScrollBarPadding(int paddingTop, int paddingBottom) {
-        if (mScrollBarEnabled) {
-            mScrollBarPaddingTop = paddingTop;
-            mScrollBarPaddingBottom = paddingBottom;
-
-            if (mScrollBar != null) {
-                mScrollBar.setPadding(paddingTop + getPaddingTop(),
-                        paddingBottom + getPaddingBottom());
-            }
+        if (mScrollBarEnabled && mScrollBar != null) {
+            mScrollBar.setPadding(paddingTop, paddingBottom);
         }
     }
 
     @Override
     public void setContentDescription(CharSequence contentDescription) {
-        super.setContentDescription(contentDescription);
         boolean rotaryScrollEnabled = contentDescription != null
                 && (ROTARY_HORIZONTALLY_SCROLLABLE.contentEquals(contentDescription)
                 || ROTARY_VERTICALLY_SCROLLABLE.contentEquals(contentDescription));
         int orientation = getLayoutStyle() == null ? LinearLayout.VERTICAL
                 : getLayoutStyle().getOrientation();
-
         initRotaryScroll(mRecyclerView, rotaryScrollEnabled, orientation);
+        // Only change this view's content description when not related to rotary scroll. Don't
+        // change its content description when related to rotary scroll, because the content
+        // description should be set on its inner recyclerview in this case.
+        if (!rotaryScrollEnabled) {
+            super.setContentDescription(contentDescription);
+        }
     }
 
     @Override
@@ -671,7 +708,14 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
             // the adapter using RecyclerView#getAdapter()
             mScrollBar.adapterChanged(adapter);
         }
+        if (mAdapter instanceof OnAttachListener) {
+            ((OnAttachListener) mAdapter).onDetachedFromCarUiRecyclerView(this);
+        }
+        mAdapter = adapter;
         mRecyclerView.setAdapter(adapter);
+        if (adapter instanceof OnAttachListener) {
+            ((OnAttachListener) adapter).onAttachedToCarUiRecyclerView(this);
+        }
     }
 
     @Override
@@ -687,6 +731,32 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
     @Override
     public void setOnFlingListener(OnFlingListener listener) {
         mRecyclerView.setOnFlingListener(listener);
+    }
+
+    private OrientationHelper createOrientationHelper() {
+        if (mLayoutStyle.getOrientation() == CarUiLayoutStyle.VERTICAL) {
+            return OrientationHelper.createVerticalHelper(mRecyclerView.getLayoutManager());
+        } else {
+            return OrientationHelper.createHorizontalHelper(mRecyclerView.getLayoutManager());
+        }
+    }
+
+    @Override
+    public int getEndAfterPadding() {
+        if (mLayoutStyle == null) return 0;
+        return createOrientationHelper().getEndAfterPadding();
+    }
+
+    @Override
+    public int getStartAfterPadding() {
+        if (mLayoutStyle == null) return 0;
+        return createOrientationHelper().getStartAfterPadding();
+    }
+
+    @Override
+    public int getTotalSpace() {
+        if (mLayoutStyle == null) return 0;
+        return createOrientationHelper().getTotalSpace();
     }
 
     private void createScrollBarFromConfig(Context context, View scrollView) {
@@ -710,7 +780,8 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
 
         mScrollBar.initialize(context, mRecyclerView, scrollView);
 
-        setScrollBarPadding(mScrollBarPaddingTop, mScrollBarPaddingBottom);
+        setScrollBarPadding(mScrollBarPaddingTop + getPaddingTop(),
+                mScrollBarPaddingBottom + getPaddingBottom());
     }
 
     private class UxRestrictionChangedListener implements
@@ -749,8 +820,8 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
     }
 
     /**
-     * Instantiate and set a LayoutManager, if specified in the attributes.
-     * exact copy of {@link Recyclerview#createLayoutManager(Context, String, int, int)}
+     * Instantiate and set a LayoutManager, if specified in the attributes. exact copy of
+     * {@link Recyclerview#createLayoutManager(Context, String, int, int)}
      */
     private void createLayoutManager(Context context, String className, AttributeSet attrs,
             int defStyleAttr, int defStyleRes) {
@@ -806,7 +877,9 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
         }
     }
 
-    /** exact copy of {@link RecyclerView#getFullClassName(Context, String)} */
+    /**
+     * exact copy of {@link RecyclerView#getFullClassName(Context, String)}
+     */
     private String getFullClassName(Context context, String className) {
         if (className.charAt(0) == '.') {
             return context.getPackageName() + className;

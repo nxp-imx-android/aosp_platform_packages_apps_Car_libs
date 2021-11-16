@@ -26,7 +26,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibilit
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
-import static com.android.car.ui.actions.CarUiRecyclerViewActions.actionOnItem;
+import static com.android.car.ui.core.CarUi.TARGET_API_R;
 import static com.android.car.ui.core.SearchResultsProvider.ITEM_ID;
 import static com.android.car.ui.core.SearchResultsProvider.SECONDARY_IMAGE_ID;
 import static com.android.car.ui.core.SearchResultsProvider.SUBTITLE;
@@ -79,6 +79,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
 import android.widget.FrameLayout;
 
+import androidx.annotation.RequiresApi;
 import androidx.test.InstrumentationRegistry;
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
@@ -104,6 +105,7 @@ import org.mockito.MockitoAnnotations;
  * Unit tests for {@link CarUiImeWideScreenController}.
  */
 @RunWith(AndroidJUnit4.class)
+@RequiresApi(TARGET_API_R)
 public class CarUiImeWideScreenControllerTest {
 
     private final Context mContext = ApplicationProvider.getApplicationContext();
@@ -404,8 +406,7 @@ public class CarUiImeWideScreenControllerTest {
                 .check(matches(atPosition(0, hasDescendant(withText("Title")))));
         onView(withId(R.id.car_ui_wideScreenSearchResultList))
                 .check(matches(atPosition(0, hasDescendant(withText("SubTitle")))));
-        onView(withId(R.id.car_ui_wideScreenSearchResultList))
-                .perform(actionOnItem(hasDescendant(withText("Title")), click()));
+        onView((withText("Title"))).perform(click());
 
         verify(spy, times(1)).onItemClicked("1");
     }

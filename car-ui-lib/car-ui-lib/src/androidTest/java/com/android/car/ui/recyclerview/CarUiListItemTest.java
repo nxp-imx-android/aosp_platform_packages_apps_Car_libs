@@ -25,6 +25,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isEnabled;
 import static androidx.test.espresso.matcher.ViewMatchers.isNotChecked;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
+import static com.android.car.ui.core.CarUi.MIN_TARGET_API;
 import static com.android.car.ui.matchers.ViewMatchers.isActivated;
 import static com.android.car.ui.matchers.ViewMatchers.withDrawable;
 
@@ -39,6 +40,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import android.annotation.TargetApi;
+import android.graphics.drawable.Drawable;
 import android.widget.CompoundButton;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -61,7 +64,9 @@ import java.util.List;
  * Unit tests for {@link CarUiListItem}.
  */
 @RunWith(Parameterized.class)
+@TargetApi(MIN_TARGET_API)
 public class CarUiListItemTest {
+
     @Rule
     public ActivityScenarioRule<CarUiRecyclerViewTestActivity> mActivityRule =
             new ActivityScenarioRule<>(CarUiRecyclerViewTestActivity.class);
@@ -192,12 +197,14 @@ public class CarUiListItemTest {
     public void testItemVisibility_withTitle_withBodyAndIcon() {
         List<CarUiListItem> items = new ArrayList<>();
 
+        Drawable close = mActivity.getDrawable(R.drawable.car_ui_icon_close);
+
         CarUiContentListItem item = new CarUiContentListItem(CarUiContentListItem.Action.NONE);
         String title = "Test title";
         String body = "Test body";
         item.setTitle(title);
         item.setBody(body);
-        item.setIcon(mActivity.getDrawable(R.drawable.car_ui_icon_close));
+        item.setIcon(close);
         items.add(item);
 
         mCarUiRecyclerView.post(
@@ -205,7 +212,7 @@ public class CarUiListItemTest {
 
         onView(withText(title)).check(matches(isDisplayed()));
         onView(withText(body)).check(matches(isDisplayed()));
-        onView(withDrawable(mActivity, R.drawable.car_ui_icon_close)).check(matches(isDisplayed()));
+        onView(withDrawable(close)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -359,9 +366,11 @@ public class CarUiListItemTest {
         CarUiContentListItem.OnClickListener mockOnCheckedChangeListener = mock(
                 CarUiContentListItem.OnClickListener.class);
 
+        Drawable close = mActivity.getDrawable(R.drawable.car_ui_icon_close);
+
         CarUiContentListItem item = new CarUiContentListItem(
                 CarUiContentListItem.Action.NONE);
-        item.setIcon(mActivity.getDrawable(R.drawable.car_ui_icon_close));
+        item.setIcon(close);
         item.setPrimaryIconType(CarUiContentListItem.IconType.AVATAR);
         String title = "Test item with listener";
         String body = "Body text";
@@ -382,7 +391,8 @@ public class CarUiListItemTest {
         onView(withText(body)).perform(click());
         verify(mockOnCheckedChangeListener, times(2)).onClick(item);
 
-        onView(withDrawable(mActivity, R.drawable.car_ui_icon_close)).perform(click());
+        onView(withDrawable(close)).check(matches(isDisplayed()));
+        onView(withDrawable(close)).perform(click());
         verify(mockOnCheckedChangeListener, times(3)).onClick(item);
     }
 
@@ -400,8 +410,11 @@ public class CarUiListItemTest {
         String title = "Test item with two listeners";
         item.setTitle(title);
         item.setOnItemClickedListener(clickListener);
+        Drawable close = mActivity.getDrawable(R.drawable.car_ui_icon_close);
+
+
         item.setSupplementalIcon(
-                mActivity.getDrawable(R.drawable.car_ui_icon_close),
+                close,
                 supplementalIconClickListener);
         items.add(item);
 
@@ -416,7 +429,8 @@ public class CarUiListItemTest {
         verify(clickListener, times(1)).onClick(item);
         verify(supplementalIconClickListener, times(0)).onClick(item);
 
-        onView(withDrawable(mActivity, R.drawable.car_ui_icon_close)).perform(click());
+        onView(withDrawable(close)).check(matches(isDisplayed()));
+        onView(withDrawable(close)).perform(click());
         // Check that icon is argument for single call to click listener.
         verify(supplementalIconClickListener, times(1)).onClick(item);
 
@@ -433,7 +447,9 @@ public class CarUiListItemTest {
 
         CarUiContentListItem item = new CarUiContentListItem(
                 CarUiContentListItem.Action.ICON);
-        item.setSupplementalIcon(mActivity.getDrawable(R.drawable.car_ui_icon_close));
+        Drawable close = mActivity.getDrawable(R.drawable.car_ui_icon_close);
+
+        item.setSupplementalIcon(close);
         item.setOnItemClickedListener(mockedItemOnClickListener);
         String title = "Test item with listener";
         item.setTitle(title);
@@ -445,7 +461,7 @@ public class CarUiListItemTest {
         onView(withText(title)).check(matches(isDisplayed()));
 
         // Clicks anywhere on the icon should invoke listener.
-        onView(withDrawable(mActivity, R.drawable.car_ui_icon_close)).perform(click());
+        onView(withDrawable(close)).perform(click());
         verify(mockedItemOnClickListener, times(1)).onClick(item);
     }
 
@@ -471,10 +487,12 @@ public class CarUiListItemTest {
         CarUiContentListItem.OnClickListener mockedIconListener = mock(
                 CarUiContentListItem.OnClickListener.class);
 
+        Drawable close = mActivity.getDrawable(R.drawable.car_ui_icon_close);
+
         CarUiContentListItem item = new CarUiContentListItem(
                 CarUiContentListItem.Action.ICON);
         item.setSupplementalIcon(
-                mActivity.getDrawable(R.drawable.car_ui_icon_close),
+                close,
                 mockedIconListener);
         item.setOnItemClickedListener(mockedItemOnClickListener);
         String title = "Test item with listeners";
@@ -492,7 +510,8 @@ public class CarUiListItemTest {
         verify(mockedItemOnClickListener, times(1)).onClick(item);
 
         // Clicks anywhere on the icon should invoke both listeners.
-        onView(withDrawable(mActivity, R.drawable.car_ui_icon_close)).perform(click());
+        onView(withDrawable(close)).check(matches(isDisplayed()));
+        onView(withDrawable(close)).perform(click());
         verify(mockedItemOnClickListener, times(1)).onClick(item);
         verify(mockedIconListener, times(1)).onClick(item);
     }

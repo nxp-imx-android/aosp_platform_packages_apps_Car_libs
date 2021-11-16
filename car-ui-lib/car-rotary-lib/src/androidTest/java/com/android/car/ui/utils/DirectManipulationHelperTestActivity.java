@@ -13,13 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.chassis.car.ui.plugin;
+
+package com.android.car.ui.utils;
 
 import android.app.Activity;
+import android.os.Bundle;
 
-/**
- * A blank activity. It's only purpose is for responding to the
- * {@code com.android.car.ui.intent.action.PLUGIN} intent.
- */
-public class MainActivity extends Activity {
+import com.android.car.rotary.test.R;
+
+/** An activity used for testing {@link DirectManipulationHelper}. */
+public class DirectManipulationHelperTestActivity extends Activity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.direct_manipulation_helper_test_activity);
+    }
 }

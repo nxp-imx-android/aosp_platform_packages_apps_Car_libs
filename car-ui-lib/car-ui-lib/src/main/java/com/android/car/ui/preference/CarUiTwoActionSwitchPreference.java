@@ -16,8 +16,10 @@
 
 package com.android.car.ui.preference;
 
+import static com.android.car.ui.core.CarUi.MIN_TARGET_API;
 import static com.android.car.ui.utils.CarUiUtils.requireViewByRefId;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
@@ -27,6 +29,7 @@ import androidx.annotation.Nullable;
 import androidx.preference.PreferenceViewHolder;
 
 import com.android.car.ui.R;
+import com.android.car.ui.utils.CarUiUtils;
 
 import java.util.function.Consumer;
 
@@ -35,6 +38,7 @@ import java.util.function.Consumer;
  * body of the preference.
  */
 @SuppressWarnings("AndroidJdkLibsChecker")
+@TargetApi(MIN_TARGET_API)
 public class CarUiTwoActionSwitchPreference extends CarUiTwoActionBasePreference {
     @Nullable
     protected Consumer<Boolean> mSecondaryActionOnClickListener;
@@ -104,6 +108,9 @@ public class CarUiTwoActionSwitchPreference extends CarUiTwoActionBasePreference
                 isSecondaryActionEnabled() || isUxRestricted() || isClickableWhileDisabled());
         secondaryAction.setFocusable(
                 isSecondaryActionEnabled() || isUxRestricted() || isClickableWhileDisabled());
+
+        CarUiUtils.makeAllViewsEnabledAndUxRestricted(secondaryAction, isSecondaryActionEnabled(),
+                isUxRestricted());
     }
 
     /**

@@ -16,8 +16,10 @@
 
 package com.android.car.ui.recyclerview;
 
+import static com.android.car.ui.core.CarUi.MIN_TARGET_API;
 import static com.android.car.ui.utils.CarUiUtils.requireViewByRefId;
 
+import android.annotation.TargetApi;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -48,7 +50,11 @@ import java.util.List;
  * <ul>
  * <li> Implements {@link CarUiRecyclerView.ItemCap} - defaults to unlimited item count.
  * </ul>
+ * <p>
+ * Rendered views will comply with
+ * <a href="https://source.android.com/devices/automotive/hmi/car_ui/appendix_b">customization guardrails</a>
  */
+@TargetApi(MIN_TARGET_API)
 public class CarUiListItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements
         CarUiRecyclerView.ItemCap {
 

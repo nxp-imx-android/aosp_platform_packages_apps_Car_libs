@@ -15,22 +15,32 @@
  */
 package com.android.car.ui.pluginsupport;
 
+import static android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_ENABLED;
+import static android.content.pm.PackageManager.MATCH_ALL;
+import static android.content.pm.PackageManager.MATCH_DISABLED_COMPONENTS;
+
+import static com.android.car.ui.core.CarUi.MIN_TARGET_API;
+
 import static java.util.Objects.requireNonNull;
 
+import android.annotation.SuppressLint;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ProviderInfo;
 import android.os.Build;
 import android.os.Process;
 import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.annotation.VisibleForTesting;
 
 import com.android.car.ui.R;
-import com.android.car.ui.utils.CarUiUtils;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -44,6 +54,9 @@ import java.util.Set;
  * UI components that we want to be customizable by the OEM.
  */
 @SuppressWarnings("AndroidJdkLibsChecker")
+// TODO: (b/200322953)
+@SuppressLint("LogConditional")
+@RequiresApi(MIN_TARGET_API)
 public final class PluginFactorySingleton {
     private enum TestingOverride {
         NOT_SET, ENABLED, DISABLED
@@ -52,6 +65,11 @@ public final class PluginFactorySingleton {
     private static final String TAG = "carui";
     private static PluginFactory sInstance;
     private static TestingOverride sTestingOverride = TestingOverride.NOT_SET;
+
+    /** Only has value during testing, null otherwise */
+    @SuppressLint("StaticFieldLeak")
+    @Nullable
+    private static Context sPluginContext = null;
 
     /**
      * Get the {@link PluginFactory}.
@@ -86,8 +104,7 @@ public final class PluginFactorySingleton {
             return sInstance;
         }
 
-        String pluginPackageName = CarUiUtils.getSystemProperty(context.getResources(),
-                R.string.car_ui_plugin_package_system_property_name);
+        String pluginPackageName = getPluginPackageName(context);
 
         if (TextUtils.isEmpty(pluginPackageName)) {
             sInstance = new PluginFactoryStub();
@@ -159,6 +176,10 @@ public final class PluginFactorySingleton {
                 + " version " + pluginPackageInfo.getLongVersionCode()
                 + " for package " + context.getPackageName());
 
+        if (sTestingOverride != TestingOverride.NOT_SET) {
+            sPluginContext = pluginContext;
+        }
+
         return sInstance;
     }
 
@@ -180,6 +201,13 @@ public final class PluginFactorySingleton {
         }
         // Cause the next call to get() to reinitialize the plugin
         sInstance = null;
+        sPluginContext = null;
+    }
+
+    @Nullable
+    @VisibleForTesting
+    public static Context getPluginContext() {
+        return sPluginContext;
     }
 
     private PluginFactorySingleton() {
@@ -226,8 +254,41 @@ public final class PluginFactorySingleton {
         return abis;
     }
 
-    private static boolean isPluginEnabled(Context context) {
-        return CarUiUtils.getBooleanSystemProperty(context.getResources(),
-                R.string.car_ui_plugin_enabled_system_property_name, false);
+    /**
+     * Return the package name for the Car UI plugin implementation.
+     */
+    @Nullable
+    public static String getPluginPackageName(Context context) {
+        String authority = context.getString(
+                R.string.car_ui_plugin_package_provider_authority_name);
+        ProviderInfo providerInfo = context.getPackageManager().resolveContentProvider(authority,
+                MATCH_ALL | MATCH_DISABLED_COMPONENTS);
+        if (providerInfo == null) {
+            return null;
+        }
+        return providerInfo.packageName;
+    }
+
+    /**
+     * Return if Car UI components should be loaded from the plugin implementation.
+     */
+    public static boolean isPluginEnabled(Context context) {
+        String authority = context.getString(
+                R.string.car_ui_plugin_package_provider_authority_name);
+        PackageManager packageManager = context.getPackageManager();
+        ProviderInfo providerInfo = packageManager.resolveContentProvider(authority,
+                MATCH_ALL | MATCH_DISABLED_COMPONENTS);
+        if (providerInfo == null) {
+            return false;
+        }
+
+        ComponentName componentName = new ComponentName(providerInfo.packageName,
+                providerInfo.name);
+        int state = packageManager.getComponentEnabledSetting(componentName);
+        if (state == PackageManager.COMPONENT_ENABLED_STATE_DEFAULT) {
+            return providerInfo.enabled;
+        }
+
+        return state == COMPONENT_ENABLED_STATE_ENABLED;
     }
 }

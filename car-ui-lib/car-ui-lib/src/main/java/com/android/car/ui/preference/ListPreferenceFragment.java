@@ -16,8 +16,10 @@
 
 package com.android.car.ui.preference;
 
+import static com.android.car.ui.core.CarUi.MIN_TARGET_API;
 import static com.android.car.ui.preference.PreferenceDialogFragment.ARG_KEY;
 
+import android.annotation.TargetApi;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,6 +53,7 @@ import java.util.List;
  * A fragment that provides a layout with a list of options associated with a {@link
  * ListPreference}.
  */
+@TargetApi(MIN_TARGET_API)
 public class ListPreferenceFragment extends Fragment implements InsetsChangedListener {
 
     private ListPreference mPreference;
@@ -94,7 +97,7 @@ public class ListPreferenceFragment extends Fragment implements InsetsChangedLis
         mPreference = getListPreference();
         if (toolbar != null) {
             toolbar.setTitle(mPreference.getTitle());
-            toolbar.setSubtitle(null);
+            toolbar.setSubtitle("");
             if (toolbar.isStateSet()) {
                 toolbar.setState(Toolbar.State.SUBPAGE);
             } else {
