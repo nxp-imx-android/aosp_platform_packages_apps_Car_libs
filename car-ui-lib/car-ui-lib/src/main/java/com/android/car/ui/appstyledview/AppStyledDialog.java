@@ -102,6 +102,10 @@ import androidx.annotation.NonNull;
         mContent = contentView;
     }
 
+    View getContent() {
+        return mContent;
+    }
+
     void setOnDismissListener(Runnable listener) {
         mOnDismissListener = listener;
     }

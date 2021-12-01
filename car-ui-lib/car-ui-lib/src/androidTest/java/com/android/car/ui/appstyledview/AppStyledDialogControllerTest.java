@@ -23,6 +23,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNull;
+
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -71,9 +74,9 @@ public class AppStyledDialogControllerTest {
 
     @Test
     public void show_shouldDisplayDialog() throws Throwable {
-        LayoutInflater inflator = LayoutInflater.from(mActivityRule.getActivity());
+        LayoutInflater inflater = LayoutInflater.from(mActivityRule.getActivity());
 
-        View appStyledTestView = inflator.inflate(R.layout.app_styled_view_sample, null,
+        View appStyledTestView = inflater.inflate(R.layout.app_styled_view_sample, null,
                 false);
 
         mActivityRule.runOnUiThread(() -> {
@@ -91,9 +94,9 @@ public class AppStyledDialogControllerTest {
 
     @Test
     public void setNavIcon_showCloseIcon() throws Throwable {
-        LayoutInflater inflator = LayoutInflater.from(mActivityRule.getActivity());
+        LayoutInflater inflater = LayoutInflater.from(mActivityRule.getActivity());
 
-        View appStyledTestView = inflator.inflate(R.layout.app_styled_view_sample, null,
+        View appStyledTestView = inflater.inflate(R.layout.app_styled_view_sample, null,
                 false);
 
         mActivityRule.runOnUiThread(() -> {
@@ -111,9 +114,9 @@ public class AppStyledDialogControllerTest {
 
     @Test
     public void setOnCloseClickListener_shouldInvokeCallback() throws Throwable {
-        LayoutInflater inflator = LayoutInflater.from(mActivityRule.getActivity());
+        LayoutInflater inflater = LayoutInflater.from(mActivityRule.getActivity());
 
-        View appStyledTestView = inflator.inflate(R.layout.app_styled_view_sample, null,
+        View appStyledTestView = inflater.inflate(R.layout.app_styled_view_sample, null,
                 false);
 
         Runnable callback = mock(Runnable.class);
@@ -136,9 +139,9 @@ public class AppStyledDialogControllerTest {
 
     @Test
     public void setOnDismissListener_shouldInvokeCallback() throws Throwable {
-        LayoutInflater inflator = LayoutInflater.from(mActivityRule.getActivity());
+        LayoutInflater inflater = LayoutInflater.from(mActivityRule.getActivity());
 
-        View appStyledTestView = inflator.inflate(R.layout.app_styled_view_sample, null,
+        View appStyledTestView = inflater.inflate(R.layout.app_styled_view_sample, null,
                 false);
 
         Runnable callback = mock(Runnable.class);
@@ -155,6 +158,26 @@ public class AppStyledDialogControllerTest {
         onView(withId(R.id.car_ui_app_styled_view_icon_close))
                 .inRoot(new RootWithDecorMatcher(dialog.getWindow().getDecorView()))
                 .perform(click());
+    }
+
+    @Test
+    public void getContentView_equalsSetView() throws Throwable {
+        LayoutInflater inflater = LayoutInflater.from(mActivityRule.getActivity());
+
+        View appStyledTestView = inflater.inflate(R.layout.app_styled_view_sample, null,
+                false);
+
+        mActivityRule.runOnUiThread(() -> {
+            mAppStyledDialogController.setContentView(appStyledTestView);
+            mAppStyledDialogController.show();
+        });
+
+        assertEquals(appStyledTestView, mAppStyledDialogController.getContentView());
+    }
+
+    @Test
+    public void getContentView_nullWhenNotSet() {
+        assertNull(mAppStyledDialogController.getContentView());
     }
 
     private static class RootWithDecorMatcher extends TypeSafeMatcher<Root> {
