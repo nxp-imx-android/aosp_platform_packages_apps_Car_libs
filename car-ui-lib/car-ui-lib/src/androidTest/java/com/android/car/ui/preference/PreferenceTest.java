@@ -21,6 +21,7 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.matcher.ViewMatchers.isChecked;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isFocused;
@@ -52,6 +53,8 @@ import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewParent;
+import android.view.accessibility.AccessibilityNodeInfo;
 
 import androidx.preference.CheckBoxPreference;
 import androidx.preference.DropDownPreference;
@@ -64,6 +67,7 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.android.car.ui.test.R;
 
+import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -168,9 +172,8 @@ public class PreferenceTest {
         // Return to main screen and turn off touch mode.
         onView(withContentDescription("Back")).perform(click());
         InstrumentationRegistry.getInstrumentation().setInTouchMode(false);
-        // Return to list preference screen. Requires two inputs to focus and then click.
-        InstrumentationRegistry.getInstrumentation()
-                .sendKeyDownUpSync(KeyEvent.KEYCODE_DPAD_CENTER);
+        // Return to list preference screen.
+        onView(withText(R.string.title_list_preference)).perform(new FocusAncestorAction());
         InstrumentationRegistry.getInstrumentation()
                 .sendKeyDownUpSync(KeyEvent.KEYCODE_DPAD_CENTER);
         // Check that second option is selected and focused.
@@ -1157,5 +1160,37 @@ public class PreferenceTest {
         // Click on ux restricted preference
         onView(withText(R.string.title_seek_bar_preference)).perform(click());
         verify(restrictedClickListener, times(1)).accept(preference);
+    }
+
+    /** An action which focuses the given view or the nearest focusable ancestor. */
+    private static class FocusAncestorAction implements ViewAction {
+        @Override
+        public Matcher<View> getConstraints() {
+            return isAssignableFrom(View.class);
+        }
+
+        @Override
+        public String getDescription() {
+            return "focus view or nearest focusable ancestor";
+        }
+
+        @Override
+        public void perform(UiController uiController, View view) {
+            View ancestor = findFocusableAncestor(view);
+            if (ancestor != null) {
+                ancestor.performAccessibilityAction(AccessibilityNodeInfo.ACTION_FOCUS, null);
+            }
+        }
+
+        private View findFocusableAncestor(View view) {
+            if (view.isFocusable()) {
+                return view;
+            }
+            ViewParent parent = view.getParent();
+            if (parent instanceof View) {
+                return findFocusableAncestor((View) parent);
+            }
+            return null;
+        }
     }
 }

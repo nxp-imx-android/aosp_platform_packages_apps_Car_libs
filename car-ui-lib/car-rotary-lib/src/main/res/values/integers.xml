@@ -30,4 +30,8 @@
   <!-- How many milliseconds before an entry in FocusAreaHistoryCache expires. Must be positive
   value when car_ui_focus_area_history_cache_type is 2. -->
   <integer name="car_ui_focus_area_history_expiration_period_ms">3000</integer>
+
+  <!-- Period, in milliseconds, after exiting touch mode during which requests to restore focus are
+  skipped. -->
+  <integer name="car_ui_touch_mode_skip_restore_focus_ms">100</integer>
 </resources>

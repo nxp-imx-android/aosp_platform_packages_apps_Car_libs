@@ -44,6 +44,7 @@ import android.util.SparseArray;
 import android.util.SparseIntArray;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalFocusChangeListener;
 import android.view.accessibility.AccessibilityNodeInfo;
 
@@ -188,12 +189,28 @@ class FocusAreaHelper {
 
     private final OnGlobalFocusChangeListener mFocusChangeListener;
 
+    private final ViewTreeObserver.OnTouchModeChangeListener mTouchModeChangeListener;
+
     /**
      * Whether to restore focus when Android frameworks want to focus inside {@link #mFocusArea}.
      * This should be false if {@link #mFocusArea} is in a {@link com.android.wm.shell.TaskView}.
      * The default value is true.
      */
     private boolean mShouldRestoreFocus = true;
+
+    /**
+     * Period, in milliseconds, after exiting touch mode during which requests to restore focus are
+     * skipped.
+     */
+    private final long mTouchModeSkipRestoreFocusMs;
+
+    /**
+     * Time, in {link {@link SystemClock#uptimeMillis}, before which restoring focus should be
+     * skipped. Used to avoid restoring focus when exiting touch mode.
+     * TODO(207547699): Remove this workaround once highlight is conditional on window focus as well
+     *                  as view focus.
+     */
+    private long mSkipRestoreFocusUntil;
 
     FocusAreaHelper(@NonNull ViewGroup viewGroup, @Nullable AttributeSet attrs) {
         mFocusArea = viewGroup;
@@ -233,6 +250,16 @@ class FocusAreaHelper {
                 resources.getInteger(R.integer.car_ui_focus_area_history_expiration_period_ms);
         mRotaryCache = new RotaryCache(focusHistoryCacheType, focusHistoryExpirationPeriodMs,
                 focusAreaHistoryCacheType, focusAreaHistoryExpirationPeriodMs);
+
+        mTouchModeSkipRestoreFocusMs =
+                resources.getInteger(R.integer.car_ui_touch_mode_skip_restore_focus_ms);
+        mTouchModeChangeListener =
+                isInTouchMode -> {
+                    if (!isInTouchMode) {
+                        mSkipRestoreFocusUntil =
+                                SystemClock.uptimeMillis() + mTouchModeSkipRestoreFocusMs;
+                    }
+                };
 
         // Ensure that an AccessibilityNodeInfo is created for mFocusArea.
         mFocusArea.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_YES);
@@ -476,6 +503,7 @@ class FocusAreaHelper {
 
     void onAttachedToWindow() {
         mFocusArea.getViewTreeObserver().addOnGlobalFocusChangeListener(mFocusChangeListener);
+        mFocusArea.getViewTreeObserver().addOnTouchModeChangeListener(mTouchModeChangeListener);
 
         // Disable restore focus behavior if mFocusArea is in a TaskView.
         if (mShouldRestoreFocus && ViewUtils.isInMultiWindowMode(mFocusArea)) {
@@ -484,6 +512,7 @@ class FocusAreaHelper {
     }
 
     void onDetachedFromWindow() {
+        mFocusArea.getViewTreeObserver().removeOnTouchModeChangeListener(mTouchModeChangeListener);
         mFocusArea.getViewTreeObserver().removeOnGlobalFocusChangeListener(mFocusChangeListener);
     }
 
@@ -682,17 +711,26 @@ class FocusAreaHelper {
     }
 
     boolean onRequestFocusInDescendants() {
-        if (!mShouldRestoreFocus) {
+        if (!mShouldRestoreFocus || shouldSkipRestoreFocus()) {
             return false;
         }
         return maybeAdjustFocus();
     }
 
     boolean restoreDefaultFocus() {
-        if (!mShouldRestoreFocus) {
+        if (!mShouldRestoreFocus || shouldSkipRestoreFocus()) {
             return false;
         }
         return maybeAdjustFocus();
+    }
+
+    /** Returns whether to skip restoring focus because touch mode recently exited. */
+    private boolean shouldSkipRestoreFocus() {
+        if (SystemClock.uptimeMillis() <= mSkipRestoreFocusUntil) {
+            mSkipRestoreFocusUntil = 0;
+            return true;
+        }
+        return false;
     }
 
     private void maybeInitializeSpecifiedFocusAreas() {

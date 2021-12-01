@@ -32,6 +32,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalFocusChangeListener;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.inputmethod.InputMethodManager;
@@ -104,6 +105,20 @@ public class FocusParkingView extends View {
     private boolean mShouldRestoreFocus = true;
 
     /**
+     * Period, in milliseconds, after exiting touch mode during which requests to restore focus are
+     * skipped.
+     */
+    private long mTouchModeSkipRestoreFocusMs;
+
+    /**
+     * Time, in {link {@link SystemClock#uptimeMillis}, before which restoring focus should be
+     * skipped. Used to avoid restoring focus when exiting touch mode.
+     * TODO(207547699): Remove this workaround once highlight is conditional on window focus as well
+     *                  as view focus.
+     */
+    private long mSkipRestoreFocusUntil;
+
+    /**
      * Whether to focus on the default focus view when nudging to the explicit focus area containing
      * this FocusParkingView, even if there was another view in the explicit focus area focused
      * before.
@@ -121,6 +136,14 @@ public class FocusParkingView extends View {
                 // Keep track of the focused view so that we can recover focus when it's removed.
                 View focusedView = newFocus instanceof FocusParkingView ? null : newFocus;
                 updateFocusedView(focusedView);
+            };
+
+    private final ViewTreeObserver.OnTouchModeChangeListener mTouchModeChangeListener =
+            isInTouchMode -> {
+                if (!isInTouchMode) {
+                    mSkipRestoreFocusUntil =
+                            SystemClock.uptimeMillis() + mTouchModeSkipRestoreFocusMs;
+                }
             };
 
     public FocusParkingView(Context context) {
@@ -150,6 +173,9 @@ public class FocusParkingView extends View {
             mShouldRestoreFocus = a.getBoolean(R.styleable.FocusParkingView_shouldRestoreFocus,
                     /* defValue= */ true);
         }
+
+        mTouchModeSkipRestoreFocusMs =
+                getResources().getInteger(R.integer.car_ui_touch_mode_skip_restore_focus_ms);
 
         // This view is focusable, visible and enabled so it can take focus.
         setFocusable(View.FOCUSABLE);
@@ -198,6 +224,7 @@ public class FocusParkingView extends View {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         getViewTreeObserver().addOnGlobalFocusChangeListener(mFocusChangeListener);
+        getViewTreeObserver().addOnTouchModeChangeListener(mTouchModeChangeListener);
         // Disable restore focus behavior if this view is in a TaskView.
         if (mShouldRestoreFocus && ViewUtils.isInMultiWindowMode(this)) {
             mShouldRestoreFocus = false;
@@ -206,6 +233,7 @@ public class FocusParkingView extends View {
 
     @Override
     protected void onDetachedFromWindow() {
+        getViewTreeObserver().removeOnTouchModeChangeListener(mTouchModeChangeListener);
         getViewTreeObserver().removeOnGlobalFocusChangeListener(mFocusChangeListener);
         super.onDetachedFromWindow();
     }
@@ -271,7 +299,7 @@ public class FocusParkingView extends View {
 
     @Override
     public boolean requestFocus(int direction, Rect previouslyFocusedRect) {
-        if (!mShouldRestoreFocus) {
+        if (!mShouldRestoreFocus || shouldSkipRestoreFocus()) {
             return super.requestFocus(direction, previouslyFocusedRect);
         }
         // Find a better target to focus instead of focusing this FocusParkingView when
@@ -281,7 +309,7 @@ public class FocusParkingView extends View {
 
     @Override
     public boolean restoreDefaultFocus() {
-        if (!mShouldRestoreFocus) {
+        if (!mShouldRestoreFocus || shouldSkipRestoreFocus()) {
             return super.restoreDefaultFocus();
         }
         // Find a better target to focus instead of focusing this FocusParkingView when the
@@ -336,6 +364,15 @@ public class FocusParkingView extends View {
         // It failed to find a target view (e.g., all the views are not shown), so focus on this
         // FocusParkingView as fallback.
         return super.requestFocus(FOCUS_DOWN, /* previouslyFocusedRect= */ null);
+    }
+
+    /** Returns whether to skip restoring focus because touch mode recently exited. */
+    private boolean shouldSkipRestoreFocus() {
+        if (SystemClock.uptimeMillis() <= mSkipRestoreFocusUntil) {
+            mSkipRestoreFocusUntil = 0;
+            return true;
+        }
+        return false;
     }
 
     private boolean maybeFocusOnScrollableContainer() {
