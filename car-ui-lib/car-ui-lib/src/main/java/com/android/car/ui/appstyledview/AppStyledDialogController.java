@@ -23,6 +23,7 @@ import android.content.Context;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 
 import com.android.car.ui.appstyledview.AppStyledViewController.AppStyledViewNavIcon;
@@ -58,12 +59,20 @@ public final class AppStyledDialogController {
     }
 
     /**
-     * Sets the content view to de displayed in AppStyledView.
+     * Sets the content view to be displayed in AppStyledView.
      */
     public void setContentView(@NonNull View contentView) {
         Objects.requireNonNull(contentView);
 
         mDialog.setContent(contentView);
+    }
+
+    /**
+     * Returns the content view to be displayed in AppStyledView.
+     */
+    @Nullable
+    public View getContentView() {
+        return mDialog.getContent();
     }
 
     /**
