@@ -69,4 +69,6 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
 
     implementation project(":car-ui-lib")
+
+    implementation 'androidx.test.ext:junit:1.1.3'
 }
