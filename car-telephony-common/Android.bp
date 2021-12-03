@@ -18,6 +18,16 @@ package {
     default_applicable_licenses: ["Android-Apache-2.0"],
 }
 
+car_telephony_common_static_libs = [
+    "androidx.legacy_legacy-support-v4",
+    "androidx.lifecycle_lifecycle-common-java8",
+    "androidx.lifecycle_lifecycle-extensions",
+    "car-apps-common-prebuilt",
+    "glide-prebuilt",
+    "guava",
+    "libphonenumber",
+]
+
 android_library {
     name: "car-telephony-common",
 
@@ -33,14 +43,31 @@ android_library {
     min_sdk_version: "28",
     target_sdk_version: "31",
 
-    static_libs: [
-        "androidx.legacy_legacy-support-v4",
-        "car-apps-common",
-        "glide-prebuilt",
-        "guava",
-        "libphonenumber",
-    ],
-
+    static_libs: car_telephony_common_static_libs,
     libs: ["android.car-system-stubs"],
+}
+
+java_genrule {
+    name: "car-telephony-common-aar",
+    srcs: [
+        ":car-telephony-common{.aar}",
+        "res/**/*",
+    ],
+    out: ["car-telephony-common.aar"],
+    tools: [
+        "make_slim_aar",
+    ],
+    cmd: "dir=packages/apps/Car/libs/car-telephony-common && " +
+        "$(location make_slim_aar) --classes-allowlist com/android/car/telephony/common $(out) $(location :car-telephony-common{.aar}) $$dir/res",
+    dist: {
+        targets: ["car-telephony-common-aar",]
+    },
+}
+
+android_library_import {
+    name: "car-telephony-common-prebuilt",
+    aars: [":car-telephony-common-aar"],
+    sdk_version: "current",
+    static_libs: car_telephony_common_static_libs,
 }
 

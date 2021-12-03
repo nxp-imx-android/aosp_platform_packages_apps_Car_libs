@@ -22,11 +22,14 @@ def main():
     parser = AP(description='AARs built with soong currently have classes from all their dependencies '
                             'included inside them, and no resources. This tool takes such an AAR, removes'
                             'the dependency classes, and adds resources')
-    parser.add_argument('--classes-allowlist', default='com/android/car/ui')
+    parser.add_argument('--classes-allowlist', default='')
     parser.add_argument('output')
     parser.add_argument('soong_aar')
     parser.add_argument('res_folders', nargs='*')
     args = parser.parse_args()
+
+    if (len(args.classes_allowlist) <= 0):
+        raise ValueError("--classes-allowlist must not be empty")
 
     with ZipFile(args.output, mode='w', compression=ZIP_DEFLATED) as outaar, ZipFile(args.soong_aar) as soongaar:
         # Create a new classes.jar that only has the classes with the desired prefix

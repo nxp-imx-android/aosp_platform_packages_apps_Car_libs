@@ -40,10 +40,15 @@ android_library {
     static_libs: [
         "androidx.legacy_legacy-support-v4",
         "androidx.annotation_annotation",
-        "car-assist-lib",
-        "car-telephony-common",
+        "car-assist-lib-prebuilt",
+        "car-telephony-common-prebuilt",
     ],
 }
+
+car_messaging_models_static_libs = [
+    "androidx.legacy_legacy-support-v4",
+    "androidx.annotation_annotation",
+]
 
 // Car Messaging Models, Unbundled
 android_library {
@@ -65,8 +70,29 @@ android_library {
 
     target_sdk_version: "31",
 
-    static_libs: [
-        "androidx.legacy_legacy-support-v4",
-        "androidx.annotation_annotation",
+    static_libs: car_messaging_models_static_libs,
+}
+
+java_genrule {
+    name: "car-messaging-models-aar",
+    srcs: [
+        ":car-messaging-models{.aar}",
+        "res/**/*",
     ],
+    out: ["car-messaging-models.aar"],
+    tools: [
+        "make_slim_aar",
+    ],
+    cmd: "dir=packages/apps/Car/libs/car-messaging-models && " +
+        "$(location make_slim_aar) --classes-allowlist com/android/car/messenger/common/Conversation $(out) $(location :car-messaging-models{.aar})",
+    dist: {
+        targets: ["car-messaging-models-aar",]
+    },
+}
+
+android_library_import {
+    name: "car-messaging-models-prebuilt",
+    aars: [":car-messaging-models-aar"],
+    sdk_version: "current",
+    static_libs: car_messaging_models_static_libs,
 }

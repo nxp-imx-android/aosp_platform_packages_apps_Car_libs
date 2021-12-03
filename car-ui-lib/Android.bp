@@ -16,6 +16,18 @@ package {
     default_applicable_licenses: ["Android-Apache-2.0"],
 }
 
+car_ui_lib_static_libs = [
+    "androidx.annotation_annotation",
+    "androidx.appcompat_appcompat",
+    "androidx-constraintlayout_constraintlayout",
+    "androidx.preference_preference",
+    "androidx.recyclerview_recyclerview",
+    "androidx-constraintlayout_constraintlayout-solver",
+    "androidx.asynclayoutinflater_asynclayoutinflater",
+    "car-ui-lib-resources",
+    "car-rotary-lib",
+]
+
 android_library {
     name: "car-ui-lib-resources",
 
@@ -62,17 +74,7 @@ android_library {
         "android.car-stubs",
         "car-ui-lib-oem-apis",
     ],
-    static_libs: [
-        "androidx.annotation_annotation",
-        "androidx.appcompat_appcompat",
-        "androidx-constraintlayout_constraintlayout",
-        "androidx.preference_preference",
-        "androidx.recyclerview_recyclerview",
-        "androidx-constraintlayout_constraintlayout-solver",
-        "androidx.asynclayoutinflater_asynclayoutinflater",
-        "car-ui-lib-resources",
-        "car-rotary-lib",
-    ],
+    static_libs: car_ui_lib_static_libs,
 }
 
 java_genrule {
@@ -89,24 +91,17 @@ java_genrule {
         "make_slim_aar",
     ],
     cmd: "dir=packages/apps/Car/libs/car-ui-lib && " +
-        "$(location make_slim_aar) $(out) $(location :car-ui-lib{.aar}) $$dir/car-ui-lib/src/main/res $$dir/car-ui-lib/src/main/res-overlayable $$dir/car-ui-lib/src/main/res-private $$dir/car-rotary-lib/src/main/res",
+        "$(location make_slim_aar) --classes-allowlist com/android/car/ui $(out) $(location :car-ui-lib{.aar}) $$dir/car-ui-lib/src/main/res $$dir/car-ui-lib/src/main/res-overlayable $$dir/car-ui-lib/src/main/res-private $$dir/car-rotary-lib/src/main/res",
     dist: {
         targets: ["car-ui-lib-aar",]
     },
 }
 
 android_library_import {
-    name: "com.android.car.ui_car-ui-lib",
+    name: "car-ui-lib-prebuilt",
     aars: [":car-ui-lib-aar"],
-    static_libs: [
-        "androidx.annotation_annotation",
-        "androidx.appcompat_appcompat",
-        "androidx-constraintlayout_constraintlayout",
-        "androidx.preference_preference",
-        "androidx.recyclerview_recyclerview",
-        "androidx-constraintlayout_constraintlayout-solver",
-        "androidx.asynclayoutinflater_asynclayoutinflater",
-    ],
+    sdk_version: "current",
+    static_libs: car_ui_lib_static_libs,
 }
 
 android_library {
@@ -212,7 +207,7 @@ android_app {
 
     libs: ["android.car-stubs"],
     static_libs: [
-        "com.android.car.ui_car-ui-lib",
+        "car-ui-lib-prebuilt",
         "androidx.annotation_annotation",
         "androidx.appcompat_appcompat",
         "androidx-constraintlayout_constraintlayout",

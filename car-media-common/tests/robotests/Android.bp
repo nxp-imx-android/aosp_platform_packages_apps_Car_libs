@@ -15,7 +15,7 @@ android_app {
     privileged: true,
 
     static_libs: [
-        "car-apps-common",
+        "car-apps-common-prebuilt",
         "car-media-common",
     ],
 }

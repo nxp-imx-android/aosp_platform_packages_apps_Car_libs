@@ -11,7 +11,7 @@ android_test {
     srcs: ["src/**/*.java"],
 
     static_libs: [
-        "car-telephony-common",
+        "car-telephony-common-prebuilt",
         "androidx.test.core",
         "androidx.test.rules",
         "androidx.test.runner",
