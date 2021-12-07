@@ -48,12 +48,12 @@ import androidx.annotation.NonNull;
         mContext = context;
         mController = controller;
         setOnDismissListener(this);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(mController.getAppStyledView(mContent));
 
         WindowManager.LayoutParams params = getWindow().getAttributes();
