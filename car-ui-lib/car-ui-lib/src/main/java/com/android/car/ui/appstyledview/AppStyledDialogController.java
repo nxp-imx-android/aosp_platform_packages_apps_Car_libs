@@ -62,7 +62,6 @@ public final class AppStyledDialogController {
      */
     public void setContentView(@NonNull View contentView) {
         Objects.requireNonNull(contentView);
-
         mDialog.setContent(contentView);
     }
 

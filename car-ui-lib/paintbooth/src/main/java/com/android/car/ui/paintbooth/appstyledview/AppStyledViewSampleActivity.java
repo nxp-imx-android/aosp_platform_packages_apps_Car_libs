@@ -55,7 +55,6 @@ public class AppStyledViewSampleActivity extends AppCompatActivity {
 
         mAppStyledDialogController = new AppStyledDialogController(this);
         int width = mAppStyledDialogController.getAppStyledViewDialogWidth();
-
         Resources resources = getResources();
         Configuration config = resources.getConfiguration();
 
@@ -69,6 +68,9 @@ public class AppStyledViewSampleActivity extends AppCompatActivity {
 
         View appStyledTestView = LayoutInflater.from(contextThemeWrapper)
                 .inflate(R.layout.app_styled_view_test_sample, null, false);
+
+        mAppStyledDialogController.setOnNavIconClickListener(
+                () -> mAppStyledDialogController.dismiss());
 
         Button btn = findViewById(R.id.show_app_styled_fragment);
         btn.setOnClickListener(v -> {
