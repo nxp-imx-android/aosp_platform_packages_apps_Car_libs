@@ -307,16 +307,6 @@ public class FocusParkingView extends View {
         return restoreFocusInRoot(/* checkForTouchMode= */ true);
     }
 
-    @Override
-    public boolean restoreDefaultFocus() {
-        if (!mShouldRestoreFocus || shouldSkipRestoreFocus()) {
-            return super.restoreDefaultFocus();
-        }
-        // Find a better target to focus instead of focusing this FocusParkingView when the
-        // framework wants to focus it.
-        return restoreFocusInRoot(/* checkForTouchMode= */ true);
-    }
-
     /**
      * Sets whether this view should restore focus when Android frameworks want to focus this view.
      * When set to false, this view allows itself to be focused instead. This should be set to false
