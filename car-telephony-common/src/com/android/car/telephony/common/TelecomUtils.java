@@ -121,6 +121,18 @@ public class TelecomUtils {
     }
 
     /**
+     * Returns the normalized phone number in the format of E164 which is the same format with the
+     * normalized number of {@link CallLog} and {@link ContactsContract}.
+     */
+    public static String getNormalizedNumber(Context context, String number) {
+        String countryIso = getCurrentCountryIsoFromLocale(context);
+        L.d(TAG, "PhoneNumberUtils.formatNumberToE164, number: " + piiLog(number)
+                + ", country: " + countryIso);
+        String e164Format = PhoneNumberUtils.formatNumberToE164(number, countryIso);
+        return TextUtils.isEmpty(e164Format) ? number : e164Format;
+    }
+
+    /**
      * Format a number as a phone number.
      */
     public static String getFormattedNumber(Context context, String number) {
