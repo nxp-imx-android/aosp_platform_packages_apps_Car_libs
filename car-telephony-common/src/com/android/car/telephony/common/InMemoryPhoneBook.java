@@ -51,10 +51,12 @@ public class InMemoryPhoneBook implements Observer<List<Contact>> {
 
     private final Context mContext;
     private final AsyncQueryLiveData<List<Contact>> mContactListAsyncQueryLiveData;
+
     /**
-     * A map to speed up phone number searching.
+     * A map to speed up phone number searching by account name and phone number. Each entry
+     * presents a map of normalized phone number key to contacts for one account.
      */
-    private final Map<I18nPhoneNumberWrapper, Contact> mPhoneNumberContactMap = new HashMap<>();
+    private final Map<String, Map<String, Contact>> mPhoneNumberContactMap = new HashMap<>();
     /**
      * A map to look up contact by account name and lookup key. Each entry presents a map of lookup
      * key to contacts for one account.
@@ -167,7 +169,10 @@ public class InMemoryPhoneBook implements Observer<List<Contact>> {
     /**
      * Looks up a {@link Contact} by the given phone number. Returns null if can't find a Contact or
      * the {@link InMemoryPhoneBook} is still loading.
+     *
+     * @deprecated Use {@link #lookupContactByKey(String, String)} instead.
      */
+    @Deprecated
     @Nullable
     public Contact lookupContactEntry(String phoneNumber) {
         L.v(TAG, String.format("lookupContactEntry: %s", TelecomUtils.piiLog(phoneNumber)));
@@ -180,9 +185,33 @@ public class InMemoryPhoneBook implements Observer<List<Contact>> {
             return null;
         }
 
-        I18nPhoneNumberWrapper i18nPhoneNumber = I18nPhoneNumberWrapper.Factory.INSTANCE.get(
-                mContext, phoneNumber);
-        return mPhoneNumberContactMap.get(i18nPhoneNumber);
+        String normalizedNumber = TelecomUtils.getNormalizedNumber(mContext, phoneNumber);
+        for (Map<String, Contact> numberContactSubMap : mPhoneNumberContactMap.values()) {
+            if (numberContactSubMap.containsKey(normalizedNumber)) {
+                return numberContactSubMap.get(normalizedNumber);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Looks up a {@link Contact} by the given phone number and account name.
+     */
+    @Nullable
+    public Contact lookupContactEntry(String phoneNumber, @Nullable String accountName) {
+        if (!isLoaded()) {
+            L.w(TAG, "looking up a contact while loading.");
+        }
+        if (TextUtils.isEmpty(phoneNumber)) {
+            L.w(TAG, "looking up an empty phone number.");
+            return null;
+        }
+        if (mPhoneNumberContactMap.containsKey(accountName)) {
+            String normalizedNumber = TelecomUtils.getNormalizedNumber(mContext, phoneNumber);
+            return mPhoneNumberContactMap.get(accountName).get(normalizedNumber);
+        }
+
+        return null;
     }
 
     /**
@@ -251,23 +280,26 @@ public class InMemoryPhoneBook implements Observer<List<Contact>> {
         }
 
         mAccountContactsMap.clear();
+        mPhoneNumberContactMap.clear();
         for (String accountName : contactMap.keySet()) {
             Map<String, Contact> subMap = contactMap.get(accountName);
             contactList.addAll(subMap.values());
             List<Contact> accountContacts = new ArrayList<>();
             accountContacts.addAll(subMap.values());
             mAccountContactsMap.put(accountName, accountContacts);
+
+            Map<String, Contact> phoneNumberSubMap = new HashMap<>();
+            mPhoneNumberContactMap.put(accountName, phoneNumberSubMap);
+            for (Contact contact : subMap.values()) {
+                for (PhoneNumber phoneNumber : contact.getNumbers()) {
+                    phoneNumberSubMap.put(phoneNumber.getNormalizedNumber(), contact);
+                }
+            }
         }
 
         mLookupKeyContactMap.clear();
         mLookupKeyContactMap.putAll(contactMap);
 
-        mPhoneNumberContactMap.clear();
-        for (Contact contact : contactList) {
-            for (PhoneNumber phoneNumber : contact.getNumbers()) {
-                mPhoneNumberContactMap.put(phoneNumber.getI18nPhoneNumberWrapper(), contact);
-            }
-        }
         return contactList;
     }
 

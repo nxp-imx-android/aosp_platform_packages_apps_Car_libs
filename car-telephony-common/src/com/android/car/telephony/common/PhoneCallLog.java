@@ -81,7 +81,7 @@ public class PhoneCallLog {
 
     private long mId;
     private String mPhoneNumberString;
-    private I18nPhoneNumberWrapper mI18nPhoneNumberWrapper;
+    private String mNormalizedNumber;
     private String mAccountName;
     private List<Record> mCallRecords = new ArrayList<>();
     private int mTimeRange;
@@ -92,6 +92,7 @@ public class PhoneCallLog {
     public static PhoneCallLog fromCursor(Context context, Cursor cursor) {
         int idColumn = cursor.getColumnIndex(CallLog.Calls._ID);
         int numberColumn = cursor.getColumnIndex(CallLog.Calls.NUMBER);
+        int normalizedNumberColumn = cursor.getColumnIndex(CallLog.Calls.CACHED_NORMALIZED_NUMBER);
         int dateColumn = cursor.getColumnIndex(CallLog.Calls.DATE);
         int callTypeColumn = cursor.getColumnIndex(CallLog.Calls.TYPE);
         int accountNameColumn = cursor.getColumnIndex(CallLog.Calls.PHONE_ACCOUNT_ID);
@@ -99,8 +100,9 @@ public class PhoneCallLog {
         PhoneCallLog phoneCallLog = new PhoneCallLog();
         phoneCallLog.mId = cursor.getLong(idColumn);
         phoneCallLog.mPhoneNumberString = cursor.getString(numberColumn);
-        phoneCallLog.mI18nPhoneNumberWrapper = I18nPhoneNumberWrapper.Factory.INSTANCE.get(context,
-                phoneCallLog.mPhoneNumberString);
+        String normalizedNumber = cursor.getString(normalizedNumberColumn);
+        phoneCallLog.mNormalizedNumber = TextUtils.isEmpty(normalizedNumber)
+                ? phoneCallLog.mPhoneNumberString : normalizedNumber;
         Record record = new Record(cursor.getLong(dateColumn), cursor.getInt(callTypeColumn));
         phoneCallLog.mCallRecords.add(record);
         phoneCallLog.mTimeRange = getTimeRange(record.getCallEndTimestamp());
@@ -111,6 +113,11 @@ public class PhoneCallLog {
     /** Returns the phone number of this log. */
     public String getPhoneNumberString() {
         return mPhoneNumberString;
+    }
+
+    /** Returns the normalized number of this call log. */
+    public String getNormalizedNumber() {
+        return mNormalizedNumber;
     }
 
     /**
@@ -171,8 +178,8 @@ public class PhoneCallLog {
             if (TextUtils.isEmpty(mPhoneNumberString)) {
                 return mId == ((PhoneCallLog) object).mId;
             } else {
-                return mI18nPhoneNumberWrapper.equals(
-                        ((PhoneCallLog) object).mI18nPhoneNumberWrapper);
+                return TextUtils.equals(
+                        mNormalizedNumber, ((PhoneCallLog) object).mNormalizedNumber);
             }
         }
         return false;
@@ -183,7 +190,7 @@ public class PhoneCallLog {
         if (TextUtils.isEmpty(mPhoneNumberString)) {
             return Long.hashCode(mId);
         } else {
-            return Objects.hashCode(mI18nPhoneNumberWrapper);
+            return Objects.hashCode(mNormalizedNumber);
         }
     }
 
