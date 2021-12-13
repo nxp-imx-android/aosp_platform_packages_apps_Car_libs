@@ -336,7 +336,7 @@ public class Contact implements Parcelable, Comparable<Contact> {
      * {@link ContactsContract.CommonDataKinds.Phone#CONTENT_ITEM_TYPE}.
      */
     private void addPhoneNumber(Context context, Cursor cursor) {
-        PhoneNumber newNumber = PhoneNumber.fromCursor(context, cursor);
+        PhoneNumber newNumber = PhoneNumber.fromCursor(cursor);
 
         boolean hasSameNumber = false;
         for (PhoneNumber number : mPhoneNumbers) {
@@ -355,7 +355,7 @@ public class Contact implements Parcelable, Comparable<Contact> {
         }
 
         // TODO: update voice mail number part when start to support voice mail.
-        if (TelecomUtils.isVoicemailNumber(context, newNumber.getNumber())) {
+        if (TelecomUtils.isVoicemailNumber(context, newNumber.getNormalizedNumber())) {
             mIsVoiceMail = true;
         }
     }
@@ -556,10 +556,9 @@ public class Contact implements Parcelable, Comparable<Contact> {
      */
     @Nullable
     public PhoneNumber getPhoneNumber(Context context, String number) {
-        I18nPhoneNumberWrapper i18nPhoneNumber = I18nPhoneNumberWrapper.Factory.INSTANCE.get(
-                context, number);
+        String normalizedNumber = TelecomUtils.getNormalizedNumber(context, number);
         for (PhoneNumber phoneNumber : mPhoneNumbers) {
-            if (phoneNumber.getI18nPhoneNumberWrapper().equals(i18nPhoneNumber)) {
+            if (TextUtils.equals(normalizedNumber, phoneNumber.getNormalizedNumber())) {
                 return phoneNumber;
             }
         }
