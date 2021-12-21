@@ -23,6 +23,7 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.ContactsContract;
+import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -355,7 +356,7 @@ public class Contact implements Parcelable, Comparable<Contact> {
         }
 
         // TODO: update voice mail number part when start to support voice mail.
-        if (TelecomUtils.isVoicemailNumber(context, newNumber.getNormalizedNumber())) {
+        if (TelecomUtils.isVoicemailNumber(context, newNumber.getRawNumber())) {
             mIsVoiceMail = true;
         }
     }
@@ -555,10 +556,10 @@ public class Contact implements Parcelable, Comparable<Contact> {
      * {@code null} if this contact doesn't contain the given phone number.
      */
     @Nullable
-    public PhoneNumber getPhoneNumber(Context context, String number) {
-        String normalizedNumber = TelecomUtils.getNormalizedNumber(context, number);
+    public PhoneNumber getPhoneNumber(String number) {
+        String minMatch = PhoneNumberUtils.toCallerIDMinMatch(number);
         for (PhoneNumber phoneNumber : mPhoneNumbers) {
-            if (TextUtils.equals(normalizedNumber, phoneNumber.getNormalizedNumber())) {
+            if (TextUtils.equals(minMatch, phoneNumber.getMinMatch())) {
                 return phoneNumber;
             }
         }

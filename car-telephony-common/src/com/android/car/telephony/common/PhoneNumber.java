@@ -22,6 +22,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.RawContacts;
+import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -35,7 +36,13 @@ import java.util.Objects;
 public class PhoneNumber implements Parcelable {
 
     private final String mRawNumber;
+    // The E.164 representation. Null if the raw number is null or not valid.
+    // 511 numbers also return null.
+    @Nullable
     private final String mNormalizedNumber;
+    // Null if the raw number is null.
+    @Nullable
+    private final String mMinMatch;
 
     @NonNull
     private final String mAccountName;
@@ -102,7 +109,8 @@ public class PhoneNumber implements Parcelable {
     private PhoneNumber(String rawNumber, String normalizedNumber, int type, @Nullable String label,
             boolean isPrimary, long id, String accountName, String accountType, int dataVersion) {
         mRawNumber = rawNumber;
-        mNormalizedNumber = TextUtils.isEmpty(normalizedNumber) ? rawNumber : normalizedNumber;
+        mNormalizedNumber = normalizedNumber;
+        mMinMatch = PhoneNumberUtils.toCallerIDMinMatch(mRawNumber);
         mType = type;
         mLabel = label;
         mIsPrimary = isPrimary;
@@ -115,14 +123,14 @@ public class PhoneNumber implements Parcelable {
     @Override
     public boolean equals(Object obj) {
         return obj instanceof PhoneNumber
-                && TextUtils.equals(mNormalizedNumber, ((PhoneNumber) obj).mNormalizedNumber)
+                && TextUtils.equals(mMinMatch, ((PhoneNumber) obj).mMinMatch)
                 && mAccountName.equals(((PhoneNumber) obj).mAccountName)
                 && mAccountType.equals(((PhoneNumber) obj).mAccountType);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(mNormalizedNumber, mAccountName, mAccountType);
+        return Objects.hash(mMinMatch, mAccountName, mAccountType);
     }
 
     /**
@@ -141,10 +149,11 @@ public class PhoneNumber implements Parcelable {
     }
 
     /**
-     * Gets a phone number in the international format if valid. Otherwise, returns the raw number.
+     * Returns the rightmost minimum matched characters in the network portion in *reversed* order.
+     * See {@link PhoneNumberUtils#toCallerIDMinMatch(String)}.
      */
-    public String getNormalizedNumber() {
-        return mNormalizedNumber;
+    public String getMinMatch() {
+        return mMinMatch;
     }
 
     /**
@@ -152,6 +161,15 @@ public class PhoneNumber implements Parcelable {
      */
     public String getRawNumber() {
         return mRawNumber;
+    }
+
+    /**
+     * Returns the E.164 representation. Null if raw number is not valid. The normalized numbers are
+     * downloaded from phone, so the country code uses the phone's locale.
+     */
+    @Nullable
+    public String getNormalizedNumber() {
+        return mNormalizedNumber;
     }
 
     /**
@@ -219,7 +237,7 @@ public class PhoneNumber implements Parcelable {
 
     @Override
     public String toString() {
-        return getNormalizedNumber() + " " + mAccountName + " " + mAccountType;
+        return TelecomUtils.piiLog(mRawNumber) + " " + mAccountName + " " + mAccountType;
     }
 
     @Override

@@ -22,6 +22,7 @@ import android.database.Cursor;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds;
 import android.provider.ContactsContract.Data;
+import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 
@@ -54,7 +55,9 @@ public class InMemoryPhoneBook implements Observer<List<Contact>> {
 
     /**
      * A map to speed up phone number searching by account name and phone number. Each entry
-     * presents a map of normalized phone number key to contacts for one account.
+     * presents a map of phone number min match key to contacts for one account. See
+     * {@link PhoneNumberUtils#toCallerIDMinMatch(String)}. The min match resolves the contact
+     * mismatch when the system locale differs from the phone locale.
      */
     private final Map<String, Map<String, Contact>> mPhoneNumberContactMap = new HashMap<>();
     /**
@@ -185,10 +188,10 @@ public class InMemoryPhoneBook implements Observer<List<Contact>> {
             return null;
         }
 
-        String normalizedNumber = TelecomUtils.getNormalizedNumber(mContext, phoneNumber);
+        String minMatch = PhoneNumberUtils.toCallerIDMinMatch(phoneNumber);
         for (Map<String, Contact> numberContactSubMap : mPhoneNumberContactMap.values()) {
-            if (numberContactSubMap.containsKey(normalizedNumber)) {
-                return numberContactSubMap.get(normalizedNumber);
+            if (numberContactSubMap.containsKey(minMatch)) {
+                return numberContactSubMap.get(minMatch);
             }
         }
         return null;
@@ -207,8 +210,8 @@ public class InMemoryPhoneBook implements Observer<List<Contact>> {
             return null;
         }
         if (mPhoneNumberContactMap.containsKey(accountName)) {
-            String normalizedNumber = TelecomUtils.getNormalizedNumber(mContext, phoneNumber);
-            return mPhoneNumberContactMap.get(accountName).get(normalizedNumber);
+            String minMatch = PhoneNumberUtils.toCallerIDMinMatch(phoneNumber);
+            return  mPhoneNumberContactMap.get(accountName).get(minMatch);
         }
 
         return null;
@@ -292,7 +295,7 @@ public class InMemoryPhoneBook implements Observer<List<Contact>> {
             mPhoneNumberContactMap.put(accountName, phoneNumberSubMap);
             for (Contact contact : subMap.values()) {
                 for (PhoneNumber phoneNumber : contact.getNumbers()) {
-                    phoneNumberSubMap.put(phoneNumber.getNormalizedNumber(), contact);
+                    phoneNumberSubMap.put(phoneNumber.getMinMatch(), contact);
                 }
             }
         }
