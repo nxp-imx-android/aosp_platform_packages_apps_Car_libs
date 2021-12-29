@@ -19,6 +19,7 @@ package com.android.car.ui.actions;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast;
 
+import android.view.InputDevice;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -152,8 +153,14 @@ public class LowLevelActions {
                 float[] coordinatesMove = new float[]{downX + location[0], downY + location[1]};
                 float[] precision = new float[]{1f, 1f};
                 // Send down event, pause, and send up
+                // TODO(b/212478377): Apparently the issue is that the InputDevice value is not the
+                // same for all three down, move, and up motions. Until the bug is fixed on the
+                // Espresso side, we need to pass the InputDevice explicitly for all three motions.
+                // But since Espresso doesn't provide any methods for passing the InputDevice for
+                // move, and up motions, we only can use the default InputDevice which is
+                // (SOURCE_CLASS_POINTER) for down motion so it's consistent with the other motions.
                 MotionEvent down = MotionEvents.sendDown(uiController, coordinatesDown,
-                        precision).down;
+                        precision, InputDevice.SOURCE_CLASS_POINTER, 0 /*butttonState*/).down;
                 uiController.loopMainThreadForAtLeast(200);
                 for (int i = 0; i < interval; i++) {
                     MotionEvents.sendMovement(uiController, down, coordinatesMove);
