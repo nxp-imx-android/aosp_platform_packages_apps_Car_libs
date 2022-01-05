@@ -45,12 +45,14 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
 /**
  * Unit tests for {@link AppStyledDialogController}.
  */
-@RunWith(AndroidJUnit4.class)
+@RunWith(Parameterized.class)
 public class AppStyledDialogControllerTest {
+
     private AppStyledDialogController mAppStyledDialogController;
 
     @Rule
@@ -58,6 +60,15 @@ public class AppStyledDialogControllerTest {
             new ActivityScenarioRule<>(TestActivity.class);
 
     private TestActivity mActivity;
+
+    @Parameterized.Parameters
+    public static Object[] data() {
+        return new Object[]{false, true};
+    }
+
+    public AppStyledDialogControllerTest(boolean pluginEnabled) {
+        PluginFactorySingleton.setPluginEnabledForTesting(pluginEnabled);
+    }
 
     @Before
     public void setUp() throws Throwable {
