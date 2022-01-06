@@ -35,7 +35,7 @@ import com.android.car.ui.pluginsupport.PluginFactorySingleton;
 import java.util.List;
 
 /**
- * This is aa definition for a {@link TextView} extension that supports rendering {@link
+ * This is a definition for a {@link TextView} extension that supports rendering {@link
  * CarUiText}.
  */
 @SuppressLint("AppCompatCustomView")

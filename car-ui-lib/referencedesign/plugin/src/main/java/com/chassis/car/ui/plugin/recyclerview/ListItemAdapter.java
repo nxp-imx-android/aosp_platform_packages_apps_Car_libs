@@ -32,7 +32,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.car.ui.plugin.oemapis.TextOEMV1;
 import com.android.car.ui.plugin.oemapis.recyclerview.AdapterDataObserverOEMV1;
 import com.android.car.ui.plugin.oemapis.recyclerview.AdapterOEMV1;
 import com.android.car.ui.plugin.oemapis.recyclerview.ContentListItemOEMV1;
@@ -43,6 +42,7 @@ import com.android.car.ui.plugin.oemapis.recyclerview.ViewHolderOEMV1;
 
 import com.chassis.car.ui.plugin.R;
 import com.chassis.car.ui.plugin.SecureView;
+import com.chassis.car.ui.plugin.VariantTextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -246,8 +246,8 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.BaseVi
      * Holds views of {@link ContentListItemOEMV1}.
      */
     static class ListItemViewHolder extends ListItemAdapter.BaseViewHolder {
-        final TextView mTitle;
-        final TextView mBody;
+        final VariantTextView mTitle;
+        final VariantTextView mBody;
         final ImageView mIcon;
         final ImageView mContentIcon;
         final ImageView mAvatarIcon;
@@ -286,14 +286,14 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.BaseVi
 
         void bind(@NonNull ContentListItemOEMV1 item) {
             if (item.getTitle() != null) {
-                mTitle.setText(item.getTitle().getPreferredText());
+                mTitle.setText(item.getTitle());
                 mTitle.setVisibility(View.VISIBLE);
             } else {
                 mTitle.setVisibility(View.GONE);
             }
 
             if (item.getBody() != null) {
-                mBody.setText(TextOEMV1.combineMultiLine(item.getBody()));
+                mBody.setText(item.getBody());
                 mBody.setVisibility(View.VISIBLE);
             } else {
                 mBody.setVisibility(View.GONE);

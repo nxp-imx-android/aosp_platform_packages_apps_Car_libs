@@ -81,7 +81,7 @@
             android:scaleType="fitCenter" />
     </FrameLayout>
 
-    <TextView
+    <com.chassis.car.ui.plugin.VariantTextView
         android:id="@+id/list_item_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -94,7 +94,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
         app:layout_goneMarginStart="@dimen/list_item_text_no_icon_start_margin" />
-    <TextView
+    <com.chassis.car.ui.plugin.VariantTextView
         android:id="@+id/list_item_body"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
