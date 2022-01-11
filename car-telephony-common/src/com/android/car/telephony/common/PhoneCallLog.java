@@ -19,6 +19,7 @@ package com.android.car.telephony.common;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.CallLog;
+import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 
@@ -81,7 +82,7 @@ public class PhoneCallLog {
 
     private long mId;
     private String mPhoneNumberString;
-    private String mNormalizedNumber;
+    private String mMinMatch;
     private String mAccountName;
     private List<Record> mCallRecords = new ArrayList<>();
     private int mTimeRange;
@@ -92,7 +93,6 @@ public class PhoneCallLog {
     public static PhoneCallLog fromCursor(Context context, Cursor cursor) {
         int idColumn = cursor.getColumnIndex(CallLog.Calls._ID);
         int numberColumn = cursor.getColumnIndex(CallLog.Calls.NUMBER);
-        int normalizedNumberColumn = cursor.getColumnIndex(CallLog.Calls.CACHED_NORMALIZED_NUMBER);
         int dateColumn = cursor.getColumnIndex(CallLog.Calls.DATE);
         int callTypeColumn = cursor.getColumnIndex(CallLog.Calls.TYPE);
         int accountNameColumn = cursor.getColumnIndex(CallLog.Calls.PHONE_ACCOUNT_ID);
@@ -100,9 +100,8 @@ public class PhoneCallLog {
         PhoneCallLog phoneCallLog = new PhoneCallLog();
         phoneCallLog.mId = cursor.getLong(idColumn);
         phoneCallLog.mPhoneNumberString = cursor.getString(numberColumn);
-        String normalizedNumber = cursor.getString(normalizedNumberColumn);
-        phoneCallLog.mNormalizedNumber = TextUtils.isEmpty(normalizedNumber)
-                ? phoneCallLog.mPhoneNumberString : normalizedNumber;
+        phoneCallLog.mMinMatch = PhoneNumberUtils.toCallerIDMinMatch(
+                phoneCallLog.mPhoneNumberString);
         Record record = new Record(cursor.getLong(dateColumn), cursor.getInt(callTypeColumn));
         phoneCallLog.mCallRecords.add(record);
         phoneCallLog.mTimeRange = getTimeRange(record.getCallEndTimestamp());
@@ -115,9 +114,12 @@ public class PhoneCallLog {
         return mPhoneNumberString;
     }
 
-    /** Returns the normalized number of this call log. */
-    public String getNormalizedNumber() {
-        return mNormalizedNumber;
+    /**
+     * Returns the rightmost minimum matched characters in the network portion in *reversed* order.
+     * See {@link PhoneNumberUtils#toCallerIDMinMatch(String)}.
+     */
+    public String getMinMatch() {
+        return mMinMatch;
     }
 
     /**
@@ -179,7 +181,7 @@ public class PhoneCallLog {
                 return mId == ((PhoneCallLog) object).mId;
             } else {
                 return TextUtils.equals(
-                        mNormalizedNumber, ((PhoneCallLog) object).mNormalizedNumber);
+                        mMinMatch, ((PhoneCallLog) object).mMinMatch);
             }
         }
         return false;
@@ -190,7 +192,7 @@ public class PhoneCallLog {
         if (TextUtils.isEmpty(mPhoneNumberString)) {
             return Long.hashCode(mId);
         } else {
-            return Objects.hashCode(mNormalizedNumber);
+            return Objects.hashCode(mMinMatch);
         }
     }
 

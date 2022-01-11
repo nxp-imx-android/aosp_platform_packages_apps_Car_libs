@@ -128,8 +128,7 @@ public class TelecomUtils {
         String countryIso = getCurrentCountryIsoFromLocale(context);
         L.d(TAG, "PhoneNumberUtils.formatNumberToE164, number: " + piiLog(number)
                 + ", country: " + countryIso);
-        String e164Format = PhoneNumberUtils.formatNumberToE164(number, countryIso);
-        return TextUtils.isEmpty(e164Format) ? number : e164Format;
+        return PhoneNumberUtils.formatNumberToE164(number, countryIso);
     }
 
     /**
@@ -259,13 +258,21 @@ public class TelecomUtils {
      * Gets all the info needed to properly display a phone number to the UI. (e.g. if it's the
      * voicemail number, return a string and a uri that represents voicemail, if it's a contact, get
      * the contact's name, its avatar uri, the phone number's label, etc).
+     *
+     * @deprecated use {@link InMemoryPhoneBook#lookupContactEntry(String, String)} instead.
      */
+    @Deprecated
     public static CompletableFuture<PhoneNumberInfo> getPhoneNumberInfo(
             Context context, String number) {
         return CompletableFuture.supplyAsync(() -> lookupNumberInBackground(context, number));
     }
 
-    /** Lookup phone number info in background. */
+    /**
+     * Lookup phone number info in background.
+     *
+     * @deprecated use {@link InMemoryPhoneBook#lookupContactEntry(String, String)} instead.
+     */
+    @Deprecated
     @WorkerThread
     public static PhoneNumberInfo lookupNumberInBackground(Context context, String number) {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS)
@@ -299,7 +306,7 @@ public class TelecomUtils {
                     nameAlt = name;
                 }
 
-                PhoneNumber phoneNumber = contact.getPhoneNumber(context, number);
+                PhoneNumber phoneNumber = contact.getPhoneNumber(number);
                 CharSequence typeLabel = phoneNumber == null ? "" : phoneNumber.getReadableLabel(
                         context.getResources());
 
