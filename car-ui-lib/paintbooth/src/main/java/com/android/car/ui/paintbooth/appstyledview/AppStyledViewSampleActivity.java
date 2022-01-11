@@ -26,6 +26,9 @@ import android.view.Window;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.android.car.ui.appstyledview.AppStyledDialogController;
 import com.android.car.ui.appstyledview.AppStyledViewController.AppStyledViewNavIcon;
@@ -70,14 +73,45 @@ public class AppStyledViewSampleActivity extends AppCompatActivity {
                 .inflate(R.layout.app_styled_view_test_sample, null, false);
 
         mAppStyledDialogController.setOnNavIconClickListener(
-                () -> mAppStyledDialogController.dismiss());
+                () -> {
+                    mAppStyledDialogController.dismiss();
+                    showSystemBars();
+                });
 
         Button btn = findViewById(R.id.show_app_styled_fragment);
         btn.setOnClickListener(v -> {
             mAppStyledDialogController.setContentView(appStyledTestView);
             mAppStyledDialogController.setNavIcon(AppStyledViewNavIcon.CLOSE);
-            mAppStyledDialogController.show();
+            hideSystemBars();
+            btn.post(() -> mAppStyledDialogController.show());
         });
+    }
+
+    private void hideSystemBars() {
+        WindowInsetsControllerCompat windowInsetsController =
+                ViewCompat.getWindowInsetsController(getWindow().getDecorView());
+        if (windowInsetsController == null) {
+            return;
+        }
+
+        // Configure the behavior of the hidden system bars
+        windowInsetsController.setSystemBarsBehavior(
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        );
+
+        // Hide the system bars
+        windowInsetsController.hide(WindowInsetsCompat.Type.systemBars());
+    }
+
+    private void showSystemBars() {
+        WindowInsetsControllerCompat windowInsetsController =
+                ViewCompat.getWindowInsetsController(getWindow().getDecorView());
+        if (windowInsetsController == null) {
+            return;
+        }
+
+        // Show the system bars
+        windowInsetsController.show(WindowInsetsCompat.Type.systemBars());
     }
 
     @Override
@@ -85,6 +119,7 @@ public class AppStyledViewSampleActivity extends AppCompatActivity {
         super.onStop();
         if (mAppStyledDialogController != null) {
             mAppStyledDialogController.dismiss();
+            showSystemBars();
         }
     }
 }
