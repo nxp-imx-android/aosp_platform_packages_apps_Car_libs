@@ -30,7 +30,13 @@
                   android:theme="@style/Theme.CarUi.WithToolbar"/>
         <activity
             android:name="com.android.car.ui.preference.NonFullscreenPreferenceFragmentTest$MyActivity"
-            android:theme="@style/Theme.CarUi.WithToolbar"/>
+            android:theme="@style/Theme.CarUi.WithToolbar"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" >
+                </action>
+            </intent-filter>
+        </activity>
         <activity android:name="com.android.car.ui.utils.ViewUtilsTestActivity" />
         <activity
             android:name="com.android.car.ui.toolbar.ToolbarTestActivity"

@@ -44,7 +44,6 @@ import androidx.preference.MultiSelectListPreference;
 import androidx.preference.PreferenceScreen;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.core.app.ActivityScenario;
-import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import com.android.car.ui.baselayout.Insets;
@@ -53,7 +52,6 @@ import com.android.car.ui.core.CarUi;
 import com.android.car.ui.matchers.PaddingMatcher.Side;
 import com.android.car.ui.toolbar.ToolbarController;
 
-import org.junit.Rule;
 import org.junit.Test;
 
 @TargetApi(MIN_TARGET_API)
@@ -65,17 +63,12 @@ public class NonFullscreenPreferenceFragmentTest {
     private static final String LIST_PREFERENCE_TITLE = "List Preference";
     private static final String MULTI_SELECT_LIST_PREFERENCE_TITLE = "MultiSelect List Preference";
     private static final String BACK_CONTENT_DESCRIPTION = "Back";
-    private static final String[] ITEMS = { "Item 1", "Item 2", "Item 3" };
-
-    @Rule
-    public ActivityScenarioRule<PreferenceTestActivity> mActivityRule =
-            new ActivityScenarioRule<>(PreferenceTestActivity.class);
+    private static final String[] ITEMS = {"Item 1", "Item 2", "Item 3"};
 
     @Test
     public void test_fullscreen_changesTitle() {
         try (ActivityScenario<MyActivity> scenario =
                      ActivityScenario.launch(MyActivity.newIntent(true))) {
-
             onView(withText(TOOLBAR_DEFAULT_TEXT)).check(doesNotExist());
             onView(withText(PREFERENCE_SCREEN_TITLE)).check(matches(isDisplayed()));
             onView(isAssignableFrom(RecyclerView.class)).check(
@@ -101,7 +94,6 @@ public class NonFullscreenPreferenceFragmentTest {
     public void test_nonFullscreen_doesntChangeTitle() {
         try (ActivityScenario<MyActivity> scenario =
                      ActivityScenario.launch(MyActivity.newIntent(false))) {
-
             onView(withText(TOOLBAR_DEFAULT_TEXT)).check(matches(isDisplayed()));
             onView(withText(PREFERENCE_SCREEN_TITLE)).check(doesNotExist());
             onView(isAssignableFrom(RecyclerView.class)).check(matches(withPadding(Side.TOP, 0)));
@@ -124,9 +116,7 @@ public class NonFullscreenPreferenceFragmentTest {
         }
     }
 
-
     public static class MyActivity extends AppCompatActivity implements InsetsChangedListener {
-
         private boolean mIsFullScreen = false;
 
         public static Intent newIntent(boolean isFullScreen) {
