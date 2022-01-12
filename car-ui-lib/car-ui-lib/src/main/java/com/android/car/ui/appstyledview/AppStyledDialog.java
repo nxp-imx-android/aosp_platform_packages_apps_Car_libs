@@ -22,21 +22,29 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowInsets;
 import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 
 /**
  * App styled dialog used to display a view that cannot be customized via OEM. Dialog will inflate a
  * layout and add the view provided by the application into the layout. Everything other than the
  * view within the layout can be customized by OEM.
- *
+ * <p>
  * Apps should not use this directly. App's should use {@link AppStyledDialogController}.
  */
-/* package */ class AppStyledDialog extends Dialog implements DialogInterface.OnDismissListener {
+@RequiresApi(api = Build.VERSION_CODES.R)
+        /* package */ class AppStyledDialog extends Dialog implements
+        DialogInterface.OnDismissListener {
 
     private final AppStyledViewController mController;
     private Runnable mOnDismissListener;
@@ -99,6 +107,36 @@ import androidx.annotation.NonNull;
         getWindow().getDecorView().setSystemUiVisibility(
                 ((Activity) mContext).getWindow().getDecorView().getSystemUiVisibility()
         );
+
+        //The following code is used to copy window inset settings from the activity that
+        // requested the dialog. Status bar insets mirror activity state but nav bar requires the
+        // following workaround.
+
+        // WindowInsetsController corresponding to activity that requested the dialog
+        WindowInsetsControllerCompat activityWindowInsetsController =
+                ViewCompat.getWindowInsetsController(
+                        ((Activity) mContext).getWindow().getDecorView());
+
+        // WindowInsetsController corresponding to the dialog
+        WindowInsetsControllerCompat dialogWindowInsetsController =
+                ViewCompat.getWindowInsetsController(getWindow().getDecorView());
+
+        if (dialogWindowInsetsController == null || activityWindowInsetsController == null) {
+            return;
+        }
+
+        // Configure the behavior of the hidden system bars to match requesting activity
+        dialogWindowInsetsController.setSystemBarsBehavior(
+                activityWindowInsetsController.getSystemBarsBehavior()
+        );
+
+        // Configure nav bar visibility to match requesting activity
+        boolean isNavBarVisible =
+                ((Activity) mContext).getWindow().getDecorView().getRootWindowInsets().isVisible(
+                        WindowInsets.Type.navigationBars());
+        if (!isNavBarVisible) {
+            dialogWindowInsetsController.hide(WindowInsetsCompat.Type.navigationBars());
+        }
     }
 
     void setContent(View contentView) {
