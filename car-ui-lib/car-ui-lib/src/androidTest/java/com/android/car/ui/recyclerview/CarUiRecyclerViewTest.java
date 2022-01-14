@@ -1013,6 +1013,10 @@ public class CarUiRecyclerViewTest {
                 is(greaterThan(orientationHelper.getEndAfterPadding())));
 
         onView(withId(getId("car_ui_scrollbar_page_down"))).perform(click());
+
+        // Verify long item does not snap to bottom.
+        assertThat(orientationHelper.getDecoratedEnd(longItem),
+                not(equalTo(orientationHelper.getEndAfterPadding())));
     }
 
     @Test
@@ -2223,7 +2227,7 @@ public class CarUiRecyclerViewTest {
                 OrientationHelper.createVerticalHelper(recyclerView.getLayoutManager());
         for (int i = 0; i < recyclerView.getLayoutManager().getChildCount(); i++) {
             View item = recyclerView.getLayoutManager().getChildAt(i);
-            if (item.getHeight() >= orientationHelper.getTotalSpace()) {
+            if (item.getHeight() > orientationHelper.getTotalSpace()) {
                 return item;
             }
         }
@@ -2295,10 +2299,10 @@ public class CarUiRecyclerViewTest {
                 case STANDARD:
                     break;
                 case TALL:
-                    holder.itemView.setMinimumHeight(screenHeight);
+                    holder.itemView.setMinimumHeight((int) (screenHeight * 1.1));
                     break;
                 case EXTRA_TALL:
-                    holder.itemView.setMinimumHeight(screenHeight * 2);
+                    holder.itemView.setMinimumHeight((int) (screenHeight * 2.1));
                     break;
                 default:
                     throw new IllegalStateException("Unexpected value: " + height);

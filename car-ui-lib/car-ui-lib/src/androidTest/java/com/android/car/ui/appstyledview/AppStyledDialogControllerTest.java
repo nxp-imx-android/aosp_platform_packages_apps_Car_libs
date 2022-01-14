@@ -150,12 +150,12 @@ public class AppStyledDialogControllerTest {
 
     @Test
     public void getContentView_equalsSetView() {
-        LayoutInflater inflater = LayoutInflater.from(mActivityRule.getActivity());
+        LayoutInflater inflater = LayoutInflater.from(mActivity);
 
         View appStyledTestView = inflater.inflate(R.layout.app_styled_view_sample, null,
                 false);
 
-        mActivityRule.runOnUiThread(() -> {
+        mActivity.runOnUiThread(() -> {
             mAppStyledDialogController.setContentView(appStyledTestView);
             mAppStyledDialogController.show();
         });
