@@ -229,6 +229,46 @@ public final class RecyclerViewAdapterV1 extends FrameLayout
         return mOEMRecyclerView.getRecyclerViewChildAt(index);
     }
 
+    @Override
+    public int getRecyclerViewChildPosition(View child) {
+        return mOEMRecyclerView.getRecyclerViewChildPosition(child);
+    }
+
+    @Override
+    public int getDecoratedStart(View child) {
+        return mOEMRecyclerView.getDecoratedStart(child);
+    }
+
+    @Override
+    public int getDecoratedEnd(View child) {
+        return mOEMRecyclerView.getDecoratedEnd(child);
+    }
+
+    @Override
+    public int getDecoratedMeasuredHeight(View child) {
+        return mOEMRecyclerView.getDecoratedMeasuredHeight(child);
+    }
+
+    @Override
+    public int getDecoratedMeasuredWidth(View child) {
+        return mOEMRecyclerView.getDecoratedMeasuredWidth(child);
+    }
+
+    @Override
+    public int getDecoratedMeasurementInOther(View child) {
+        return mOEMRecyclerView.getDecoratedMeasurementInOther(child);
+    }
+
+    @Override
+    public int getDecoratedMeasurement(View child) {
+        return mOEMRecyclerView.getDecoratedMeasurement(child);
+    }
+
+    @Override
+    public View findViewByPosition(int position) {
+        return mOEMRecyclerView.findViewByPosition(position);
+    }
+
     private static int toInternalScrollState(int state) {
         /* default to RecyclerViewOEMV1.SCROLL_STATE_IDLE */
         int internalState = SCROLL_STATE_IDLE;
@@ -427,18 +467,6 @@ public final class RecyclerViewAdapterV1 extends FrameLayout
     @Override
     public boolean hasFixedSize() {
         return mOEMRecyclerView.hasFixedSize();
-    }
-
-    /**
-     * @return null
-     * @deprecated LayoutManager will be implemented by OEMs, use other available APIs to get the
-     * required data
-     */
-    @Nullable
-    @Override
-    @Deprecated
-    public LayoutManager getLayoutManager() {
-        return null;
     }
 
     @Override

@@ -156,7 +156,7 @@ public class FocusParkingViewTest {
 
     @Test
     public void testRestoreFocusInRoot_recyclerViewItemRemoved() throws Exception {
-        View firstItem = mList.getLayoutManager().findViewByPosition(0);
+        View firstItem = mList.findViewByPosition(0);
         TestUtils.requestFocusAndAssertFocused(/* viewToRequestFocus= */
                 firstItem, /* viewToGetFocus= */ firstItem);
         ViewGroup parent = (ViewGroup) firstItem.getParent();

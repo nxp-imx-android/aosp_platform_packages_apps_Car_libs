@@ -268,7 +268,6 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
     }
 
     @Nullable
-    @Override
     public LayoutManager getLayoutManager() {
         return mRecyclerView.getLayoutManager();
     }
@@ -414,6 +413,24 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
     public View getRecyclerViewChildAt(int index) {
         if (mRecyclerView.getLayoutManager() != null) {
             return mRecyclerView.getLayoutManager().getChildAt(index);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public int getRecyclerViewChildPosition(View child) {
+        if (mRecyclerView.getLayoutManager() != null) {
+            return mRecyclerView.getLayoutManager().getPosition(child);
+        } else {
+            return -1;
+        }
+    }
+
+    @Override
+    public View findViewByPosition(int position) {
+        if (mRecyclerView.getLayoutManager() != null) {
+            return mRecyclerView.getLayoutManager().findViewByPosition(position);
         } else {
             return null;
         }
@@ -788,6 +805,48 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
     public int getTotalSpace() {
         if (mLayoutStyle == null) return 0;
         return createOrientationHelper().getTotalSpace();
+    }
+
+    @Override
+    public int getDecoratedStart(View child) {
+        if (mLayoutStyle == null) return 0;
+        return createOrientationHelper().getDecoratedStart(child);
+    }
+
+    @Override
+    public int getDecoratedEnd(View child) {
+        if (mLayoutStyle == null) return 0;
+        return createOrientationHelper().getDecoratedEnd(child);
+    }
+
+    @Override
+    public int getDecoratedMeasuredHeight(View child) {
+        if (mRecyclerView.getLayoutManager() != null) {
+            return mRecyclerView.getLayoutManager().getDecoratedMeasuredHeight(child);
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
+    public int getDecoratedMeasuredWidth(View child) {
+        if (mRecyclerView.getLayoutManager() != null) {
+            return mRecyclerView.getLayoutManager().getDecoratedMeasuredWidth(child);
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
+    public int getDecoratedMeasurementInOther(View child) {
+        if (mLayoutStyle == null) return 0;
+        return createOrientationHelper().getDecoratedMeasurementInOther(child);
+    }
+
+    @Override
+    public int getDecoratedMeasurement(View child) {
+        if (mLayoutStyle == null) return 0;
+        return createOrientationHelper().getDecoratedMeasurement(child);
     }
 
     private void createScrollBarFromConfig(Context context, View scrollView) {
