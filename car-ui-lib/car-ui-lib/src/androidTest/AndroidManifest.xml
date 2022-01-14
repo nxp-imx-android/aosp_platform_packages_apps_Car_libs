@@ -15,43 +15,62 @@
     limitations under the License.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.android.car.ui.test">
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
-    <application android:debuggable="true" android:theme="@style/Theme.CarUi.NoToolbar">
-        <uses-library android:name="android.test.runner" />
-        <activity android:name="com.android.car.ui.TrulyEmptyActivity"
-            android:theme="@style/Theme.CarUi"/>
-        <activity android:name="com.android.car.ui.TestActivity" />
-        <activity android:name="com.android.car.ui.recyclerview.CarUiRecyclerViewTestActivity" />
-        <activity android:name="com.android.car.ui.imewidescreen.CarUiImeWideScreenTestActivity" />
-        <activity android:name="com.android.car.ui.FocusAreaTestActivity" />
-        <activity android:name="com.android.car.ui.FocusParkingViewTestActivity" />
-        <activity android:name="com.android.car.ui.preference.PreferenceTestActivity"
-                  android:theme="@style/Theme.CarUi.WithToolbar"/>
+    package="com.android.car.ui.test">
+    <application
+        android:debuggable="true"
+        android:theme="@style/Theme.CarUi.NoToolbar">
+        <activity
+            android:name="com.android.car.ui.TrulyEmptyActivity"
+            android:theme="@style/Theme.CarUi" />
+        <activity
+            android:name="com.android.car.ui.TestActivity"
+            android:exported="true" />
+        <activity
+            android:name="com.android.car.ui.recyclerview.CarUiRecyclerViewTestActivity"
+            android:exported="true" />
+        <activity
+            android:name="com.android.car.ui.imewidescreen.CarUiImeWideScreenTestActivity"
+            android:exported="true" />
+        <activity
+            android:name="com.android.car.ui.FocusAreaTestActivity"
+            android:exported="true" />
+        <activity
+            android:name="com.android.car.ui.FocusParkingViewTestActivity"
+            android:exported="true" />
+        <activity
+            android:name="com.android.car.ui.preference.PreferenceTestActivity"
+            android:exported="true"
+            android:theme="@style/Theme.CarUi.WithToolbar" />
         <activity
             android:name="com.android.car.ui.preference.NonFullscreenPreferenceFragmentTest$MyActivity"
-            android:theme="@style/Theme.CarUi.WithToolbar"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.CarUi.WithToolbar">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" >
-                </action>
+                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name="com.android.car.ui.utils.ViewUtilsTestActivity" />
+        <activity
+            android:name="com.android.car.ui.utils.ViewUtilsTestActivity"
+            android:exported="true" />
         <activity
             android:name="com.android.car.ui.toolbar.ToolbarTestActivity"
+            android:exported="true"
             android:theme="@style/Theme.CarUi.WithToolbar">
-            <meta-data android:name="distractionOptimized" android:value="true"/>
+            <meta-data
+                android:name="distractionOptimized"
+                android:value="true" />
         </activity>
         <provider
             android:name="com.android.car.ui.core.SearchResultsProvider"
             android:authorities="${applicationId}.SearchResultsProvider"
             android:exported="true"
             android:process="@string/car_ui_installer_process_name"
-            android:readPermission="com.android.car.ui.READ_SEARCH_RESULTS"/>
+            android:readPermission="com.android.car.ui.READ_SEARCH_RESULTS" />
+        <uses-library android:name="android.test.runner" />
     </application>
-    <instrumentation android:name="androidx.test.runner.AndroidJUnitRunner"
-        android:targetPackage="com.android.car.ui.test"
-        android:label="Chassis Test Cases">
-    </instrumentation>
+    <instrumentation
+        android:name="androidx.test.runner.AndroidJUnitRunner"
+        android:label="Chassis Test Cases"
+        android:targetPackage="com.android.car.ui.test" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 </manifest>

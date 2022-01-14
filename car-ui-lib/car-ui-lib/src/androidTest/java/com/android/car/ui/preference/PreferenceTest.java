@@ -57,8 +57,10 @@ import androidx.preference.CheckBoxPreference;
 import androidx.preference.DropDownPreference;
 import androidx.preference.EditTextPreference;
 import androidx.preference.Preference;
+import androidx.test.espresso.UiController;
+import androidx.test.espresso.ViewAction;
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.rule.ActivityTestRule;
 
 import com.android.car.ui.test.R;
 
@@ -75,18 +77,19 @@ import java.util.function.Consumer;
  */
 @TargetApi(MIN_TARGET_API)
 public class PreferenceTest {
-
     private PreferenceTestActivity mActivity;
     private String[] mEntries;
     private String[] mEntriesValues;
 
     @Rule
-    public ActivityTestRule<PreferenceTestActivity> mActivityRule =
-            new ActivityTestRule<>(PreferenceTestActivity.class);
+    public ActivityScenarioRule<PreferenceTestActivity> mActivityRule =
+            new ActivityScenarioRule<>(PreferenceTestActivity.class);
 
     @Before
     public void setUp() {
-        mActivity = mActivityRule.getActivity();
+        mActivityRule.getScenario().onActivity(activity -> {
+            mActivity = activity;
+        });
         Resources resources = mActivity.getResources();
         mEntries = resources.getStringArray(R.array.entries);
         mEntriesValues = resources.getStringArray(R.array.entry_values);
