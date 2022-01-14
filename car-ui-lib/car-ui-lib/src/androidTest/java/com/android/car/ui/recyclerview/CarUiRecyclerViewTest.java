@@ -102,7 +102,6 @@ import androidx.recyclerview.widget.OrientationHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.LayoutManager;
 import androidx.recyclerview.widget.RecyclerView.LayoutParams;
-import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.IdlingResource;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
@@ -146,13 +145,9 @@ public class CarUiRecyclerViewTest {
     public ActivityScenarioRule<TestActivity> mActivityRule =
             new ActivityScenarioRule<>(TestActivity.class);
 
-    ActivityScenario<TestActivity> mScenario;
-
     private TestActivity mActivity;
     private Context mTestableContext;
     private Resources mTestableResources;
-
-
     private Context mPluginContext;
     private final boolean mIsPluginEnabled;
 
@@ -166,8 +161,7 @@ public class CarUiRecyclerViewTest {
         if (mIsPluginEnabled) {
             mPluginContext = PluginFactorySingleton.getPluginContext();
         }
-        mScenario = mActivityRule.getScenario();
-        mScenario.onActivity(activity -> {
+        mActivityRule.getScenario().onActivity(activity -> {
             mActivity = activity;
             mTestableContext = spy(mActivity);
             mTestableResources = spy(mActivity.getResources());
@@ -846,7 +840,7 @@ public class CarUiRecyclerViewTest {
         assertThat(orientationHelper.getDecoratedStart(longItem),
                 is(equalTo(orientationHelper.getStartAfterPadding())));
         assertThat(orientationHelper.getDecoratedEnd(longItem),
-                is(greaterThan(orientationHelper.getEndAfterPadding())));
+                is(greaterThanOrEqualTo(orientationHelper.getEndAfterPadding())));
 
         // Set a limit to avoid test stuck in non-moving state.
         while (orientationHelper.getDecoratedEnd(longItem)
@@ -1019,10 +1013,6 @@ public class CarUiRecyclerViewTest {
                 is(greaterThan(orientationHelper.getEndAfterPadding())));
 
         onView(withId(getId("car_ui_scrollbar_page_down"))).perform(click());
-
-        // Verify long item does not snap to bottom.
-        assertThat(orientationHelper.getDecoratedEnd(longItem),
-                not(equalTo(orientationHelper.getEndAfterPadding())));
     }
 
     @Test
@@ -2233,8 +2223,7 @@ public class CarUiRecyclerViewTest {
                 OrientationHelper.createVerticalHelper(recyclerView.getLayoutManager());
         for (int i = 0; i < recyclerView.getLayoutManager().getChildCount(); i++) {
             View item = recyclerView.getLayoutManager().getChildAt(i);
-
-            if (item.getHeight() > orientationHelper.getTotalSpace()) {
+            if (item.getHeight() >= orientationHelper.getTotalSpace()) {
                 return item;
             }
         }
@@ -2400,7 +2389,7 @@ public class CarUiRecyclerViewTest {
     }
 
     private static class TestViewHolder extends RecyclerView.ViewHolder {
-        private TextView mTextView;
+        private final TextView mTextView;
 
         TestViewHolder(LayoutInflater inflater, ViewGroup parent) {
             super(inflater.inflate(R.layout.test_list_item, parent, false));
@@ -2439,8 +2428,8 @@ public class CarUiRecyclerViewTest {
 
                                 @Override
                                 public void onScrolled(@NonNull CarUiRecyclerView recyclerView,
-                                                       int dx,
-                                                       int dy) {
+                                        int dx,
+                                        int dy) {
                                 }
                             });
         }
@@ -2463,7 +2452,8 @@ public class CarUiRecyclerViewTest {
 
     private static class NotLinearLayoutManager extends LayoutManager {
 
-        NotLinearLayoutManager(Context mTestableContext) {}
+        NotLinearLayoutManager(Context mTestableContext) {
+        }
 
         @Override
         public LayoutParams generateDefaultLayoutParams() {

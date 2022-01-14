@@ -19,6 +19,7 @@ package com.android.car.ui.appstyledview;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.RootMatchers.isDialog;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -33,16 +34,13 @@ import android.app.Dialog;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import androidx.test.espresso.Root;
+import androidx.test.ext.junit.rules.ActivityScenarioRule;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.rule.ActivityTestRule;
 
 import com.android.car.ui.TestActivity;
 import com.android.car.ui.appstyledview.AppStyledViewController.AppStyledViewNavIcon;
 import com.android.car.ui.test.R;
 
-import org.hamcrest.Description;
-import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -53,53 +51,49 @@ import org.junit.runner.RunWith;
  */
 @RunWith(AndroidJUnit4.class)
 public class AppStyledDialogControllerTest {
-
     private AppStyledDialogController mAppStyledDialogController;
 
     @Rule
-    public ActivityTestRule<TestActivity> mActivityRule =
-            new ActivityTestRule<>(TestActivity.class);
+    public ActivityScenarioRule<TestActivity> mActivityRule =
+            new ActivityScenarioRule<>(TestActivity.class);
+
+    private TestActivity mActivity;
 
     @Before
     public void setUp() throws Throwable {
-
-        mActivityRule.runOnUiThread(() -> {
-            mAppStyledDialogController = new AppStyledDialogController(mActivityRule.getActivity());
-            mAppStyledDialogController
-                    .setAppStyledViewController(
-                            new AppStyledViewControllerImpl(mActivityRule.getActivity()),
-                            mActivityRule.getActivity());
+        mActivityRule.getScenario().onActivity(activity -> {
+            mAppStyledDialogController = new AppStyledDialogController(activity);
+            mAppStyledDialogController.setAppStyledViewController(
+                    new AppStyledViewControllerImpl(activity), activity);
+            mActivity = activity;
         });
     }
 
     @Test
-    public void show_shouldDisplayDialog() throws Throwable {
-        LayoutInflater inflater = LayoutInflater.from(mActivityRule.getActivity());
-
+    public void show_shouldDisplayDialog() {
+        LayoutInflater inflater = LayoutInflater.from(mActivity);
         View appStyledTestView = inflater.inflate(R.layout.app_styled_view_sample, null,
                 false);
 
-        mActivityRule.runOnUiThread(() -> {
+        mActivity.runOnUiThread(() -> {
             mAppStyledDialogController.setContentView(appStyledTestView);
             mAppStyledDialogController.show();
         });
 
         String text = "app styled view";
-        Dialog dialog = mAppStyledDialogController.getAppStyledDialog();
 
         onView(withText(text))
-                .inRoot(new RootWithDecorMatcher(dialog.getWindow().getDecorView()))
+                .inRoot(isDialog())
                 .check(matches(isDisplayed()));
     }
 
     @Test
-    public void setNavIcon_showCloseIcon() throws Throwable {
-        LayoutInflater inflater = LayoutInflater.from(mActivityRule.getActivity());
-
+    public void setNavIcon_showCloseIcon() {
+        LayoutInflater inflater = LayoutInflater.from(mActivity);
         View appStyledTestView = inflater.inflate(R.layout.app_styled_view_sample, null,
                 false);
 
-        mActivityRule.runOnUiThread(() -> {
+        mActivity.runOnUiThread(() -> {
             mAppStyledDialogController.setContentView(appStyledTestView);
             mAppStyledDialogController.setNavIcon(AppStyledViewNavIcon.CLOSE);
             mAppStyledDialogController.show();
@@ -108,60 +102,54 @@ public class AppStyledDialogControllerTest {
         Dialog dialog = mAppStyledDialogController.getAppStyledDialog();
 
         onView(withId(R.id.car_ui_app_styled_view_icon_close))
-                .inRoot(new RootWithDecorMatcher(dialog.getWindow().getDecorView()))
+                .inRoot(isDialog())
                 .check(matches(isDisplayed()));
     }
 
     @Test
-    public void setOnCloseClickListener_shouldInvokeCallback() throws Throwable {
-        LayoutInflater inflater = LayoutInflater.from(mActivityRule.getActivity());
-
+    public void setOnCloseClickListener_shouldInvokeCallback() {
+        LayoutInflater inflater = LayoutInflater.from(mActivity);
         View appStyledTestView = inflater.inflate(R.layout.app_styled_view_sample, null,
                 false);
 
         Runnable callback = mock(Runnable.class);
 
-        mActivityRule.runOnUiThread(() -> {
+        mActivity.runOnUiThread(() -> {
             mAppStyledDialogController.setContentView(appStyledTestView);
             mAppStyledDialogController.setNavIcon(AppStyledViewNavIcon.BACK);
             mAppStyledDialogController.setOnNavIconClickListener(callback);
             mAppStyledDialogController.show();
         });
 
-        Dialog dialog = mAppStyledDialogController.getAppStyledDialog();
-
         onView(withId(R.id.car_ui_app_styled_view_icon_close))
-                .inRoot(new RootWithDecorMatcher(dialog.getWindow().getDecorView()))
+                .inRoot(isDialog())
                 .perform(click());
 
         verify(callback).run();
     }
 
     @Test
-    public void setOnDismissListener_shouldInvokeCallback() throws Throwable {
-        LayoutInflater inflater = LayoutInflater.from(mActivityRule.getActivity());
-
+    public void setOnDismissListener_shouldInvokeCallback() {
+        LayoutInflater inflater = LayoutInflater.from(mActivity);
         View appStyledTestView = inflater.inflate(R.layout.app_styled_view_sample, null,
                 false);
 
         Runnable callback = mock(Runnable.class);
 
-        mActivityRule.runOnUiThread(() -> {
+        mActivity.runOnUiThread(() -> {
             mAppStyledDialogController.setContentView(appStyledTestView);
             mAppStyledDialogController.setNavIcon(AppStyledViewNavIcon.BACK);
             mAppStyledDialogController.setOnDismissListener(callback);
             mAppStyledDialogController.show();
         });
 
-        Dialog dialog = mAppStyledDialogController.getAppStyledDialog();
-
         onView(withId(R.id.car_ui_app_styled_view_icon_close))
-                .inRoot(new RootWithDecorMatcher(dialog.getWindow().getDecorView()))
+                .inRoot(isDialog())
                 .perform(click());
     }
 
     @Test
-    public void getContentView_equalsSetView() throws Throwable {
+    public void getContentView_equalsSetView() {
         LayoutInflater inflater = LayoutInflater.from(mActivityRule.getActivity());
 
         View appStyledTestView = inflater.inflate(R.layout.app_styled_view_sample, null,
@@ -178,24 +166,5 @@ public class AppStyledDialogControllerTest {
     @Test
     public void getContentView_nullWhenNotSet() {
         assertNull(mAppStyledDialogController.getContentView());
-    }
-
-    private static class RootWithDecorMatcher extends TypeSafeMatcher<Root> {
-
-        private View mView;
-
-        RootWithDecorMatcher(View view) {
-            mView = view;
-        }
-
-        @Override
-        public void describeTo(Description description) {
-            description.appendText("is a root with a certain decor");
-        }
-
-        @Override
-        protected boolean matchesSafely(Root item) {
-            return item.getDecorView() == mView;
-        }
     }
 }
