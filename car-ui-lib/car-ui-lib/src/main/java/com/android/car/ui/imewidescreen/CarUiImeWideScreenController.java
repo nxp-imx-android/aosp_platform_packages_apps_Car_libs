@@ -416,6 +416,7 @@ public class CarUiImeWideScreenController {
             mWideScreenExtractedTextIcon.setImageDrawable(
                     new BitmapDrawable(mContext.getResources(), bitmap));
             mWideScreenExtractedTextIcon.setVisibility(View.VISIBLE);
+            mIsExtractIconProvidedByApp = true;
         }
 
         if (WIDE_SCREEN_SEARCH_RESULTS.equals(action)) {
