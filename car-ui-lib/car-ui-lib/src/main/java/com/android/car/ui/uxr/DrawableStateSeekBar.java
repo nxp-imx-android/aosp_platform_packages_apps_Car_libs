@@ -16,6 +16,9 @@
 
 package com.android.car.ui.uxr;
 
+import static com.android.car.ui.core.CarUi.MIN_TARGET_API;
+
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.SeekBar;
@@ -26,6 +29,7 @@ import androidx.annotation.Nullable;
  * A {@link SeekBar} that implements {@link DrawableStateView}, for allowing additional states
  * such as ux restriction.
  */
+@TargetApi(MIN_TARGET_API)
 public class DrawableStateSeekBar extends SeekBar implements DrawableStateView {
     private DrawableStateUtil mUtil;
 

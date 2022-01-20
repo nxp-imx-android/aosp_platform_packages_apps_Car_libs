@@ -151,6 +151,7 @@ def add_constraintlayout_resources(resources):
     # The source here always points to the latest version of attrs.xml from androidx repo
     # and since platform is not using the latest one, some of the tags should be excluded.
     unsupported_attrs = [
+        "guidelineUseRtl",
         "circularflow_radiusInDP",
         "constraint_referenced_tags",
         "layout_goneMarginBaseline",

@@ -332,6 +332,11 @@ public final class PluginFactoryAdapterV2 implements PluginFactory {
             public boolean getReverseLayout() {
                 return reversed;
             }
+
+            @Override
+            public int getSpanSize(int position) {
+                return 1;
+            }
         };
 
         boolean isLtr = context.getResources().getConfiguration().getLayoutDirection()
