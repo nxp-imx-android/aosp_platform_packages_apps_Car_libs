@@ -146,6 +146,9 @@ public final class RotaryConstants {
     /** Action performed on a FocusParkingView to dismiss a popup window. */
     public static final int ACTION_DISMISS_POPUP_WINDOW = 0x10000000;
 
+    /** Action performed on a focus area to query whether nudge is disabled. */
+    public static final int ACTION_QUERY_NUDGE_DISABLED = 0x20000000;
+
     /** Prevent instantiation. */
     private RotaryConstants() {
     }

@@ -46,6 +46,7 @@ import androidx.annotation.NonNull;
 import androidx.test.rule.ActivityTestRule;
 
 import com.android.car.rotary.test.R;
+import com.android.car.ui.utils.TestUtils;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -662,6 +663,39 @@ public class FocusAreaTest {
             mFocusArea4.post(() -> latch2.countDown());
         });
         latch2.await(WAIT_TIME_MS, TimeUnit.MILLISECONDS);
+        assertThat(mView1.isFocused()).isTrue();
+    }
+
+    @Test
+    public void testPerformAccessibilityAction_actionNudgeToAnotherFocusArea_disabled()
+            throws Exception {
+        TestUtils.accept(mFocusArea1, v -> {
+            mFocusArea1.setNudgeTargetFocusArea(FOCUS_DOWN, mFocusArea2);
+            mFocusArea2.setNudgeTargetFocusArea(FOCUS_UP, mFocusArea1);
+        });
+
+        TestUtils.requestFocusAndAssertFocused(mView2, true);
+        Bundle arguments = new Bundle();
+        arguments.putInt(NUDGE_DIRECTION, FOCUS_UP);
+        TestUtils.accept(mFocusArea2,
+                v -> v.performAccessibilityAction(ACTION_NUDGE_TO_ANOTHER_FOCUS_AREA, arguments));
+        // Nudging up is disabled in the layout file, so focus should stay on mView2.
+        assertThat(mView2.isFocused()).isTrue();
+
+        // Enable nudging up programmatically and try nudging up again.
+        TestUtils.accept(mFocusArea2, v -> {
+            mFocusArea2.setNudgeEnabled(FOCUS_UP, true);
+            mFocusArea2.performAccessibilityAction(ACTION_NUDGE_TO_ANOTHER_FOCUS_AREA, arguments);
+        });
+        assertThat(mView1.isFocused()).isTrue();
+
+        // Disable nudging down programmatically and try nudging down.
+        arguments.clear();
+        arguments.putInt(NUDGE_DIRECTION, FOCUS_DOWN);
+        TestUtils.accept(mFocusArea1, v -> {
+            mFocusArea1.setNudgeEnabled(FOCUS_DOWN, false);
+            mFocusArea1.performAccessibilityAction(ACTION_NUDGE_TO_ANOTHER_FOCUS_AREA, arguments);
+        });
         assertThat(mView1.isFocused()).isTrue();
     }
 

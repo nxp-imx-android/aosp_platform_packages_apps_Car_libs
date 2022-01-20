@@ -25,6 +25,7 @@ import static android.view.accessibility.AccessibilityNodeInfo.ACTION_FOCUS;
 
 import static com.android.car.ui.utils.RotaryConstants.ACTION_NUDGE_SHORTCUT;
 import static com.android.car.ui.utils.RotaryConstants.ACTION_NUDGE_TO_ANOTHER_FOCUS_AREA;
+import static com.android.car.ui.utils.RotaryConstants.ACTION_QUERY_NUDGE_DISABLED;
 import static com.android.car.ui.utils.RotaryConstants.FOCUS_AREA_BOTTOM_BOUND_OFFSET;
 import static com.android.car.ui.utils.RotaryConstants.FOCUS_AREA_LEFT_BOUND_OFFSET;
 import static com.android.car.ui.utils.RotaryConstants.FOCUS_AREA_RIGHT_BOUND_OFFSET;
@@ -55,7 +56,9 @@ import androidx.annotation.VisibleForTesting;
 import com.android.car.ui.utils.ViewUtils;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /** A helper class used by {@link IFocusArea} implementation classes such as {@link FocusArea}. */
 class FocusAreaHelper {
@@ -70,7 +73,8 @@ class FocusAreaHelper {
             Arrays.asList(FOCUS_LEFT, FOCUS_RIGHT, FOCUS_UP, FOCUS_DOWN);
 
     private static final List<Integer> FOCUS_AREA_ACTIONS =
-            Arrays.asList(ACTION_FOCUS, ACTION_NUDGE_SHORTCUT, ACTION_NUDGE_TO_ANOTHER_FOCUS_AREA);
+            Arrays.asList(ACTION_FOCUS, ACTION_NUDGE_SHORTCUT, ACTION_NUDGE_TO_ANOTHER_FOCUS_AREA,
+                    ACTION_QUERY_NUDGE_DISABLED);
 
     @NonNull
     private final ViewGroup mFocusArea;
@@ -150,6 +154,9 @@ class FocusAreaHelper {
 
     /** Map from direction to specified nudge target focus areas. */
     private SparseArray<IFocusArea> mSpecifiedNudgeFocusAreaMap;
+
+    /** Set of disabled nudge direction. */
+    private final Set<Integer> mDisabledNudgeDirections = new HashSet<>();
 
     /** Whether wrap-around is enabled for {@link #mFocusArea}. */
     private boolean mWrapAround;
@@ -471,6 +478,20 @@ class FocusAreaHelper {
                         a.getResourceId(R.styleable.IFocusArea_nudgeDown, View.NO_ID));
             }
 
+            // Handle disabled nudge direction.
+            if (a.getBoolean(R.styleable.IFocusArea_nudgeLeftDisabled, false)) {
+                mDisabledNudgeDirections.add(FOCUS_LEFT);
+            }
+            if (a.getBoolean(R.styleable.IFocusArea_nudgeRightDisabled, false)) {
+                mDisabledNudgeDirections.add(FOCUS_RIGHT);
+            }
+            if (a.getBoolean(R.styleable.IFocusArea_nudgeUpDisabled, false)) {
+                mDisabledNudgeDirections.add(FOCUS_UP);
+            }
+            if (a.getBoolean(R.styleable.IFocusArea_nudgeDownDisabled, false)) {
+                mDisabledNudgeDirections.add(FOCUS_DOWN);
+            }
+
             mDefaultFocusOverridesHistory = a.getBoolean(
                     R.styleable.IFocusArea_defaultFocusOverridesHistory, false);
 
@@ -576,6 +597,8 @@ class FocusAreaHelper {
                 return nudgeToShortcutView(arguments);
             case ACTION_NUDGE_TO_ANOTHER_FOCUS_AREA:
                 return nudgeToAnotherFocusArea(arguments);
+            case ACTION_QUERY_NUDGE_DISABLED:
+                return isNudgeDisabled(getNudgeDirection(arguments));
             default:
                 return false;
         }
@@ -603,6 +626,9 @@ class FocusAreaHelper {
 
     private boolean nudgeToAnotherFocusArea(Bundle arguments) {
         int direction = getNudgeDirection(arguments);
+        if (isNudgeDisabled(direction)) {
+            return false;
+        }
         long elapsedRealtime = SystemClock.uptimeMillis();
 
         // Try to nudge to specified focus area, if any.
@@ -617,6 +643,10 @@ class FocusAreaHelper {
         }
 
         return success;
+    }
+
+    private boolean isNudgeDisabled(int direction) {
+        return mDisabledNudgeDirections.contains(direction);
     }
 
     private static int getNudgeDirection(Bundle arguments) {
@@ -827,7 +857,8 @@ class FocusAreaHelper {
 
     /**
      * Sets the nudge target focus area for the given {@code direction}. Removes the existing
-     * target if {@code target} is {@code null}.
+     * target if {@code target} is {@code null}. Note: this method doesn't affect whether
+     * nudge is enabled.
      */
     void setNudgeTargetFocusArea(int direction, @Nullable IFocusArea target) {
         if (!NUDGE_DIRECTIONS.contains(direction)) {
@@ -839,6 +870,19 @@ class FocusAreaHelper {
             mSpecifiedNudgeFocusAreaMap.remove(direction);
         } else {
             mSpecifiedNudgeFocusAreaMap.put(direction, target);
+        }
+    }
+
+    /** Sets whether to enable nudge for the given {@code direction}. */
+    void setNudgeEnabled(int direction, boolean enable) {
+        if (!NUDGE_DIRECTIONS.contains(direction)) {
+            throw new IllegalArgumentException("direction must be "
+                    + "FOCUS_UP, FOCUS_DOWN, FOCUS_LEFT, or FOCUS_RIGHT.");
+        }
+        if (enable) {
+            mDisabledNudgeDirections.remove(direction);
+        } else {
+            mDisabledNudgeDirections.add(direction);
         }
     }
 

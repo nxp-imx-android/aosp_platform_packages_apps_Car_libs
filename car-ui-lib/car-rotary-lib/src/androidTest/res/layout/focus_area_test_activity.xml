@@ -46,6 +46,7 @@
         android:id="@+id/focus_area2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:nudgeUpDisabled="true"
         app:defaultFocus="@+id/default_focus2"
         app:highlightPaddingHorizontal="10dp"
         app:highlightPaddingVertical="20dp"

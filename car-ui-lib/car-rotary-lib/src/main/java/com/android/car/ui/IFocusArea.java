@@ -84,9 +84,13 @@ public interface IFocusArea {
 
     /**
      * Sets the nudge target IFocusArea for the given {@code direction}. Removes the
-     * existing target if {@code target} is {@code null}.
+     * existing target if {@code target} is {@code null}. Note: this method doesn't affect whether
+     * nudge is enabled.
      */
     void setNudgeTargetFocusArea(int direction, @Nullable IFocusArea target);
+
+    /** Sets whether to enable nudge for the given {@code direction}. */
+    void setNudgeEnabled(int direction, boolean enable);
 
     /**
      * Sets whether to focus on the default focus view when nudging to the IFocusArea, even if there

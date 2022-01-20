@@ -198,6 +198,11 @@ public class FrameFocusArea extends FrameLayout implements IFocusArea {
     }
 
     @Override
+    public void setNudgeEnabled(int direction, boolean enable) {
+        mFocusAreaHelper.setNudgeEnabled(direction, enable);
+    }
+
+    @Override
     public void setDefaultFocusOverridesHistory(boolean override) {
         mFocusAreaHelper.setDefaultFocusOverridesHistory(override);
     }
