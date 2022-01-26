@@ -23,7 +23,6 @@ java_library {
     target_sdk_version: "30",
     sdk_version: "current",
 
-    manifest: "src/main/AndroidManifest.xml",
     srcs: ["src/main/java/**/*.java"],
 
     optimize: {
