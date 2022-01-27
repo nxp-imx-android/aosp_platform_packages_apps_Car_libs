@@ -283,10 +283,10 @@ import java.util.Objects;
 
         int lastChildPosition = isAtEnd(layoutManager) ? 0 : layoutManager.getChildCount() - 1;
 
-        OrientationHelper orientationHelper = getOrientationHelper(layoutManager);
         @NonNull View lastChild = Objects.requireNonNull(
                 layoutManager.getChildAt(lastChildPosition));
-        float percentageVisible = getPercentageVisible(lastChild, orientationHelper);
+        float percentageVisible = getPercentageVisible(lastChild,
+                getOrientationHelper(layoutManager));
 
         int maxDistance = layoutManager.getHeight();
         if (percentageVisible > 0.f) {
@@ -309,14 +309,15 @@ import java.util.Objects;
      * Estimates a position to which CarUiSnapHelper will try to snap to for a requested scroll
      * distance.
      *
-     * @param helper         The {@link OrientationHelper} that is created from the LayoutManager.
+     * @param layoutManager  The {@link LayoutManager} associated with the attached
+     * {@link RecyclerView}.
      * @param scrollDistance The intended scroll distance.
      *
      * @return The diff between the target snap position and the current position.
      */
-    public int estimateNextPositionDiffForScrollDistance(OrientationHelper helper,
+    public int estimateNextPositionDiffForScrollDistance(LayoutManager layoutManager,
             int scrollDistance) {
-        float distancePerChild = computeDistancePerChild(helper.getLayoutManager(), helper);
+        float distancePerChild = computeDistancePerChild(layoutManager);
         if (distancePerChild <= 0) {
             return 0;
         }
@@ -333,14 +334,11 @@ import java.util.Objects;
      *
      * @param layoutManager The {@link RecyclerView.LayoutManager} associated with the attached
      *                      {@link RecyclerView}.
-     * @param helper        The relevant {@link OrientationHelper} for the attached
-     *                      {@link RecyclerView.LayoutManager}.
      *
      * @return A float value that is the average number of pixels needed to scroll by one view in
      * the relevant direction.
      */
-    private float computeDistancePerChild(RecyclerView.LayoutManager layoutManager,
-            OrientationHelper helper) {
+    private float computeDistancePerChild(RecyclerView.LayoutManager layoutManager) {
         View minPosView = null;
         View maxPosView = null;
         int minPos = Integer.MAX_VALUE;
@@ -368,6 +366,7 @@ import java.util.Objects;
         if (minPosView == null || maxPosView == null) {
             return 1;
         }
+        OrientationHelper helper = getOrientationHelper(layoutManager);
         int start = Math.min(helper.getDecoratedStart(minPosView),
                 helper.getDecoratedStart(maxPosView));
         int end = Math.max(helper.getDecoratedEnd(minPosView),
@@ -388,9 +387,7 @@ import java.util.Objects;
         }
 
         @NonNull View firstChild = Objects.requireNonNull(layoutManager.getChildAt(0));
-        OrientationHelper orientationHelper =
-                layoutManager.canScrollVertically() ? getVerticalHelper(layoutManager)
-                        : getHorizontalHelper(layoutManager);
+        OrientationHelper orientationHelper = getOrientationHelper(layoutManager);
 
         // Check that the first child is completely visible and is the first item in the list.
         return orientationHelper.getDecoratedStart(firstChild)
@@ -407,9 +404,7 @@ import java.util.Objects;
         }
 
         int childCount = layoutManager.getChildCount();
-        OrientationHelper orientationHelper =
-                layoutManager.canScrollVertically() ? getVerticalHelper(layoutManager)
-                        : getHorizontalHelper(layoutManager);
+        OrientationHelper orientationHelper = getOrientationHelper(layoutManager);
 
         @NonNull View lastVisibleChild = Objects.requireNonNull(
                 layoutManager.getChildAt(childCount - 1));

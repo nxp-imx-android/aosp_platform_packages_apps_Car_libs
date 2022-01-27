@@ -206,6 +206,11 @@ public final class RecyclerViewImpl extends FrameLayout implements RecyclerViewO
                 public boolean getReverseLayout() {
                     return false;
                 }
+
+                @Override
+                public int getSpanSize(int position) {
+                    return 1;
+                }
             };
         }
 
@@ -499,6 +504,15 @@ public final class RecyclerViewImpl extends FrameLayout implements RecyclerViewO
     }
 
     @Override
+    public int getRecyclerViewChildPosition(View child) {
+        if (mRecyclerView.getLayoutManager() != null) {
+            return mRecyclerView.getLayoutManager().getPosition(child);
+        } else {
+            return -1;
+        }
+    }
+
+    @Override
     public ViewHolderOEMV1 findViewHolderForAdapterPosition(int position) {
         ViewHolder viewHolder = mRecyclerView.findViewHolderForAdapterPosition(position);
         if (viewHolder instanceof ViewHolderWrapper) {
@@ -561,6 +575,57 @@ public final class RecyclerViewImpl extends FrameLayout implements RecyclerViewO
     @Override
     public int getChildLayoutPosition(View child) {
         return mRecyclerView.getChildLayoutPosition(child);
+    }
+
+    @Override
+    public int getDecoratedStart(View child) {
+        if (mLayoutStyle == null) return 0;
+        return createOrientationHelper().getDecoratedStart(child);
+    }
+
+    @Override
+    public int getDecoratedEnd(View child) {
+        if (mLayoutStyle == null) return 0;
+        return createOrientationHelper().getDecoratedEnd(child);
+    }
+
+    @Override
+    public int getDecoratedMeasuredHeight(View child) {
+        if (mRecyclerView.getLayoutManager() != null) {
+            return mRecyclerView.getLayoutManager().getDecoratedMeasuredHeight(child);
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
+    public int getDecoratedMeasuredWidth(View child) {
+        if (mRecyclerView.getLayoutManager() != null) {
+            return mRecyclerView.getLayoutManager().getDecoratedMeasuredWidth(child);
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
+    public int getDecoratedMeasurementInOther(View child) {
+        if (mLayoutStyle == null) return 0;
+        return createOrientationHelper().getDecoratedMeasurementInOther(child);
+    }
+
+    @Override
+    public int getDecoratedMeasurement(View child) {
+        if (mLayoutStyle == null) return 0;
+        return createOrientationHelper().getDecoratedMeasurement(child);
+    }
+
+    @Override
+    public View findViewByPosition(int position) {
+        if (mRecyclerView.getLayoutManager() != null) {
+            return mRecyclerView.getLayoutManager().findViewByPosition(position);
+        } else {
+            return null;
+        }
     }
 
     /**

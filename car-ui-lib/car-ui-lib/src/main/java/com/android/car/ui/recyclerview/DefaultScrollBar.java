@@ -357,7 +357,7 @@ class DefaultScrollBar implements ScrollBar {
             if (mChildHeightByAdapterPosition.indexOfKey(i) < 0) {
                 // Use the average height estimate when there is not enough data
                 nextPos = mSnapHelper.estimateNextPositionDiffForScrollDistance(
-                        orientationHelper, -scrollDistance);
+                        orientationHelper.getLayoutManager(), -scrollDistance);
                 break;
             }
             if ((distance + mChildHeightByAdapterPosition.get(i)) > Math.abs(scrollDistance)) {

@@ -227,6 +227,9 @@ public interface CarUiRecyclerView {
     @Deprecated
     <T extends View> T findViewById(int id);
 
+    /** see {@link LayoutManager#findViewByPosition(int)} */
+    View findViewByPosition(int position);
+
     /** see {@link RecyclerView#findViewHolderForAdapterPosition(int)} */
     ViewHolder findViewHolderForAdapterPosition(int position);
 
@@ -268,6 +271,37 @@ public interface CarUiRecyclerView {
     /** see {@link View#getContext()} */
     Context getContext();
 
+    /**
+     * see {@link OrientationHelper#getDecoratedEnd(View)}
+     */
+    int getDecoratedEnd(View child);
+
+
+    /**
+     * see {@link LayoutManager#getDecoratedMeasuredHeight(View)}
+     */
+    int getDecoratedMeasuredHeight(View child);
+
+    /**
+     * see {@link LayoutManager#getDecoratedMeasuredWidth(View)}
+     */
+    int getDecoratedMeasuredWidth(View child);
+
+    /**
+     * see {@link OrientationHelper#getDecoratedMeasurement(View)}
+     */
+    int getDecoratedMeasurement(View child);
+
+    /**
+     * see {@link OrientationHelper#getDecoratedMeasurementInOther(View)}
+     */
+    int getDecoratedMeasurementInOther(View child);
+
+    /**
+     * see {@link OrientationHelper#getDecoratedStart(View)}
+     */
+    int getDecoratedStart(View child);
+
     /** see {@link OrientationHelper#getEndAfterPadding()} */
     int getEndAfterPadding();
 
@@ -289,15 +323,7 @@ public interface CarUiRecyclerView {
     @Deprecated
     int getItemDecorationCount();
 
-    /**
-     * see {@link RecyclerView#getLayoutManager()}
-     * @deprecated this will fail when there is a oem implementation
-     */
-    @Deprecated
-    @Nullable
-    LayoutManager getLayoutManager();
-
-    /** Use this instead of {@link #getLayoutManager} */
+    /** Use this instead of {@link RecyclerView#getLayoutManager} */
     @Nullable
     CarUiLayoutStyle getLayoutStyle();
 
@@ -341,6 +367,11 @@ public interface CarUiRecyclerView {
      */
     @Nullable
     View getRecyclerViewChildAt(int index);
+
+    /**
+     * see {@link LayoutManager#getPosition(View)}
+     */
+    int getRecyclerViewChildPosition(View child);
 
     /** see {@link RecyclerView#getScrollState()} */
     int getScrollState();

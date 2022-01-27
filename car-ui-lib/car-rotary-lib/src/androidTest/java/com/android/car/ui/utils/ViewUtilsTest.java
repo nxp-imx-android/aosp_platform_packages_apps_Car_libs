@@ -126,7 +126,7 @@ public class ViewUtilsTest {
 
     @Test
     public void testGetAncestorScrollableContainer() {
-        View firstItem = mCarUiRecyclerView5.getLayoutManager().findViewByPosition(0);
+        View firstItem = mCarUiRecyclerView5.findViewByPosition(0);
         View container = ViewUtils.getAncestorScrollableContainer(firstItem);
         // Since there is no API to get the inner RecyclerView, verify its focus level instead.
         assertThat(ViewUtils.getFocusLevel(container)).isEqualTo(SCROLLABLE_CONTAINER_FOCUS);
@@ -167,14 +167,14 @@ public class ViewUtilsTest {
 
     @Test
     public void testFindImplicitDefaultFocusView_inRoot() {
-        View firstItem = mCarUiRecyclerView5.getLayoutManager().findViewByPosition(0);
+        View firstItem = mCarUiRecyclerView5.findViewByPosition(0);
         View implicitDefaultFocus = ViewUtils.findImplicitDefaultFocusView(mRoot);
         assertThat(implicitDefaultFocus).isEqualTo(firstItem);
     }
 
     @Test
     public void testFindImplicitDefaultFocusView_inFocusArea() {
-        View firstItem = mCarUiRecyclerView5.getLayoutManager().findViewByPosition(0);
+        View firstItem = mCarUiRecyclerView5.findViewByPosition(0);
         View implicitDefaultFocus =
                 ViewUtils.findImplicitDefaultFocusView(mFocusArea5);
         assertThat(implicitDefaultFocus).isEqualTo(firstItem);
@@ -191,7 +191,7 @@ public class ViewUtilsTest {
     @Test
     public void testFindImplicitDefaultFocusView_selectedItem_inFocusArea()
             throws InterruptedException {
-        View selectedItem = mCarUiRecyclerView5.getLayoutManager().findViewByPosition(1);
+        View selectedItem = mCarUiRecyclerView5.findViewByPosition(1);
         TestUtils.accept(selectedItem, v -> v.setSelected(true));
         View implicitDefaultFocus =
                 ViewUtils.findImplicitDefaultFocusView(mFocusArea5);
@@ -233,13 +233,13 @@ public class ViewUtilsTest {
 
     @Test
     public void testIsImplicitDefaultFocusView_firstItem() {
-        View firstItem = mCarUiRecyclerView5.getLayoutManager().findViewByPosition(0);
+        View firstItem = mCarUiRecyclerView5.findViewByPosition(0);
         assertThat(ViewUtils.isImplicitDefaultFocusView(firstItem)).isTrue();
     }
 
     @Test
     public void testIsImplicitDefaultFocusView_secondItem() {
-        View secondItem = mCarUiRecyclerView5.getLayoutManager().findViewByPosition(1);
+        View secondItem = mCarUiRecyclerView5.findViewByPosition(1);
         assertThat(ViewUtils.isImplicitDefaultFocusView(secondItem)).isFalse();
     }
 
@@ -251,13 +251,13 @@ public class ViewUtilsTest {
     @Test
     public void testIsImplicitDefaultFocusView_skipInvisibleAncestor() throws InterruptedException {
         TestUtils.accept(mFocusArea5, v -> v.setVisibility(View.INVISIBLE));
-        View firstItem = mCarUiRecyclerView5.getLayoutManager().findViewByPosition(0);
+        View firstItem = mCarUiRecyclerView5.findViewByPosition(0);
         assertThat(ViewUtils.isImplicitDefaultFocusView(firstItem)).isFalse();
     }
 
     @Test
     public void testIsImplicitDefaultFocusView_selectedItem() throws InterruptedException {
-        View selectedItem = mCarUiRecyclerView5.getLayoutManager().findViewByPosition(1);
+        View selectedItem = mCarUiRecyclerView5.findViewByPosition(1);
         TestUtils.accept(selectedItem, v -> v.setSelected(true));
         assertThat(ViewUtils.isImplicitDefaultFocusView(selectedItem)).isTrue();
     }
@@ -330,7 +330,7 @@ public class ViewUtilsTest {
         // This test verifies that the rotary container can't be focused because it's not focusable.
         // Instead, its focusable descendant should get focused.
         TestUtils.adjustFocusAndAssertFocusAdjusted(mCarUiRecyclerView5.getView(), NO_FOCUS, true);
-        View firstItem = mCarUiRecyclerView5.getLayoutManager().findViewByPosition(0);
+        View firstItem = mCarUiRecyclerView5.findViewByPosition(0);
         assertThat(firstItem.isFocused()).isTrue();
     }
 
@@ -339,7 +339,7 @@ public class ViewUtilsTest {
         // This test verifies that the scrollable container can't be focused. Thought it's
         // focusable, its focusable descendant should get focused.
         TestUtils.adjustFocusAndAssertFocusAdjusted(mCarUiRecyclerView5.getView(), NO_FOCUS, true);
-        View firstItem = mCarUiRecyclerView5.getLayoutManager().findViewByPosition(0);
+        View firstItem = mCarUiRecyclerView5.findViewByPosition(0);
         assertThat(firstItem.isFocused()).isTrue();
     }
 
@@ -392,9 +392,9 @@ public class ViewUtilsTest {
         TestUtils.adjustFocusAndAssertFocusAdjusted(mFocusArea3, FOCUSED_BY_DEFAULT, false);
 
         mRoot.post(() -> {
-            View firstItem = mCarUiRecyclerView5.getLayoutManager().findViewByPosition(0);
+            View firstItem = mCarUiRecyclerView5.findViewByPosition(0);
             firstItem.setFocusable(false);
-            View secondItem = mCarUiRecyclerView5.getLayoutManager().findViewByPosition(1);
+            View secondItem = mCarUiRecyclerView5.findViewByPosition(1);
             secondItem.setFocusable(false);
         });
         TestUtils.adjustFocusAndAssertFocusAdjusted(mFocusArea5, NO_FOCUS, true);
@@ -416,7 +416,7 @@ public class ViewUtilsTest {
         mView4.setSelected(true);
         assertThat(ViewUtils.getFocusLevel(mView4)).isEqualTo(SELECTED_FOCUS);
 
-        View firstItem = mCarUiRecyclerView5.getLayoutManager().findViewByPosition(0);
+        View firstItem = mCarUiRecyclerView5.findViewByPosition(0);
         assertThat(ViewUtils.getFocusLevel(firstItem)).isEqualTo(IMPLICIT_DEFAULT_FOCUS);
 
         assertThat(ViewUtils.getFocusLevel(mDefaultFocus4)).isEqualTo(DEFAULT_FOCUS);

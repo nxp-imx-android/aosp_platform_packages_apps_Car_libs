@@ -96,7 +96,7 @@ public class DelegatingContentLimitingAdapterTest {
 
         onView(withId(R.id.list)).check(matches(isDisplayed()));
 
-        CarUiRecyclerView carUiRecyclerView = mActivity.requireViewById(R.id.list);
+        CarUiRecyclerViewImpl carUiRecyclerView = mActivity.requireViewById(R.id.list);
         mActivity.runOnUiThread(() -> {
             carUiRecyclerView.setAdapter(mContentLimitingAdapter);
             carUiRecyclerView.setVisibility(View.VISIBLE);
@@ -126,7 +126,7 @@ public class DelegatingContentLimitingAdapterTest {
 
         onView(withId(R.id.list)).check(matches(isDisplayed()));
 
-        CarUiRecyclerView carUiRecyclerView = mActivity.requireViewById(R.id.list);
+        CarUiRecyclerViewImpl carUiRecyclerView = mActivity.requireViewById(R.id.list);
         mActivity.runOnUiThread(() -> {
             carUiRecyclerView.setAdapter(mContentLimitingAdapter);
             carUiRecyclerView.setVisibility(View.VISIBLE);

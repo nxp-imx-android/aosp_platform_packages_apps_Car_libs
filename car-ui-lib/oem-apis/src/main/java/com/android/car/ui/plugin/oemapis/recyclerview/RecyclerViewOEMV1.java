@@ -140,6 +140,11 @@ public interface RecyclerViewOEMV1 {
     View getRecyclerViewChildAt(int index);
 
     /**
+     * see {@link LayoutManager#getPosition(View)}
+     */
+    int getRecyclerViewChildPosition(View child);
+
+    /**
      * see {@link RecyclerView#findViewHolderForAdapterPosition(int)}
      */
     ViewHolderOEMV1 findViewHolderForAdapterPosition(int position);
@@ -160,4 +165,25 @@ public interface RecyclerViewOEMV1 {
 
     /** {@link RecyclerView#getChildLayoutPosition} */
     int getChildLayoutPosition(View child);
+
+    /** {@link OrientationHelper#getDecoratedStart} */
+    int getDecoratedStart(View child);
+
+    /** {@link OrientationHelper#getDecoratedEnd} */
+    int getDecoratedEnd(View child);
+
+    /** {@link LayoutManager#getDecoratedMeasuredHeight} */
+    int getDecoratedMeasuredHeight(View child);
+
+    /** {@link LayoutManager#getDecoratedMeasuredWidth} */
+    int getDecoratedMeasuredWidth(View child);
+
+    /** {@link OrientationHelper#getDecoratedMeasurementInOther} */
+    int getDecoratedMeasurementInOther(View child);
+
+    /** {@link OrientationHelper#getDecoratedMeasurement} */
+    int getDecoratedMeasurement(View child);
+
+    /** {@link LayoutManager#findViewByPosition} */
+    View findViewByPosition(int position);
 }
