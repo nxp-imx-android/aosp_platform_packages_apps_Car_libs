@@ -52,4 +52,6 @@ dependencies {
     api 'androidx.annotation:annotation:1.2.0'
     api 'androidx.constraintlayout:constraintlayout:2.1.0'
     api 'androidx.recyclerview:recyclerview:1.2.1'
+    api 'androidx.preference:preference:1.1.1'
+    api "androidx.asynclayoutinflater:asynclayoutinflater:1.0.0"
 }
