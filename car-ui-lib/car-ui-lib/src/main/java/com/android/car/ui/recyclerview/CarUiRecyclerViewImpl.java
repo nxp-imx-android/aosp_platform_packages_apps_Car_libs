@@ -719,6 +719,12 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
     }
 
     @Override
+    public void scrollToPositionWithOffset(int position, int offset) {
+        ((LinearLayoutManager) Objects.requireNonNull(mRecyclerView.getLayoutManager()))
+                .scrollToPositionWithOffset(position, offset);
+    }
+
+    @Override
     public void scrollBy(int x, int y) {
         mRecyclerView.scrollBy(x, y);
     }

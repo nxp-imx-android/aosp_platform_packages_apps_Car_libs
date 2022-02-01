@@ -417,6 +417,11 @@ public final class RecyclerViewAdapterV1 extends FrameLayout
     }
 
     @Override
+    public void scrollToPositionWithOffset(int position, int offset) {
+        mOEMRecyclerView.scrollToPositionWithOffset(position, offset);
+    }
+
+    @Override
     public void smoothScrollBy(int dx, int dy) {
         mOEMRecyclerView.smoothScrollBy(dx, dy);
     }

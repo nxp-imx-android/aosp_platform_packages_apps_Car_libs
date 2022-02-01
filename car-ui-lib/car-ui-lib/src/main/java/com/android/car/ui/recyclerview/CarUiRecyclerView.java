@@ -439,6 +439,9 @@ public interface CarUiRecyclerView {
     /** see {@link RecyclerView#scrollToPosition(int)} */
     void scrollToPosition(int position);
 
+    /** see {@link LinearLayoutManager#scrollToPositionWithOffset(int, int)} */
+    void scrollToPositionWithOffset(int position, int offset);
+
     /** see {@link RecyclerView#setAdapter(Adapter)} */
     void setAdapter(Adapter<?> adapter);
 

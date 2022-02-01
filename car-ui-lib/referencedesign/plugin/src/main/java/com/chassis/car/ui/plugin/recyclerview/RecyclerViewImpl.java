@@ -276,6 +276,12 @@ public final class RecyclerViewImpl extends FrameLayout implements RecyclerViewO
     }
 
     @Override
+    public void scrollToPositionWithOffset(int position, int offset) {
+        ((LinearLayoutManager) mRecyclerView.getLayoutManager())
+                .scrollToPositionWithOffset(position, offset);
+    }
+
+    @Override
     public void smoothScrollBy(int dx, int dy) {
         mRecyclerView.smoothScrollBy(dx, dy);
     }

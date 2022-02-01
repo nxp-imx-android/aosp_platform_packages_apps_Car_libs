@@ -59,6 +59,9 @@ public interface RecyclerViewOEMV1 {
     /** {@code RecyclerView#scrollToPosition(int)} */
     void scrollToPosition(int position);
 
+    /** {@code LinearLayoutManager#scrollToPositionWithOffset(int, int)} */
+    void scrollToPositionWithOffset(int position, int offset);
+
     /** {@code RecyclerView#smoothScrollBy(int, int)} */
     void smoothScrollBy(int dx, int dy);
 
