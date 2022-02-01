@@ -18,7 +18,7 @@ package com.android.car.ui.plugin.oemapis;
 import java.util.Objects;
 
 /**
- * Represents insets in the base layout. {@link com.android.car.ui.baselayout.Insets} for more
+ * Represents insets in the base layout. {@code com.android.car.ui.baselayout.Insets} for more
  * information.
  */
 public final class InsetsOEMV1 {

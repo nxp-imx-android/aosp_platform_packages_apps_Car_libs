@@ -122,7 +122,7 @@ public interface ToolbarControllerOEMV1 {
     void setMenuItems(List<MenuItemOEMV1> items);
 
     /**
-     * Sets a {@link Consumer<String>} to be called whenever the text in the search box
+     * Sets a {@code Consumer<String>} to be called whenever the text in the search box
      * changes.
      *
      * Must accept {@code null} to unset the listener.

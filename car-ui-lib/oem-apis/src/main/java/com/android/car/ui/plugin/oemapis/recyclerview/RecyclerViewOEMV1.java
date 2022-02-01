@@ -18,7 +18,7 @@ package com.android.car.ui.plugin.oemapis.recyclerview;
 import android.view.View;
 
 /**
- * {@link androidx.recyclerview.widget.RecyclerView}
+ * {@code androidx.recyclerview.widget.RecyclerView}
  */
 public interface RecyclerViewOEMV1 {
 
@@ -44,42 +44,42 @@ public interface RecyclerViewOEMV1 {
      */
     int SCROLL_STATE_SETTLING = 2;
 
-    /** {@link RecyclerView#setAdapter(Adapter)} */
+    /** {@code RecyclerView#setAdapter(Adapter)} */
     <V extends ViewHolderOEMV1> void setAdapter(AdapterOEMV1<V> adapter);
 
-    /** {@link RecyclerView#addOnScrollListener} */
+    /** {@code RecyclerView#addOnScrollListener} */
     void addOnScrollListener(OnScrollListenerOEMV1 listener);
 
-    /** {@link RecyclerView#removeOnScrollListener} */
+    /** {@code RecyclerView#removeOnScrollListener} */
     void removeOnScrollListener(OnScrollListenerOEMV1 listener);
 
-    /** {@link RecyclerView#clearOnScrollListeners()} */
+    /** {@code RecyclerView#clearOnScrollListeners()} */
     void clearOnScrollListeners();
 
-    /** {@link RecyclerView#scrollToPosition(int)} */
+    /** {@code RecyclerView#scrollToPosition(int)} */
     void scrollToPosition(int position);
 
-    /** {@link RecyclerView#smoothScrollBy(int, int)} */
+    /** {@code RecyclerView#smoothScrollBy(int, int)} */
     void smoothScrollBy(int dx, int dy);
 
-    /** {@link RecyclerView#smoothScrollToPosition(int)} */
+    /** {@code RecyclerView#smoothScrollToPosition(int)} */
     void smoothScrollToPosition(int position);
 
-    /** {@link RecyclerView#setHasFixedSize(boolean)} */
+    /** {@code RecyclerView#setHasFixedSize(boolean)} */
     void setHasFixedSize(boolean hasFixedSize);
 
-    /** {@link RecyclerView#hasFixedSize()} */
+    /** {@code RecyclerView#hasFixedSize()} */
     boolean hasFixedSize();
 
     /**
      * set {@link LayoutStyleOEMV1}. This is the replacement for
-     * {@link androidx.recyclerview.widget.RecyclerView.LayoutManager}
+     * {@code androidx.recyclerview.widget.RecyclerView.LayoutManager}
      */
     void setLayoutStyle(LayoutStyleOEMV1 layoutStyle);
 
     /**
      * set {@link LayoutStyleOEMV1}. This is the replacement for
-     * {@link androidx.recyclerview.widget.RecyclerView.LayoutManager}
+     * {@code androidx.recyclerview.widget.RecyclerView.LayoutManager}
      */
     LayoutStyleOEMV1 getLayoutStyle();
 
@@ -88,28 +88,28 @@ public interface RecyclerViewOEMV1 {
      */
     View getView();
 
-    /** {@link android.view.View#setPadding(int, int, int, int)} */
+    /** {@link View#setPadding(int, int, int, int)} */
     void setPadding(int left, int top, int right, int bottom);
 
-    /** {@link android.view.View#setPaddingRelative(int, int, int, int)} */
+    /** {@link View#setPaddingRelative(int, int, int, int)} */
     void setPaddingRelative(int start, int top, int end, int bottom);
 
-    /** {@link androidx.recyclerview.widget.RecyclerView#setClipToPadding(boolean)} */
+    /** {@code androidx.recyclerview.widget.RecyclerView#setClipToPadding(boolean)} */
     void setClipToPadding(boolean clipToPadding);
 
-    /** see {@link LinearLayoutManager#findFirstCompletelyVisibleItemPosition()} */
+    /** see {@code LinearLayoutManager#findFirstCompletelyVisibleItemPosition()} */
     int findFirstCompletelyVisibleItemPosition();
 
-    /** see {@link LinearLayoutManager#findFirstVisibleItemPosition()} */
+    /** see {@code LinearLayoutManager#findFirstVisibleItemPosition()} */
     int findFirstVisibleItemPosition();
 
-    /** see {@link LinearLayoutManager#findLastCompletelyVisibleItemPosition()} */
+    /** see {@code LinearLayoutManager#findLastCompletelyVisibleItemPosition()} */
     int findLastCompletelyVisibleItemPosition();
 
-    /** see {@link LinearLayoutManager#findLastVisibleItemPosition()} */
+    /** see {@code LinearLayoutManager#findLastVisibleItemPosition()} */
     int findLastVisibleItemPosition();
 
-    /** see {@link RecyclerView#getScrollState()} */
+    /** see {@code RecyclerView#getScrollState()} */
     int getScrollState();
 
     /** see {@link View#setContentDescription(CharSequence)} */
@@ -118,72 +118,72 @@ public interface RecyclerViewOEMV1 {
     /** see {@link View#setAlpha(float)} */
     void setAlpha(float alpha);
 
-    /** see {@link OrientationHelper#getEndAfterPadding()} */
+    /** see {@code OrientationHelper#getEndAfterPadding()} */
     int getEndAfterPadding();
 
-    /** see {@link OrientationHelper#getStartAfterPadding()} */
+    /** see {@code OrientationHelper#getStartAfterPadding()} */
     int getStartAfterPadding();
 
-    /** see {@link OrientationHelper#getTotalSpace()} */
+    /** see {@code OrientationHelper#getTotalSpace()} */
     int getTotalSpace();
 
     /**
-     * see {@link LayoutManager#getChildCount()}
-     * Prefer this method over {@link View#getChildCount()}
+     * see {@code LayoutManager#getChildCount()}
+     * Prefer this method over {@link android.view.ViewGroup#getChildCount()}
      */
     int getRecyclerViewChildCount();
 
     /**
-     * see {@link LayoutManager#getChildAt(int)}
-     * Prefer this method over {@link View#getChildAt(int)}
+     * see {@code LayoutManager#getChildAt(int)}
+     * Prefer this method over {@link android.view.ViewGroup#getChildAt(int)}
      */
     View getRecyclerViewChildAt(int index);
 
     /**
-     * see {@link LayoutManager#getPosition(View)}
+     * see {@code LayoutManager#getPosition(View)}
      */
     int getRecyclerViewChildPosition(View child);
 
     /**
-     * see {@link RecyclerView#findViewHolderForAdapterPosition(int)}
+     * see {@code RecyclerView#findViewHolderForAdapterPosition(int)}
      */
     ViewHolderOEMV1 findViewHolderForAdapterPosition(int position);
 
     /**
-     * see {@link RecyclerView#findViewHolderForLayoutPosition(int)}
+     * see {@code RecyclerView#findViewHolderForLayoutPosition(int)}
      */
     ViewHolderOEMV1 findViewHolderForLayoutPosition(int position);
 
-    /** {@link RecyclerView#addOnChildAttachStateChangeListener} */
+    /** {@code RecyclerView#addOnChildAttachStateChangeListener} */
     void addOnChildAttachStateChangeListener(OnChildAttachStateChangeListenerOEMV1 listener);
 
-    /** {@link RecyclerView#removeOnChildAttachStateChangeListener} */
+    /** {@code RecyclerView#removeOnChildAttachStateChangeListener} */
     void removeOnChildAttachStateChangeListener(OnChildAttachStateChangeListenerOEMV1 listener);
 
-    /** {@link RecyclerView#clearOnChildAttachStateChangeListener()} */
+    /** {@code RecyclerView#clearOnChildAttachStateChangeListener()} */
     void clearOnChildAttachStateChangeListener();
 
-    /** {@link RecyclerView#getChildLayoutPosition} */
+    /** {@code RecyclerView#getChildLayoutPosition} */
     int getChildLayoutPosition(View child);
 
-    /** {@link OrientationHelper#getDecoratedStart} */
+    /** {@code OrientationHelper#getDecoratedStart} */
     int getDecoratedStart(View child);
 
-    /** {@link OrientationHelper#getDecoratedEnd} */
+    /** {@code OrientationHelper#getDecoratedEnd} */
     int getDecoratedEnd(View child);
 
-    /** {@link LayoutManager#getDecoratedMeasuredHeight} */
+    /** {@code LayoutManager#getDecoratedMeasuredHeight} */
     int getDecoratedMeasuredHeight(View child);
 
-    /** {@link LayoutManager#getDecoratedMeasuredWidth} */
+    /** {@code LayoutManager#getDecoratedMeasuredWidth} */
     int getDecoratedMeasuredWidth(View child);
 
-    /** {@link OrientationHelper#getDecoratedMeasurementInOther} */
+    /** {@code OrientationHelper#getDecoratedMeasurementInOther} */
     int getDecoratedMeasurementInOther(View child);
 
-    /** {@link OrientationHelper#getDecoratedMeasurement} */
+    /** {@code OrientationHelper#getDecoratedMeasurement} */
     int getDecoratedMeasurement(View child);
 
-    /** {@link LayoutManager#findViewByPosition} */
+    /** {@code LayoutManager#findViewByPosition} */
     View findViewByPosition(int position);
 }

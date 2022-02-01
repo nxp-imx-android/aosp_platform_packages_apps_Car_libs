@@ -17,16 +17,16 @@ package com.android.car.ui.plugin.oemapis.recyclerview;
 
 import android.view.View;
 
-/** See {@link androidx.recyclerview.widget.RecyclerView.OnChildAttachStateChangeListenerOEMV1} */
+/** See {@code androidx.recyclerview.widget.RecyclerView.OnChildAttachStateChangeListenerOEMV1} */
 public interface OnChildAttachStateChangeListenerOEMV1 {
 
     /**
-     * see {@link RecyclerView.OnChildAttachStateChangeListenerOEMV1#onChildViewAttachedToWindow}
+     * see {@code RecyclerView.OnChildAttachStateChangeListenerOEMV1#onChildViewAttachedToWindow}
      */
     void onChildViewAttachedToWindow(View view);
 
     /**
-     * see {@link RecyclerView.OnChildAttachStateChangeListenerOEMV1#onChildViewDetachedFromWindow}
+     * see {@code RecyclerView.OnChildAttachStateChangeListenerOEMV1#onChildViewDetachedFromWindow}
      */
     void onChildViewDetachedFromWindow(View view);
 }

@@ -18,7 +18,7 @@ package com.android.car.ui.plugin.oemapis.recyclerview;
 import android.view.ViewGroup;
 
 /**
- * See {@link androidx.recyclerview.widget.RecyclerView.Adapter}
+ * See {@code androidx.recyclerview.widget.RecyclerView.Adapter}
  *
  * @param <V> A class that extends ViewHolder that will be used by the adapter.
  */
@@ -34,77 +34,77 @@ public interface AdapterOEMV1<V extends ViewHolderOEMV1> {
     int UNLIMITED = -1;
 
     /**
-     * See {@link androidx.recyclerview.widget.RecyclerView.Adapter#getItemCount()}
+     * See {@code androidx.recyclerview.widget.RecyclerView.Adapter#getItemCount()}
      */
     int getItemCount();
 
     /**
-     * See {@link androidx.recyclerview.widget.RecyclerView.Adapter#getItemId(int)}
+     * See {@code androidx.recyclerview.widget.RecyclerView.Adapter#getItemId(int)}
      */
     long getItemId(int position);
 
     /**
-     * See {@link androidx.recyclerview.widget.RecyclerView.Adapter#getItemViewType(int)}
+     * See {@code androidx.recyclerview.widget.RecyclerView.Adapter#getItemViewType(int)}
      */
     int getItemViewType(int position);
 
     /**
-     * See {@link androidx.recyclerview.widget.RecyclerView.Adapter#getStateRestorationPolicy()}
+     * See {@code androidx.recyclerview.widget.RecyclerView.Adapter#getStateRestorationPolicy()}
      */
     int getStateRestorationPolicyInt();
 
     /**
-     * See {@link androidx.recyclerview.widget.RecyclerView.Adapter#onAttachedToRecyclerView}
+     * See {@code androidx.recyclerview.widget.RecyclerView.Adapter#onAttachedToRecyclerView}
      */
     void onAttachedToRecyclerView(RecyclerViewOEMV1 recyclerView);
 
     /**
-     * See {@link androidx.recyclerview.widget.RecyclerView.Adapter#bindViewHolder}
+     * See {@code androidx.recyclerview.widget.RecyclerView.Adapter#bindViewHolder}
      */
     void bindViewHolder(V holder, int position);
 
     /**
-     * See {@link androidx.recyclerview.widget.RecyclerView.Adapter#createViewHolder}
+     * See {@code androidx.recyclerview.widget.RecyclerView.Adapter#createViewHolder}
      */
     V createViewHolder(ViewGroup parent, int viewType);
 
     /**
-     * See {@link androidx.recyclerview.widget.RecyclerView.Adapter#onDetachedFromRecyclerView}
+     * See {@code androidx.recyclerview.widget.RecyclerView.Adapter#onDetachedFromRecyclerView}
      */
     void onDetachedFromRecyclerView(RecyclerViewOEMV1 recyclerView);
 
     /**
-     * See {@link androidx.recyclerview.widget.RecyclerView.Adapter#onFailedToRecycleView}
+     * See {@code androidx.recyclerview.widget.RecyclerView.Adapter#onFailedToRecycleView}
      */
     boolean onFailedToRecycleView(V holder);
 
     /**
-     * See {@link androidx.recyclerview.widget.RecyclerView.Adapter#onViewAttachedToWindow}
+     * See {@code androidx.recyclerview.widget.RecyclerView.Adapter#onViewAttachedToWindow}
      */
     void onViewAttachedToWindow(V holder);
 
     /**
-     * See {@link androidx.recyclerview.widget.RecyclerView.Adapter#onViewDetachedFromWindow}
+     * See {@code androidx.recyclerview.widget.RecyclerView.Adapter#onViewDetachedFromWindow}
      */
     void onViewDetachedFromWindow(V holder);
 
     /**
-     * See {@link androidx.recyclerview.widget.RecyclerView.Adapter#onViewRecycled}
+     * See {@code androidx.recyclerview.widget.RecyclerView.Adapter#onViewRecycled}
      */
     void onViewRecycled(V holder);
 
     /**
-     * See {@link androidx.recyclerview.widget.RecyclerView.Adapter#registerAdapterDataObserver}
+     * See {@code androidx.recyclerview.widget.RecyclerView.Adapter#registerAdapterDataObserver}
      */
     void registerAdapterDataObserver(AdapterDataObserverOEMV1 observer);
 
     /**
-     * See {@link androidx.recyclerview.widget.RecyclerView.Adapter#unregisterAdapterDataObserver}
+     * See {@code androidx.recyclerview.widget.RecyclerView.Adapter#unregisterAdapterDataObserver}
      */
     void unregisterAdapterDataObserver(AdapterDataObserverOEMV1 observer);
 
     /**
-     * See {@link androidx.recyclerview.widget.RecyclerView.Adapter#hasStableIds}
+     * See {@code androidx.recyclerview.widget.RecyclerView.Adapter#hasStableIds}
      */
     boolean hasStableIds();
 

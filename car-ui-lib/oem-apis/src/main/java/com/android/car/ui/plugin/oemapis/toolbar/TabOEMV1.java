@@ -63,8 +63,11 @@ public final class TabOEMV1 {
 
     /** Builder for {@link TabOEMV1} */
     public static class Builder {
+        @SuppressWarnings("assignment")
         private String mTitle = null;
+        @SuppressWarnings("assignment")
         private Drawable mIcon = null;
+        @SuppressWarnings("assignment")
         private Runnable mOnSelectedListener = null;
         private boolean mTinted = true;
 

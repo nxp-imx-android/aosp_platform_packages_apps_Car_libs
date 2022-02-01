@@ -30,7 +30,7 @@ public interface RecyclerViewAttributesOEMV1 {
     boolean isRotaryScrollEnabled();
 
     /** Describes the expected relative size of the
-     * {@link androidx.recyclerview.widget.RecyclerView}. The list may be rendered differently for
+     * {@code androidx.recyclerview.widget.RecyclerView}. The list may be rendered differently for
      * each expected size.
      */
     int getSize();

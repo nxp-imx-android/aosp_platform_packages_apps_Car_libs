@@ -176,6 +176,7 @@ public final class MenuItemOEMV1 {
     }
 
     @Override
+    @SuppressWarnings("override.param")
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof MenuItemOEMV1)) return false;

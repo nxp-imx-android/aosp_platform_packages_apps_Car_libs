@@ -2960,6 +2960,7 @@ public class CarUiRecyclerViewTest {
         }
     }
 
+    @SuppressWarnings("DiscouragedApi")
     private int getId(String resourceName) {
         if (mIsPluginEnabled) {
             Context pluginContext = PluginFactorySingleton.getPluginContext();

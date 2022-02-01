@@ -38,6 +38,6 @@ public interface LayoutStyleOEMV1 {
     /** Returns true if layout is reversed */
     boolean getReverseLayout();
 
-    /** {@link androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup#getSpanSize} */
+    /** {@code androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup#getSpanSize} */
     int getSpanSize(int position);
 }

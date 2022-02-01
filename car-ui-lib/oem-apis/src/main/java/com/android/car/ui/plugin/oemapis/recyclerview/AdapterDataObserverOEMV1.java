@@ -16,28 +16,28 @@
 package com.android.car.ui.plugin.oemapis.recyclerview;
 
 /**
- * {@link androidx.recyclerview.widget.RecyclerView.Adapter#registerAdapterDataObserver}
+ * {@code androidx.recyclerview.widget.RecyclerView.Adapter#registerAdapterDataObserver}
  */
 public interface AdapterDataObserverOEMV1 {
 
-    /** {@link androidx.recyclerview.widget.RecyclerView.AdapterDataObserver#onChanged()} */
+    /** {@code androidx.recyclerview.widget.RecyclerView.AdapterDataObserver#onChanged()} */
     void onChanged();
 
-    /** {@link androidx.recyclerview.widget.RecyclerView.AdapterDataObserver#onItemRangeChanged(int, int)} */
+    /** {@code androidx.recyclerview.widget.RecyclerView.AdapterDataObserver#onItemRangeChanged(int, int)} */
     void onItemRangeChanged(int positionStart, int itemCount);
 
-    /** {@link androidx.recyclerview.widget.RecyclerView.AdapterDataObserver#onItemRangeChanged(int, int, Object)} */
+    /** {@code androidx.recyclerview.widget.RecyclerView.AdapterDataObserver#onItemRangeChanged(int, int, Object)} */
     void onItemRangeChanged(int positionStart, int itemCount, Object payload);
 
-    /** {@link androidx.recyclerview.widget.RecyclerView.AdapterDataObserver#onItemRangeInserted(int, int)} */
+    /** {@code androidx.recyclerview.widget.RecyclerView.AdapterDataObserver#onItemRangeInserted(int, int)} */
     void onItemRangeInserted(int positionStart, int itemCount);
 
-    /** {@link androidx.recyclerview.widget.RecyclerView.AdapterDataObserver#onItemRangeRemoved(int, int)} */
+    /** {@code androidx.recyclerview.widget.RecyclerView.AdapterDataObserver#onItemRangeRemoved(int, int)} */
     void onItemRangeRemoved(int positionStart, int itemCount);
 
-    /** {@link androidx.recyclerview.widget.RecyclerView.AdapterDataObserver#onItemRangeMoved(int, int, int)} */
+    /** {@code androidx.recyclerview.widget.RecyclerView.AdapterDataObserver#onItemRangeMoved(int, int, int)} */
     void onItemMoved(int fromPosition, int toPosition);
 
-    /** {@link androidx.recyclerview.widget.RecyclerView.AdapterDataObserver#onStateRestorationPolicyChanged()} */
+    /** {@code androidx.recyclerview.widget.RecyclerView.AdapterDataObserver#onStateRestorationPolicyChanged()} */
     void onStateRestorationPolicyChanged();
 }

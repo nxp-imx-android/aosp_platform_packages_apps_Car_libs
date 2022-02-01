@@ -17,10 +17,10 @@ package com.android.car.ui.plugin.oemapis.recyclerview;
 
 import android.view.View;
 
-/** {@link androidx.recyclerview.widget.RecyclerView.ViewHolder} */
+/** {@code androidx.recyclerview.widget.RecyclerView.ViewHolder} */
 public interface ViewHolderOEMV1 {
 
-    /** {@link androidx.recyclerview.widget.RecyclerView.ViewHolder#isRecyclable()} */
+    /** {@code androidx.recyclerview.widget.RecyclerView.ViewHolder#isRecyclable()} */
     boolean isRecyclable();
 
     /**
