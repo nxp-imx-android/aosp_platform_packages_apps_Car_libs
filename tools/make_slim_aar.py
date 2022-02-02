@@ -22,14 +22,12 @@ def main():
     parser = AP(description='AARs built with soong currently have classes from all their dependencies '
                             'included inside them, and no resources. This tool takes such an AAR, removes'
                             'the dependency classes, and adds resources')
-    parser.add_argument('--classes-allowlist', default='')
+    parser.add_argument('--classes-allowlist', required=True)
     parser.add_argument('output')
     parser.add_argument('soong_aar')
+    parser.add_argument('--proguard-files', nargs='*')
     parser.add_argument('res_folders', nargs='*')
     args = parser.parse_args()
-
-    if (len(args.classes_allowlist) <= 0):
-        raise ValueError("--classes-allowlist must not be empty")
 
     with ZipFile(args.output, mode='w', compression=ZIP_DEFLATED) as outaar, ZipFile(args.soong_aar) as soongaar:
         # Create a new classes.jar that only has the classes with the desired prefix
@@ -45,6 +43,16 @@ def main():
         for f in soongaar.namelist():
             if f != 'classes.jar':
                 outaar.writestr(f, soongaar.read(f))
+
+        # Copy `proguard.txt` file to the output aar
+        if args.proguard_files:
+            data = data2 = ""
+            for f in args.proguard_files:
+                with open(f, 'r') as proguard_txt:
+                    data2 = proguard_txt.read()
+                data += '\n'
+                data += data2
+            outaar.writestr('proguard.txt', data)
 
         # add the provided resource folders to the output aar
         resIndex=1
