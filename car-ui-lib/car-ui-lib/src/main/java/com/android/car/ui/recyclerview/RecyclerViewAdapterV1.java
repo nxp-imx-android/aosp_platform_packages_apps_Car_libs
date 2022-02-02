@@ -474,6 +474,17 @@ public final class RecyclerViewAdapterV1 extends FrameLayout
         return mOEMRecyclerView.hasFixedSize();
     }
 
+    /**
+     * @return null
+     * @deprecated LayoutManager will be implemented by OEMs, use other available APIs to get the
+     * required data.
+     */
+    @Nullable
+    @Deprecated
+    public LayoutManager getLayoutManager() {
+        return null;
+    }
+
     @Override
     public CarUiLayoutStyle getLayoutStyle() {
         return mLayoutStyle;
