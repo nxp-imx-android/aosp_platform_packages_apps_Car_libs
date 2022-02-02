@@ -24,12 +24,15 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
+import static com.android.car.ui.core.CarUi.MIN_TARGET_API;
+
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
+import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,6 +54,7 @@ import org.junit.runners.Parameterized;
  * Unit tests for {@link AppStyledDialogController}.
  */
 @RunWith(Parameterized.class)
+@TargetApi(MIN_TARGET_API)
 public class AppStyledDialogControllerTest {
 
     private AppStyledDialogController mAppStyledDialogController;

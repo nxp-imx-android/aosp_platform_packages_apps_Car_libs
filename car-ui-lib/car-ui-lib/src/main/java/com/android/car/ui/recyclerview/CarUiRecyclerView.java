@@ -45,7 +45,6 @@ import androidx.recyclerview.widget.RecyclerView.ItemDecoration;
 import androidx.recyclerview.widget.RecyclerView.LayoutManager;
 import androidx.recyclerview.widget.RecyclerView.OnChildAttachStateChangeListener;
 import androidx.recyclerview.widget.RecyclerView.OnFlingListener;
-import androidx.recyclerview.widget.RecyclerView.OnScrollListener;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import com.android.car.ui.pluginsupport.PluginFactorySingleton;
