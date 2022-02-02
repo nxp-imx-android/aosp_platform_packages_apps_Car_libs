@@ -16,6 +16,9 @@
 
 package com.android.car.ui.appstyledview;
 
+import static com.android.car.ui.core.CarUi.MIN_TARGET_API;
+
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -30,7 +33,6 @@ import android.view.WindowInsets;
 import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
@@ -42,7 +44,7 @@ import androidx.core.view.WindowInsetsControllerCompat;
  * <p>
  * Apps should not use this directly. App's should use {@link AppStyledDialogController}.
  */
-@RequiresApi(api = Build.VERSION_CODES.R)
+@TargetApi(MIN_TARGET_API)
         /* package */ class AppStyledDialog extends Dialog implements
         DialogInterface.OnDismissListener {
 
@@ -130,12 +132,14 @@ import androidx.core.view.WindowInsetsControllerCompat;
                 activityWindowInsetsController.getSystemBarsBehavior()
         );
 
-        // Configure nav bar visibility to match requesting activity
-        boolean isNavBarVisible =
-                ((Activity) mContext).getWindow().getDecorView().getRootWindowInsets().isVisible(
-                        WindowInsets.Type.navigationBars());
-        if (!isNavBarVisible) {
-            dialogWindowInsetsController.hide(WindowInsetsCompat.Type.navigationBars());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            // Configure nav bar visibility to match requesting activity
+            boolean isNavBarVisible =
+                    ((Activity) mContext).getWindow().getDecorView().getRootWindowInsets()
+                    .isVisible(WindowInsets.Type.navigationBars());
+            if (!isNavBarVisible) {
+                dialogWindowInsetsController.hide(WindowInsetsCompat.Type.navigationBars());
+            }
         }
     }
 

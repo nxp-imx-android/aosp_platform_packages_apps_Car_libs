@@ -35,10 +35,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.android.car.ui.TestActivity;
 import com.android.car.ui.appstyledview.AppStyledViewController.AppStyledViewNavIcon;
+import com.android.car.ui.pluginsupport.PluginFactorySingleton;
 import com.android.car.ui.test.R;
 
 import org.junit.Before;
