@@ -367,6 +367,7 @@ public final class ContentListItemOEMV1 implements ListItemOEMV1 {
          *
          * @param icon the Drawable to set as the icon, or null to clear the content.
          */
+        @SuppressWarnings("argument")
         public Builder setSupplementalIcon(Drawable icon) {
             return setSupplementalIcon(icon, null);
         }
