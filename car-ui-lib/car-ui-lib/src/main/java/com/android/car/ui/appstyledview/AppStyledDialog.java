@@ -45,9 +45,7 @@ import androidx.core.view.WindowInsetsControllerCompat;
  * Apps should not use this directly. App's should use {@link AppStyledDialogController}.
  */
 @TargetApi(MIN_TARGET_API)
-        /* package */ class AppStyledDialog extends Dialog implements
-        DialogInterface.OnDismissListener {
-
+class AppStyledDialog extends Dialog implements DialogInterface.OnDismissListener {
     private final AppStyledViewController mController;
     private Runnable mOnDismissListener;
     private View mContent;
@@ -94,26 +92,33 @@ import androidx.core.view.WindowInsetsControllerCompat;
 
         copySystemUiVisibility();
 
-        // Show the dialog with NavBar hidden.
         super.show();
 
         // Set the dialog to focusable again.
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
     }
 
+    @Override
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        copyWindowInsets();
+    }
+
     /**
-     * Copy the visibility of the Activity that has started the dialog {@link mContext}. If the
+     * Copy the visibility of the Activity that has started the dialog {@code mContext}. If the
      * activity is in Immersive mode the dialog will be in Immersive mode too and vice versa.
      */
     private void copySystemUiVisibility() {
         getWindow().getDecorView().setSystemUiVisibility(
                 ((Activity) mContext).getWindow().getDecorView().getSystemUiVisibility()
         );
+    }
 
-        //The following code is used to copy window inset settings from the activity that
-        // requested the dialog. Status bar insets mirror activity state but nav bar requires the
-        // following workaround.
-
+    /**
+     * Copy window inset settings from the activity that requested the dialog. Status bar insets
+     * mirror activity state but nav bar requires the following workaround.
+     */
+    private void copyWindowInsets() {
         // WindowInsetsController corresponding to activity that requested the dialog
         WindowInsetsControllerCompat activityWindowInsetsController =
                 ViewCompat.getWindowInsetsController(
@@ -134,9 +139,13 @@ import androidx.core.view.WindowInsetsControllerCompat;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             // Configure nav bar visibility to match requesting activity
-            boolean isNavBarVisible =
-                    ((Activity) mContext).getWindow().getDecorView().getRootWindowInsets()
-                    .isVisible(WindowInsets.Type.navigationBars());
+            WindowInsets windowInsets =
+                    ((Activity) mContext).getWindow().getDecorView().getRootWindowInsets();
+            if (windowInsets == null) {
+                return;
+            }
+
+            boolean isNavBarVisible = windowInsets.isVisible(WindowInsets.Type.navigationBars());
             if (!isNavBarVisible) {
                 dialogWindowInsetsController.hide(WindowInsetsCompat.Type.navigationBars());
             }

@@ -83,7 +83,7 @@ public class AppStyledViewSampleActivity extends AppCompatActivity {
             mAppStyledDialogController.setContentView(appStyledTestView);
             mAppStyledDialogController.setNavIcon(AppStyledViewNavIcon.CLOSE);
             hideSystemBars();
-            btn.post(() -> mAppStyledDialogController.show());
+            mAppStyledDialogController.show();
         });
     }
 
