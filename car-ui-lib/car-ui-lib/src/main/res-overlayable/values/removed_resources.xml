@@ -36,7 +36,6 @@
     <item type="dimen" name="car_ui_list_item_radio_button_start_inset"/>
     <item type="id" name="car_ui_list_item_text_container"/>
     <item type="id" name="car_ui_preference_fragment_container"/>
-    <item type="id" name="car_ui_toolbar"/>
     <item type="id" name="toolbar"/>
     <item type="layout" name="car_ui_list_preference_with_toolbar"/>
     <item type="layout" name="car_ui_preference_fragment_with_toolbar"/>

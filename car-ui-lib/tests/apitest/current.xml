@@ -328,7 +328,6 @@
   <public type="id" name="car_ui_second_action_container"/>
   <public type="id" name="car_ui_secondary_action"/>
   <public type="id" name="car_ui_secondary_action_concrete"/>
-  <public type="id" name="car_ui_toolbar"/>
   <public type="id" name="car_ui_toolbar_background"/>
   <public type="id" name="car_ui_toolbar_bottom_guideline"/>
   <public type="id" name="car_ui_toolbar_bottom_styleable"/>
