@@ -482,7 +482,6 @@ limitations under the License.-->
       <item type="layout" name="car_ui_alert_dialog_title_with_subtitle"/>
       <item type="layout" name="car_ui_base_layout"/>
       <item type="layout" name="car_ui_base_layout_toolbar"/>
-      <item type="layout" name="car_ui_base_layout_toolbar_legacy"/>
       <item type="layout" name="car_ui_header_list_item"/>
       <item type="layout" name="car_ui_ims_wide_screen_input_view"/>
       <item type="layout" name="car_ui_list_item"/>

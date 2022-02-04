@@ -38,7 +38,6 @@
     <item type="id" name="car_ui_preference_fragment_container"/>
     <item type="id" name="car_ui_toolbar"/>
     <item type="id" name="toolbar"/>
-    <item type="layout" name="car_ui_base_layout_toolbar_legacy"/>
     <item type="layout" name="car_ui_list_preference_with_toolbar"/>
     <item type="layout" name="car_ui_preference_fragment_with_toolbar"/>
     <item type="style" name="CarUiPreferenceTheme.WithToolbar"/>
