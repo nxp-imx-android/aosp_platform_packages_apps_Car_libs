@@ -21,5 +21,10 @@ package com.android.car.media.common;
  * content style API for media.
  */
 public final class MediaConstants {
-    
+
+    // TODO(b/222362032): Replace with androidx reference.
+    public static final String
+            BROWSER_SERVICE_EXTRAS_KEY_APPLICATION_PREFERENCES_USING_CAR_APP_LIBRARY_INTENT =
+            "androidx.media.BrowserRoot.Extras"
+                    + ".APPLICATION_PREFERENCES_USING_CAR_APP_LIBRARY_INTENT";
 }
