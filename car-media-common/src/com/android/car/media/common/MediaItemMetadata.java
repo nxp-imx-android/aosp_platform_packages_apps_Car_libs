@@ -36,6 +36,7 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+import androidx.media.utils.MediaConstants;
 
 import com.android.car.apps.common.BitmapUtils;
 import com.android.car.apps.common.CommonFlags;
@@ -246,8 +247,8 @@ public class MediaItemMetadata implements Parcelable {
      */
     public boolean isExplicit() {
         Bundle extras = mMediaDescription.getExtras();
-        return extras != null && extras.getLong(MediaConstants.EXTRA_IS_EXPLICIT)
-                == MediaConstants.EXTRA_METADATA_ENABLED_VALUE;
+        return extras != null && extras.getLong(MediaConstants.METADATA_KEY_IS_EXPLICIT)
+                == MediaConstants.METADATA_VALUE_ATTRIBUTE_PRESENT;
     }
 
     /**
@@ -255,7 +256,8 @@ public class MediaItemMetadata implements Parcelable {
      */
     public boolean isDownloaded() {
         Bundle extras = mMediaDescription.getExtras();
-        return extras != null && extras.getLong(MediaConstants.EXTRA_DOWNLOAD_STATUS)
+        return extras != null
+                && extras.getLong(MediaDescriptionCompat.EXTRA_DOWNLOAD_STATUS)
                 == MediaDescriptionCompat.STATUS_DOWNLOADED;
     }
 
@@ -297,10 +299,9 @@ public class MediaItemMetadata implements Parcelable {
     public int getBrowsableContentStyleHint() {
         Bundle extras = mMediaDescription.getExtras();
         if (extras != null) {
-            if (extras.containsKey(MediaConstants.CONTENT_STYLE_BROWSABLE_HINT)) {
-                return extras.getInt(MediaConstants.CONTENT_STYLE_BROWSABLE_HINT, 0);
-            } else if (extras.containsKey(MediaConstants.CONTENT_STYLE_BROWSABLE_HINT_PRERELEASE)) {
-                return extras.getInt(MediaConstants.CONTENT_STYLE_BROWSABLE_HINT_PRERELEASE, 0);
+            if (extras.containsKey(MediaConstants.DESCRIPTION_EXTRAS_KEY_CONTENT_STYLE_BROWSABLE)) {
+                return extras.getInt(MediaConstants.DESCRIPTION_EXTRAS_KEY_CONTENT_STYLE_BROWSABLE,
+                        0);
             }
         }
         return 0;
@@ -317,11 +318,9 @@ public class MediaItemMetadata implements Parcelable {
     public int getPlayableContentStyleHint() {
         Bundle extras = mMediaDescription.getExtras();
         if (extras != null) {
-
-            if (extras.containsKey(MediaConstants.CONTENT_STYLE_PLAYABLE_HINT)) {
-                return extras.getInt(MediaConstants.CONTENT_STYLE_PLAYABLE_HINT, 0);
-            } else if (extras.containsKey(MediaConstants.CONTENT_STYLE_PLAYABLE_HINT_PRERELEASE)) {
-                return extras.getInt(MediaConstants.CONTENT_STYLE_PLAYABLE_HINT_PRERELEASE, 0);
+            if (extras.containsKey(MediaConstants.DESCRIPTION_EXTRAS_KEY_CONTENT_STYLE_PLAYABLE)) {
+                return extras.getInt(MediaConstants.DESCRIPTION_EXTRAS_KEY_CONTENT_STYLE_PLAYABLE,
+                        0);
             }
         }
         return 0;
@@ -333,12 +332,10 @@ public class MediaItemMetadata implements Parcelable {
     public String getTitleGrouping() {
         Bundle extras = mMediaDescription.getExtras();
         if (extras != null) {
-            if (extras.containsKey(MediaConstants.CONTENT_STYLE_GROUP_TITLE_HINT)) {
-                return extras.getString(MediaConstants.CONTENT_STYLE_GROUP_TITLE_HINT, null);
-            } else if (extras.containsKey(
-                    MediaConstants.CONTENT_STYLE_GROUP_TITLE_HINT_PRERELEASE)) {
-                return extras.getString(MediaConstants.CONTENT_STYLE_GROUP_TITLE_HINT_PRERELEASE,
-                        null);
+            if (extras.containsKey(
+                    MediaConstants.DESCRIPTION_EXTRAS_KEY_CONTENT_STYLE_GROUP_TITLE)) {
+                return extras.getString(
+                        MediaConstants.DESCRIPTION_EXTRAS_KEY_CONTENT_STYLE_GROUP_TITLE, null);
             }
         }
         return null;

@@ -25,6 +25,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.media.utils.MediaConstants;
 
 import com.android.car.media.common.playback.PlaybackViewModel.PlaybackStateWrapper;
 
@@ -137,14 +138,14 @@ public abstract class PlaybackErrorsHelper {
     private PendingIntent getErrorResolutionIntent(@NonNull PlaybackStateWrapper state) {
         Bundle extras = state.getExtras();
         return extras == null ? null : extras.getParcelable(
-                MediaConstants.ERROR_RESOLUTION_ACTION_INTENT);
+                MediaConstants.PLAYBACK_STATE_EXTRAS_KEY_ERROR_RESOLUTION_ACTION_INTENT);
     }
 
     @Nullable
     private String getErrorResolutionLabel(@NonNull PlaybackStateWrapper state) {
         Bundle extras = state.getExtras();
         return extras == null ? null : extras.getString(
-                MediaConstants.ERROR_RESOLUTION_ACTION_LABEL);
+                MediaConstants.PLAYBACK_STATE_EXTRAS_KEY_ERROR_RESOLUTION_ACTION_LABEL);
     }
 
 }

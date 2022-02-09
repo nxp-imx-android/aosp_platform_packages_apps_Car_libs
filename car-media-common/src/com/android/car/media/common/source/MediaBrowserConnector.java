@@ -28,8 +28,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import androidx.core.util.Preconditions;
-
-import com.android.car.media.common.MediaConstants;
+import androidx.media.utils.MediaConstants;
 
 import java.util.Objects;
 
@@ -255,7 +254,8 @@ public class MediaBrowserConnector {
     protected MediaBrowserCompat createMediaBrowser(@NonNull MediaSource mediaSource,
             @NonNull MediaBrowserCompat.ConnectionCallback callback) {
         Bundle rootHints = new Bundle();
-        rootHints.putInt(MediaConstants.EXTRA_MEDIA_ART_SIZE_HINT_PIXELS, mMaxBitmapSizePx);
+        rootHints.putInt(MediaConstants.BROWSER_ROOT_HINTS_KEY_MEDIA_ART_SIZE_PIXELS,
+                mMaxBitmapSizePx);
         ComponentName browseService = mediaSource.getBrowseServiceComponentName();
         return new MediaBrowserCompat(mContext, browseService, callback, rootHints);
     }
