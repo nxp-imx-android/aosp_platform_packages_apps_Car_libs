@@ -33,7 +33,7 @@ public class TextOEMV1 {
      * Convenience method that returns a single {@link CharSequence} that is a combination of the
      * preferred text of a list of {@link TextOEMV1}, separated by line breaks.
      */
-    public static CharSequence combineMultiLine(List<TextOEMV1> lines) {
+    public static CharSequence combineMultiLine(@NonNull List<TextOEMV1> lines) {
         SpannableStringBuilder builder = new SpannableStringBuilder();
         CharSequence delimiter = "";
         for (TextOEMV1 line : lines) {
@@ -44,7 +44,7 @@ public class TextOEMV1 {
         return builder;
     }
 
-    private TextOEMV1(Builder builder) {
+    private TextOEMV1(@NonNull Builder builder) {
         mVariants = builder.mVariants;
         mMaxChars = builder.mMaxChars;
         mMaxLines = builder.mMaxLines;
@@ -68,6 +68,7 @@ public class TextOEMV1 {
     /**
      * Returns the list of text variants for this {@link TextOEMV1}.
      */
+    @NonNull
     public List<CharSequence> getTextVariants() {
         return mVariants;
     }
@@ -75,6 +76,7 @@ public class TextOEMV1 {
     /**
      * Returns the preferred text to render for this {@link TextOEMV1}.
      */
+    @NonNull
     public CharSequence getPreferredText() {
         return mVariants.get(0);
     }
@@ -92,7 +94,7 @@ public class TextOEMV1 {
          *
          * @param text text to display
          */
-        public Builder(CharSequence text) {
+        public Builder(@NonNull CharSequence text) {
             this(Collections.singletonList(text));
         }
 
@@ -102,13 +104,14 @@ public class TextOEMV1 {
          * @param variants list of text variants. Variants provide alternative text to be used to
          *                 avoid truncation. Provide variants in order of preference.
          */
-        public Builder(List<CharSequence> variants) {
+        public Builder(@NonNull List<CharSequence> variants) {
             mVariants = variants;
         }
 
         /**
          * Sets the maximum number of characters that should be displayed.
          */
+        @NonNull
         public Builder setMaxChars(int chars) {
             mMaxChars = chars;
             return this;
@@ -119,6 +122,7 @@ public class TextOEMV1 {
          * force the text to be wrapped. Text that exceeds the maximum number of lines is
          * ellipsized.
          */
+        @NonNull
         public Builder setMaxLines(int lines) {
             mMaxLines = lines;
             return this;
@@ -127,6 +131,7 @@ public class TextOEMV1 {
         /**
          * Returns a {@link TextOEMV1} for this {@link Builder}.
          */
+        @NonNull
         public TextOEMV1 build() {
             return new TextOEMV1(this);
         }

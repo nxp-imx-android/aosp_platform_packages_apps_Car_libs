@@ -17,6 +17,9 @@ package com.android.car.ui.plugin.oemapis.recyclerview;
 
 import android.graphics.drawable.Drawable;
 
+import com.android.car.ui.plugin.oemapis.NonNull;
+import com.android.car.ui.plugin.oemapis.Nullable;
+
 /**
  * Set of attributes passed from UI/layout to the oem implementation
  */
@@ -36,6 +39,7 @@ public interface RecyclerViewAttributesOEMV1 {
     int getSize();
 
     /** Returns information regarding the layout style */
+    @NonNull
     LayoutStyleOEMV1 getLayoutStyle();
 
     /** Returns requested width of the list view */
@@ -75,5 +79,6 @@ public interface RecyclerViewAttributesOEMV1 {
     int getMarginBottom();
 
     /** Returns background specified for the list view */
+    @Nullable
     Drawable getBackground();
 }

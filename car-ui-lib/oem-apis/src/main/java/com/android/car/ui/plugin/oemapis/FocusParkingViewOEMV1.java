@@ -42,5 +42,6 @@ public interface FocusParkingViewOEMV1 {
      * the position/size doesn't matter. It's recommended to use wrap_content as both the width
      * and height in the LayoutParams.
      */
+    @NonNull
     View getView();
 }

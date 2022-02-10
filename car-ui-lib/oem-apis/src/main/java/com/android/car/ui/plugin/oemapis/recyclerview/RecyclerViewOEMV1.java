@@ -17,6 +17,9 @@ package com.android.car.ui.plugin.oemapis.recyclerview;
 
 import android.view.View;
 
+import com.android.car.ui.plugin.oemapis.NonNull;
+import com.android.car.ui.plugin.oemapis.Nullable;
+
 /**
  * {@code androidx.recyclerview.widget.RecyclerView}
  */
@@ -45,13 +48,13 @@ public interface RecyclerViewOEMV1 {
     int SCROLL_STATE_SETTLING = 2;
 
     /** {@code RecyclerView#setAdapter(Adapter)} */
-    <V extends ViewHolderOEMV1> void setAdapter(AdapterOEMV1<V> adapter);
+    <V extends ViewHolderOEMV1> void setAdapter(@Nullable AdapterOEMV1<V> adapter);
 
     /** {@code RecyclerView#addOnScrollListener} */
-    void addOnScrollListener(OnScrollListenerOEMV1 listener);
+    void addOnScrollListener(@NonNull OnScrollListenerOEMV1 listener);
 
     /** {@code RecyclerView#removeOnScrollListener} */
-    void removeOnScrollListener(OnScrollListenerOEMV1 listener);
+    void removeOnScrollListener(@NonNull OnScrollListenerOEMV1 listener);
 
     /** {@code RecyclerView#clearOnScrollListeners()} */
     void clearOnScrollListeners();
@@ -78,17 +81,19 @@ public interface RecyclerViewOEMV1 {
      * set {@link LayoutStyleOEMV1}. This is the replacement for
      * {@code androidx.recyclerview.widget.RecyclerView.LayoutManager}
      */
-    void setLayoutStyle(LayoutStyleOEMV1 layoutStyle);
+    void setLayoutStyle(@Nullable LayoutStyleOEMV1 layoutStyle);
 
     /**
      * set {@link LayoutStyleOEMV1}. This is the replacement for
      * {@code androidx.recyclerview.widget.RecyclerView.LayoutManager}
      */
+    @Nullable
     LayoutStyleOEMV1 getLayoutStyle();
 
     /**
      * Returns the view that will be displayed on the screen.
      */
+    @NonNull
     View getView();
 
     /** {@link View#setPadding(int, int, int, int)} */
@@ -116,7 +121,7 @@ public interface RecyclerViewOEMV1 {
     int getScrollState();
 
     /** see {@link View#setContentDescription(CharSequence)} */
-    void setContentDescription(CharSequence contentDescription);
+    void setContentDescription(@Nullable CharSequence contentDescription);
 
     /** see {@link View#setAlpha(float)} */
     void setAlpha(float alpha);
@@ -145,48 +150,53 @@ public interface RecyclerViewOEMV1 {
     /**
      * see {@code LayoutManager#getPosition(View)}
      */
-    int getRecyclerViewChildPosition(View child);
+    int getRecyclerViewChildPosition(@NonNull View child);
 
     /**
      * see {@code RecyclerView#findViewHolderForAdapterPosition(int)}
      */
+    @Nullable
     ViewHolderOEMV1 findViewHolderForAdapterPosition(int position);
 
     /**
      * see {@code RecyclerView#findViewHolderForLayoutPosition(int)}
      */
+    @Nullable
     ViewHolderOEMV1 findViewHolderForLayoutPosition(int position);
 
     /** {@code RecyclerView#addOnChildAttachStateChangeListener} */
-    void addOnChildAttachStateChangeListener(OnChildAttachStateChangeListenerOEMV1 listener);
+    void addOnChildAttachStateChangeListener(
+            @NonNull OnChildAttachStateChangeListenerOEMV1 listener);
 
     /** {@code RecyclerView#removeOnChildAttachStateChangeListener} */
-    void removeOnChildAttachStateChangeListener(OnChildAttachStateChangeListenerOEMV1 listener);
+    void removeOnChildAttachStateChangeListener(
+            @NonNull OnChildAttachStateChangeListenerOEMV1 listener);
 
     /** {@code RecyclerView#clearOnChildAttachStateChangeListener()} */
     void clearOnChildAttachStateChangeListener();
 
     /** {@code RecyclerView#getChildLayoutPosition} */
-    int getChildLayoutPosition(View child);
+    int getChildLayoutPosition(@NonNull View child);
 
     /** {@code OrientationHelper#getDecoratedStart} */
-    int getDecoratedStart(View child);
+    int getDecoratedStart(@NonNull View child);
 
     /** {@code OrientationHelper#getDecoratedEnd} */
-    int getDecoratedEnd(View child);
+    int getDecoratedEnd(@NonNull View child);
 
     /** {@code LayoutManager#getDecoratedMeasuredHeight} */
-    int getDecoratedMeasuredHeight(View child);
+    int getDecoratedMeasuredHeight(@NonNull View child);
 
     /** {@code LayoutManager#getDecoratedMeasuredWidth} */
-    int getDecoratedMeasuredWidth(View child);
+    int getDecoratedMeasuredWidth(@NonNull View child);
 
     /** {@code OrientationHelper#getDecoratedMeasurementInOther} */
-    int getDecoratedMeasurementInOther(View child);
+    int getDecoratedMeasurementInOther(@NonNull View child);
 
     /** {@code OrientationHelper#getDecoratedMeasurement} */
-    int getDecoratedMeasurement(View child);
+    int getDecoratedMeasurement(@NonNull View child);
 
     /** {@code LayoutManager#findViewByPosition} */
+    @Nullable
     View findViewByPosition(int position);
 }

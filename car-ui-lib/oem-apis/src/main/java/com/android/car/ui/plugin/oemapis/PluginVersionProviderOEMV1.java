@@ -44,5 +44,6 @@ public interface PluginVersionProviderOEMV1 {
      * @return An object implementing {@link PluginFactoryOEMV1} for a version <=
      *         {@code maxVersion}.
      */
-    Object getPluginFactory(int maxVersion, Context context, String packageName);
+    @Nullable
+    Object getPluginFactory(int maxVersion, @NonNull Context context, @NonNull String packageName);
 }

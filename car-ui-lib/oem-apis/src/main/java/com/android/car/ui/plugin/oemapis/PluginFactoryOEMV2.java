@@ -71,10 +71,11 @@ public interface PluginFactoryOEMV2 {
      *                              decorations around the edge of it.
      * @return A {@link ToolbarControllerOEMV1} or null if {@code toolbarEnabled} was false.
      */
+    @Nullable
     ToolbarControllerOEMV1 installBaseLayoutAround(
-            Context sourceContext,
-            View contentView,
-            Consumer<InsetsOEMV1> insetsChangedListener,
+            @NonNull Context sourceContext,
+            @NonNull View contentView,
+            @Nullable Consumer<InsetsOEMV1> insetsChangedListener,
             boolean toolbarEnabled,
             boolean fullscreen);
 
@@ -98,7 +99,8 @@ public interface PluginFactoryOEMV2 {
      *                      {@link #setRotaryFactories}.
      * @return the view used for app styled view.
      */
-    AppStyledViewControllerOEMV1 createAppStyledView(Context sourceContext);
+    @Nullable
+    AppStyledViewControllerOEMV1 createAppStyledView(@NonNull Context sourceContext);
 
     /**
      * Creates an instance of CarUiRecyclerView
@@ -112,12 +114,15 @@ public interface PluginFactoryOEMV2 {
      *                      {@link #setRotaryFactories}.
      * @param attrs   An object containing initial attributes for the button.
      */
+    @Nullable
     RecyclerViewOEMV1 createRecyclerView(
-            Context sourceContext,
-            RecyclerViewAttributesOEMV1 attrs);
+            @NonNull Context sourceContext,
+            @Nullable RecyclerViewAttributesOEMV1 attrs);
 
     /**
      * Creates an instance of list item adapter
      */
-    AdapterOEMV1<? extends ViewHolderOEMV1> createListItemAdapter(List<ListItemOEMV1> items);
+    @Nullable
+    AdapterOEMV1<? extends ViewHolderOEMV1> createListItemAdapter(
+            @NonNull List<ListItemOEMV1> items);
 }

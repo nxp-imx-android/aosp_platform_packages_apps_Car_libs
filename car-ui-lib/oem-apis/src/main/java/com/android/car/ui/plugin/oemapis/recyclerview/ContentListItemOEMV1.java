@@ -19,6 +19,8 @@ package com.android.car.ui.plugin.oemapis.recyclerview;
 import android.graphics.drawable.Drawable;
 import android.text.SpannableString;
 
+import com.android.car.ui.plugin.oemapis.NonNull;
+import com.android.car.ui.plugin.oemapis.Nullable;
 import com.android.car.ui.plugin.oemapis.TextOEMV1;
 
 import java.util.Collections;
@@ -94,7 +96,7 @@ public final class ContentListItemOEMV1 implements ListItemOEMV1 {
     private final Consumer<ContentListItemOEMV1> mOnCheckedChangeListener;
     private final Consumer<ContentListItemOEMV1> mSupplementalIconOnClickListener;
 
-    ContentListItemOEMV1(Builder builder) {
+    ContentListItemOEMV1(@NonNull Builder builder) {
         mAction = builder.mAction;
         mTitle = builder.mTitle;
         mBody = builder.mBody;
@@ -114,6 +116,7 @@ public final class ContentListItemOEMV1 implements ListItemOEMV1 {
     /**
      * Returns the title of the item.
      */
+    @Nullable
     public TextOEMV1 getTitle() {
         return mTitle;
     }
@@ -121,6 +124,7 @@ public final class ContentListItemOEMV1 implements ListItemOEMV1 {
     /**
      * Returns the body of the item.
      */
+    @Nullable
     public List<TextOEMV1> getBody() {
         return mBody;
     }
@@ -128,6 +132,7 @@ public final class ContentListItemOEMV1 implements ListItemOEMV1 {
     /**
      * Returns the icon of the item.
      */
+    @Nullable
     public Drawable getIcon() {
         return mIcon;
     }
@@ -135,6 +140,7 @@ public final class ContentListItemOEMV1 implements ListItemOEMV1 {
     /**
      * Returns the primary icon type for the item.
      */
+    @NonNull
     public IconType getPrimaryIconType() {
         return mPrimaryIconType;
     }
@@ -179,6 +185,7 @@ public final class ContentListItemOEMV1 implements ListItemOEMV1 {
     /**
      * Returns the action type for the item.
      */
+    @NonNull
     public Action getAction() {
         return mAction;
     }
@@ -186,6 +193,7 @@ public final class ContentListItemOEMV1 implements ListItemOEMV1 {
     /**
      * Returns the supplemental icon for the item.
      */
+    @Nullable
     public Drawable getSupplementalIcon() {
         return mSupplementalIcon;
     }
@@ -193,6 +201,7 @@ public final class ContentListItemOEMV1 implements ListItemOEMV1 {
     /**
      * Returns the click listener registered for the supplemental icon on this item.
      */
+    @Nullable
     public Consumer<ContentListItemOEMV1> getSupplementalIconOnClickListener() {
         return mSupplementalIconOnClickListener;
     }
@@ -200,6 +209,7 @@ public final class ContentListItemOEMV1 implements ListItemOEMV1 {
     /**
      * Returns the click listener registered for this item.
      */
+    @Nullable
     public Consumer<ContentListItemOEMV1> getOnClickListener() {
         return mOnClickListener;
     }
@@ -207,6 +217,7 @@ public final class ContentListItemOEMV1 implements ListItemOEMV1 {
     /**
      * Returns the checked change listener registered for this item.
      */
+    @Nullable
     public Consumer<ContentListItemOEMV1> getOnCheckedChangeListener() {
         return mOnCheckedChangeListener;
     }
@@ -254,7 +265,7 @@ public final class ContentListItemOEMV1 implements ListItemOEMV1 {
         /**
          * Returns a new instance of a {@link Builder}.
          */
-        public Builder(Action action) {
+        public Builder(@NonNull Action action) {
             mAction = action;
         }
 
@@ -263,7 +274,8 @@ public final class ContentListItemOEMV1 implements ListItemOEMV1 {
          *
          * @param text text to display as title
          */
-        public Builder setTitle(SpannableString text) {
+        @NonNull
+        public Builder setTitle(@NonNull SpannableString text) {
             mTitle = new TextOEMV1.Builder(text).build();
             return this;
         }
@@ -273,7 +285,8 @@ public final class ContentListItemOEMV1 implements ListItemOEMV1 {
          *
          * @param text text to display as title
          */
-        public Builder setTitle(TextOEMV1 text) {
+        @NonNull
+        public Builder setTitle(@NonNull TextOEMV1 text) {
             mTitle = text;
             return this;
         }
@@ -283,7 +296,8 @@ public final class ContentListItemOEMV1 implements ListItemOEMV1 {
          *
          * @param text text to display as body text.
          */
-        public Builder setBody(SpannableString text) {
+        @NonNull
+        public Builder setBody(@NonNull SpannableString text) {
             mBody = Collections.singletonList(new TextOEMV1.Builder(text).build());
             return this;
         }
@@ -294,7 +308,8 @@ public final class ContentListItemOEMV1 implements ListItemOEMV1 {
          * @param textList list of text to display as body text. Each {@link SpannableString} in the
          *                 list will be rendered on a new line, separated by a line break.
          */
-        public Builder setBody(List<TextOEMV1> textList) {
+        @NonNull
+        public Builder setBody(@NonNull List<TextOEMV1> textList) {
             mBody = textList;
             return this;
         }
@@ -305,7 +320,8 @@ public final class ContentListItemOEMV1 implements ListItemOEMV1 {
          * @param icon the icon to display.
          * @param type the icon type for the item.
          */
-        public Builder setIcon(Drawable icon, IconType type) {
+        @NonNull
+        public Builder setIcon(@NonNull Drawable icon, IconType type) {
             mIcon = icon;
             mPrimaryIconType = type;
             return this;
@@ -316,6 +332,7 @@ public final class ContentListItemOEMV1 implements ListItemOEMV1 {
          *
          * @param activated the activated state for the item.
          */
+        @NonNull
         public Builder setActivated(boolean activated) {
             mIsActivated = activated;
             return this;
@@ -326,6 +343,7 @@ public final class ContentListItemOEMV1 implements ListItemOEMV1 {
          *
          * @param enabled the enabled state for the item.
          */
+        @NonNull
         public Builder setEnabled(boolean enabled) {
             mIsEnabled = enabled;
             return this;
@@ -336,6 +354,7 @@ public final class ContentListItemOEMV1 implements ListItemOEMV1 {
          *
          * @param checked the checked state for the item.
          */
+        @NonNull
         public Builder setChecked(boolean checked) {
             mIsChecked = checked;
             return this;
@@ -346,6 +365,7 @@ public final class ContentListItemOEMV1 implements ListItemOEMV1 {
          *
          * @param visible visibility of the action divider.
          */
+        @NonNull
         public Builder setActionDividerVisible(boolean visible) {
             mIsActionDividerVisible = visible;
             return this;
@@ -367,8 +387,9 @@ public final class ContentListItemOEMV1 implements ListItemOEMV1 {
          *
          * @param icon the Drawable to set as the icon, or null to clear the content.
          */
+        @NonNull
         @SuppressWarnings("argument")
-        public Builder setSupplementalIcon(Drawable icon) {
+        public Builder setSupplementalIcon(@NonNull Drawable icon) {
             return setSupplementalIcon(icon, null);
         }
 
@@ -378,7 +399,9 @@ public final class ContentListItemOEMV1 implements ListItemOEMV1 {
          * @param icon     the Drawable to set as the icon, or null to clear the content.
          * @param listener the callback that is invoked when the icon is clicked.
          */
-        public Builder setSupplementalIcon(Drawable icon, Consumer<ContentListItemOEMV1> listener) {
+        @NonNull
+        public Builder setSupplementalIcon(@NonNull Drawable icon,
+                @NonNull Consumer<ContentListItemOEMV1> listener) {
             if (mAction != Action.ICON) {
                 throw new IllegalStateException(
                         "Cannot set supplemental icon on list item that does not have an action of "
@@ -395,7 +418,8 @@ public final class ContentListItemOEMV1 implements ListItemOEMV1 {
          *
          * @param listener callback to be invoked when item is clicked.
          */
-        public void setOnItemClickedListener(Consumer<ContentListItemOEMV1> listener) {
+        @NonNull
+        public void setOnItemClickedListener(@NonNull Consumer<ContentListItemOEMV1> listener) {
             mOnClickListener = listener;
         }
 
@@ -407,7 +431,9 @@ public final class ContentListItemOEMV1 implements ListItemOEMV1 {
          *
          * @param listener callback to be invoked when the checked state shown in the UI changes.
          */
-        public Builder setOnCheckedChangeListener(Consumer<ContentListItemOEMV1> listener) {
+        @NonNull
+        public Builder setOnCheckedChangeListener(
+                @NonNull Consumer<ContentListItemOEMV1> listener) {
             mOnCheckedChangeListener = listener;
             return this;
         }
@@ -415,6 +441,7 @@ public final class ContentListItemOEMV1 implements ListItemOEMV1 {
         /**
          * Returns a {@link ContentListItemOEMV1} for this {@link Builder}.
          */
+        @NonNull
         public ContentListItemOEMV1 build() {
             return new ContentListItemOEMV1(this);
         }

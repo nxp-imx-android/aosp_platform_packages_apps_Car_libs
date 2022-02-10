@@ -18,6 +18,9 @@ package com.android.car.ui.plugin.oemapis.toolbar;
 
 import android.graphics.drawable.Drawable;
 
+import com.android.car.ui.plugin.oemapis.NonNull;
+import com.android.car.ui.plugin.oemapis.Nullable;
+
 import java.util.Objects;
 
 /** The OEM interface of a MenuItem, which is a button in the toolbar */
@@ -38,7 +41,7 @@ public final class MenuItemOEMV1 {
     private final boolean mIsActivated;
     private final Runnable mOnClickListener;
 
-    private MenuItemOEMV1(Builder builder) {
+    private MenuItemOEMV1(@NonNull Builder builder) {
         mKey = builder.mKey;
         mTitle = builder.mTitle;
         mIcon = builder.mIcon;
@@ -65,11 +68,13 @@ public final class MenuItemOEMV1 {
     }
 
     /** Gets the title of this MenuItem. */
+    @Nullable
     public String getTitle() {
         return mTitle;
     }
 
     /** Gets the current Icon */
+    @Nullable
     public Drawable getIcon() {
         return mIcon;
     }
@@ -229,7 +234,7 @@ public final class MenuItemOEMV1 {
         private Builder() {
         }
 
-        private Builder(MenuItemOEMV1 toCopy) {
+        private Builder(@NonNull MenuItemOEMV1 toCopy) {
             mKey = toCopy.mKey;
             mTitle = toCopy.mTitle;
             mIcon = toCopy.mIcon;
@@ -248,60 +253,70 @@ public final class MenuItemOEMV1 {
         }
 
         /** {@link MenuItemOEMV1#getKey()} */
+        @NonNull
         public Builder setKey(int key) {
             mKey = key;
             return this;
         }
 
         /** {@link MenuItemOEMV1#getTitle()} */
-        public Builder setTitle(String title) {
+        @NonNull
+        public Builder setTitle(@NonNull String title) {
             mTitle = title;
             return this;
         }
 
         /** {@link MenuItemOEMV1#getIcon()} */
-        public Builder setIcon(Drawable icon) {
+        @NonNull
+        public Builder setIcon(@NonNull Drawable icon) {
             mIcon = icon;
             return this;
         }
 
         /** {@link MenuItemOEMV1#isVisible()} */
+        @NonNull
         public Builder setVisible(boolean visible) {
             mIsVisible = visible;
             return this;
         }
 
         /** {@link MenuItemOEMV1#isEnabled()} */
+        @NonNull
         public Builder setEnabled(boolean enabled) {
             mIsEnabled = enabled;
             return this;
         }
 
         /** {@link MenuItemOEMV1#isPrimary()} */
+        @NonNull
         public Builder setPrimary(boolean primary) {
             mIsPrimary = primary;
             return this;
         }
 
         /** {@link MenuItemOEMV1#isTinted()} */
+        @NonNull
         public Builder setTinted(boolean tinted) {
             mIsTinted = tinted;
             return this;
         }
 
         /** {@link MenuItemOEMV1#isRestricted()} */
+        @NonNull
         public Builder setRestricted(boolean restricted) {
             mIsRestricted = restricted;
             return this;
         }
 
         /** {@link MenuItemOEMV1#isShowingIconAndTitle()} */
+        @NonNull
         public Builder setShowIconAndTitle(boolean showIconAndTitle) {
             mShowIconAndTitle = showIconAndTitle;
             return this;
         }
 
         /** {@link MenuItemOEMV1#getDisplayBehavior()} */
+        @NonNull
         public Builder setDisplayBehavior(int displayBehavior) {
             if (displayBehavior != MenuItemOEMV1.DISPLAY_BEHAVIOR_ALWAYS
                     && displayBehavior != MenuItemOEMV1.DISPLAY_BEHAVIOR_IF_ROOM
@@ -313,6 +328,7 @@ public final class MenuItemOEMV1 {
         }
 
         /** {@link MenuItemOEMV1#isCheckable()} */
+        @NonNull
         public Builder setCheckable(boolean checkable) {
             mIsCheckable = checkable;
             if (!mIsCheckable) {
@@ -322,6 +338,7 @@ public final class MenuItemOEMV1 {
         }
 
         /** {@link MenuItemOEMV1#isChecked()} */
+        @NonNull
         public Builder setChecked(boolean checked) {
             if (!mIsCheckable) {
                 throw new IllegalStateException("MenuItem must be checkable to be checked");
@@ -331,6 +348,7 @@ public final class MenuItemOEMV1 {
         }
 
         /** {@link MenuItemOEMV1#isActivatable()} */
+        @NonNull
         public Builder setActivatable(boolean activatable) {
             mIsActivatable = activatable;
             if (!mIsActivatable) {
@@ -340,6 +358,7 @@ public final class MenuItemOEMV1 {
         }
 
         /** {@link MenuItemOEMV1#isActivated()} */
+        @NonNull
         public Builder setActivated(boolean activated) {
             if (!mIsActivatable) {
                 throw new IllegalStateException("MenuItem must be activatable to be activated");
@@ -349,12 +368,14 @@ public final class MenuItemOEMV1 {
         }
 
         /** {@link MenuItemOEMV1#getOnClickListener()} */
-        public Builder setOnClickListener(Runnable onClickListener) {
+        @NonNull
+        public Builder setOnClickListener(@NonNull Runnable onClickListener) {
             mOnClickListener = onClickListener;
             return this;
         }
 
         /** Builds the final {@link MenuItemOEMV1} */
+        @NonNull
         public MenuItemOEMV1 build() {
             return new MenuItemOEMV1(this);
         }
@@ -363,6 +384,7 @@ public final class MenuItemOEMV1 {
     /**
      * Creates a new {@link Builder}.
      */
+    @NonNull
     public static Builder builder() {
         return new Builder();
     }
@@ -371,6 +393,7 @@ public final class MenuItemOEMV1 {
      * Creates a new {@link Builder} that is initialized with all the properties of the current
      * MenuItem. This can be used for creating an altered copy of the MenuItem easily.
      */
+    @NonNull
     public Builder copy() {
         return new Builder(this);
     }
