@@ -21,8 +21,8 @@ import android.support.v4.media.MediaBrowserCompat;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.media.utils.MediaConstants;
 
-import com.android.car.media.common.MediaConstants;
 import com.android.car.media.common.MediaItemMetadata;
 
 import java.util.ArrayList;
@@ -74,11 +74,8 @@ public class MediaBrowserViewModelImpl {
         if (extras == null) {
             return false;
         }
-        if (extras.containsKey(MediaConstants.MEDIA_SEARCH_SUPPORTED)) {
-            return extras.getBoolean(MediaConstants.MEDIA_SEARCH_SUPPORTED);
-        }
-        if (extras.containsKey(MediaConstants.MEDIA_SEARCH_SUPPORTED_PRERELEASE)) {
-            return extras.getBoolean(MediaConstants.MEDIA_SEARCH_SUPPORTED_PRERELEASE);
+        if (extras.containsKey(MediaConstants.BROWSER_SERVICE_EXTRAS_KEY_SEARCH_SUPPORTED)) {
+            return extras.getBoolean(MediaConstants.BROWSER_SERVICE_EXTRAS_KEY_SEARCH_SUPPORTED);
         }
         return false;
     }
@@ -92,11 +89,8 @@ public class MediaBrowserViewModelImpl {
         if (extras == null) {
             return 0;
         }
-        if (extras.containsKey(MediaConstants.CONTENT_STYLE_BROWSABLE_HINT)) {
-            return extras.getInt(MediaConstants.CONTENT_STYLE_BROWSABLE_HINT, 0);
-        }
-        if (extras.containsKey(MediaConstants.CONTENT_STYLE_BROWSABLE_HINT_PRERELEASE)) {
-            return extras.getInt(MediaConstants.CONTENT_STYLE_BROWSABLE_HINT_PRERELEASE, 0);
+        if (extras.containsKey(MediaConstants.DESCRIPTION_EXTRAS_KEY_CONTENT_STYLE_BROWSABLE)) {
+            return extras.getInt(MediaConstants.DESCRIPTION_EXTRAS_KEY_CONTENT_STYLE_BROWSABLE, 0);
         }
         return 0;
     }
@@ -110,11 +104,11 @@ public class MediaBrowserViewModelImpl {
         if (extras == null) {
             return 0;
         }
-        if (extras.containsKey(MediaConstants.CONTENT_STYLE_PLAYABLE_HINT)) {
-            return extras.getInt(MediaConstants.CONTENT_STYLE_PLAYABLE_HINT, 0);
+        if (extras.containsKey(MediaConstants.DESCRIPTION_EXTRAS_KEY_CONTENT_STYLE_PLAYABLE)) {
+            return extras.getInt(MediaConstants.DESCRIPTION_EXTRAS_KEY_CONTENT_STYLE_PLAYABLE, 0);
         }
-        if (extras.containsKey(MediaConstants.CONTENT_STYLE_PLAYABLE_HINT_PRERELEASE)) {
-            return extras.getInt(MediaConstants.CONTENT_STYLE_PLAYABLE_HINT_PRERELEASE, 0);
+        if (extras.containsKey(MediaConstants.DESCRIPTION_EXTRAS_KEY_CONTENT_STYLE_BROWSABLE)) {
+            return extras.getInt(MediaConstants.DESCRIPTION_EXTRAS_KEY_CONTENT_STYLE_BROWSABLE, 0);
         }
         return 0;
     }
