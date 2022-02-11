@@ -19,6 +19,9 @@ package com.android.car.ui.plugin.oemapis.appstyledview;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.android.car.ui.plugin.oemapis.NonNull;
+import com.android.car.ui.plugin.oemapis.Nullable;
+
 /** The OEM interface for a AppStyledView. */
 public interface AppStyledViewControllerOEMV1 {
 
@@ -27,17 +30,18 @@ public interface AppStyledViewControllerOEMV1 {
      *
      * @return the view used for app styled view.
      */
+    @Nullable
     View getView();
 
     /**
      * Sets the content view to be contained within this AppStyledView.
      */
-    void setContent(View content);
+    void setContent(@NonNull View content);
 
     /**
      * Sets a {@link Runnable} to be called whenever the close icon is clicked.
      */
-    void setOnBackClickListener(Runnable listener);
+    void setOnBackClickListener(@Nullable Runnable listener);
 
     int NAV_ICON_DISABLED = 0;
     int NAV_ICON_BACK = 1;
@@ -52,5 +56,7 @@ public interface AppStyledViewControllerOEMV1 {
     /**
      * Returns the layout params for the AppStyledView dialog
      */
-    WindowManager.LayoutParams getDialogWindowLayoutParam(WindowManager.LayoutParams params);
+    @NonNull
+    WindowManager.LayoutParams getDialogWindowLayoutParam(
+            @NonNull WindowManager.LayoutParams params);
 }

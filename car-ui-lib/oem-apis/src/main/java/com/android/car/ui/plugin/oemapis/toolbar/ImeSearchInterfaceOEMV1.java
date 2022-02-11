@@ -18,6 +18,8 @@ package com.android.car.ui.plugin.oemapis.toolbar;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.android.car.ui.plugin.oemapis.Nullable;
+
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -36,7 +38,7 @@ public interface ImeSearchInterfaceOEMV1 {
      *
      * @see #setOnPrivateImeCommandListener
      */
-    void setSearchTextViewConsumer(Consumer<TextView> textViewConsumer);
+    void setSearchTextViewConsumer(@Nullable Consumer<TextView> textViewConsumer);
 
     /**
      * Sets a listener to be called when the TextView supplied to the consumer set in
@@ -49,5 +51,6 @@ public interface ImeSearchInterfaceOEMV1 {
      *
      * @see #setSearchTextViewConsumer
      */
-    void setOnPrivateImeCommandListener(BiConsumer<String, Bundle> onPrivateImeCommandListener);
+    void setOnPrivateImeCommandListener(
+            @Nullable BiConsumer<String, Bundle> onPrivateImeCommandListener);
 }

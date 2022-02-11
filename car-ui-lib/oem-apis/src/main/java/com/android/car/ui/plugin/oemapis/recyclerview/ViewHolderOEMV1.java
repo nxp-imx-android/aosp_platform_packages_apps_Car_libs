@@ -17,6 +17,8 @@ package com.android.car.ui.plugin.oemapis.recyclerview;
 
 import android.view.View;
 
+import com.android.car.ui.plugin.oemapis.NonNull;
+
 /** {@code androidx.recyclerview.widget.RecyclerView.ViewHolder} */
 public interface ViewHolderOEMV1 {
 
@@ -26,5 +28,6 @@ public interface ViewHolderOEMV1 {
     /**
      * Returns the ItemView for each element in the recyclerview.
      */
+    @NonNull
     View getItemView();
 }

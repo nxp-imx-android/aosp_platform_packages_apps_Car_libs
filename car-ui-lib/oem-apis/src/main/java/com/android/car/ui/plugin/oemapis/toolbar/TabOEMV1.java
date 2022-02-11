@@ -18,6 +18,9 @@ package com.android.car.ui.plugin.oemapis.toolbar;
 
 import android.graphics.drawable.Drawable;
 
+import com.android.car.ui.plugin.oemapis.NonNull;
+import com.android.car.ui.plugin.oemapis.Nullable;
+
 /** Interface representing a toolbar tab */
 public final class TabOEMV1 {
     private final String mTitle;
@@ -25,7 +28,7 @@ public final class TabOEMV1 {
     private final Runnable mOnSelectedListener;
     private final boolean mTinted;
 
-    private TabOEMV1(Builder builder) {
+    private TabOEMV1(@NonNull Builder builder) {
         mTitle = builder.mTitle;
         mIcon = builder.mIcon;
         mOnSelectedListener = builder.mOnSelectedListener;
@@ -38,16 +41,19 @@ public final class TabOEMV1 {
     }
 
     /** Gets the title of the tab */
+    @Nullable
     public String getTitle() {
         return mTitle;
     }
 
     /** Gets the icon of the tab. The icon may be tinted to match the theme of the toolbar */
+    @Nullable
     public Drawable getIcon() {
         return mIcon;
     }
 
     /** Gets the function to call when the tab is selected */
+    @Nullable
     public Runnable getOnSelectedListener() {
         return mOnSelectedListener;
     }
@@ -75,30 +81,35 @@ public final class TabOEMV1 {
         }
 
         /** Sets the tab's text */
-        public Builder setTitle(String title) {
+        @NonNull
+        public Builder setTitle(@NonNull String title) {
             mTitle = title;
             return this;
         }
 
         /** Sets the tab's icon */
-        public Builder setIcon(Drawable icon) {
+        @NonNull
+        public Builder setIcon(@NonNull Drawable icon) {
             mIcon = icon;
             return this;
         }
 
         /** Sets a listener that is called when the tab is selected */
-        public Builder setOnSelectedListener(Runnable callback) {
+        @NonNull
+        public Builder setOnSelectedListener(@NonNull Runnable callback) {
             mOnSelectedListener = callback;
             return this;
         }
 
         /** See {@link TabOEMV1#isTinted} */
+        @NonNull
         public Builder setTinted(boolean tinted) {
             mTinted = tinted;
             return this;
         }
 
         /** Builds the final {@link TabOEMV1} */
+        @NonNull
         public TabOEMV1 build() {
             return new TabOEMV1(this);
         }

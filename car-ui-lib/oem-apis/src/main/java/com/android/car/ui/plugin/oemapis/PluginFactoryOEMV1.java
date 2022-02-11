@@ -72,10 +72,11 @@ public interface PluginFactoryOEMV1 {
      *                              decorations around the edge of it.
      * @return A {@link ToolbarControllerOEMV1} or null if {@code toolbarEnabled} was false.
      */
+    @Nullable
     ToolbarControllerOEMV1 installBaseLayoutAround(
-            Context sourceContext,
-            View contentView,
-            Consumer<InsetsOEMV1> insetsChangedListener,
+            @NonNull Context sourceContext,
+            @NonNull View contentView,
+            @Nullable Consumer<InsetsOEMV1> insetsChangedListener,
             boolean toolbarEnabled,
             boolean fullscreen);
 
@@ -99,5 +100,6 @@ public interface PluginFactoryOEMV1 {
      *                      {@link #setRotaryFactories}.
      * @return the view used for app styled view.
      */
-    AppStyledViewControllerOEMV1 createAppStyledView(Context sourceContext);
+    @Nullable
+    AppStyledViewControllerOEMV1 createAppStyledView(@NonNull Context sourceContext);
 }

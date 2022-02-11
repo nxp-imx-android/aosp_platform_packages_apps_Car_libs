@@ -64,5 +64,6 @@ public interface FocusAreaOEMV1 {
      * to the rest of the view hierarchy; no methods that change the appearance/behavior of the
      * view should be called on it.
      */
+    @NonNull
     LinearLayout getView();
 }

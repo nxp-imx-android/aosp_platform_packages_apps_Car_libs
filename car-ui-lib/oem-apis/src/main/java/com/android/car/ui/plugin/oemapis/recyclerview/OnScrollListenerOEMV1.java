@@ -15,14 +15,16 @@
  */
 package com.android.car.ui.plugin.oemapis.recyclerview;
 
+import com.android.car.ui.plugin.oemapis.NonNull;
+
 /** See {@code androidx.recyclerview.widget.RecyclerView.OnScrollListener} */
 public interface OnScrollListenerOEMV1 {
 
     /**
      * See {@code androidx.recyclerview.widget.RecyclerView.OnScrollListener#onScrollStateChanged}
      */
-    void onScrollStateChanged(RecyclerViewOEMV1 recyclerView, int newState);
+    void onScrollStateChanged(@NonNull RecyclerViewOEMV1 recyclerView, int newState);
 
     /** See {@code androidx.recyclerview.widget.RecyclerView.OnScrollListener#onScrolled} */
-    void onScrolled(RecyclerViewOEMV1 recyclerView, int dx, int dy);
+    void onScrolled(@NonNull RecyclerViewOEMV1 recyclerView, int dx, int dy);
 }

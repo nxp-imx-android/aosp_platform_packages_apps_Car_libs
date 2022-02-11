@@ -17,6 +17,9 @@ package com.android.car.ui.plugin.oemapis.recyclerview;
 
 import android.text.SpannableString;
 
+import com.android.car.ui.plugin.oemapis.NonNull;
+import com.android.car.ui.plugin.oemapis.Nullable;
+
 /**
  * The OEM interface for header list item.
  */
@@ -24,7 +27,7 @@ public final class HeaderListItemOEMV1 implements ListItemOEMV1 {
     private final SpannableString mTitle;
     private final SpannableString mBody;
 
-    HeaderListItemOEMV1(Builder builder) {
+    HeaderListItemOEMV1(@NonNull Builder builder) {
         mTitle = builder.mTitle;
         mBody = builder.mBody;
     }
@@ -32,6 +35,7 @@ public final class HeaderListItemOEMV1 implements ListItemOEMV1 {
     /**
      * Returns the title text for the header.
      */
+    @NonNull
     public SpannableString getTitle() {
         return mTitle;
     }
@@ -39,6 +43,7 @@ public final class HeaderListItemOEMV1 implements ListItemOEMV1 {
     /**
      * Returns the body text for the header.
      */
+    @Nullable
     public SpannableString getBody() {
         return mBody;
     }
@@ -55,7 +60,7 @@ public final class HeaderListItemOEMV1 implements ListItemOEMV1 {
          *
          * @param title text to display as title
          */
-        public Builder(SpannableString title) {
+        public Builder(@NonNull SpannableString title) {
             mTitle = title;
         }
 
@@ -64,7 +69,8 @@ public final class HeaderListItemOEMV1 implements ListItemOEMV1 {
          *
          * @param body text to display as body text.
          */
-        public Builder setBody(SpannableString body) {
+        @NonNull
+        public Builder setBody(@NonNull SpannableString body) {
             mBody = body;
             return this;
         }
@@ -72,6 +78,7 @@ public final class HeaderListItemOEMV1 implements ListItemOEMV1 {
         /**
          * Returns a {@link HeaderListItemOEMV1} for this {@link ContentListItemOEMV1.Builder}.
          */
+        @NonNull
         public HeaderListItemOEMV1 build() {
             return new HeaderListItemOEMV1(this);
         }

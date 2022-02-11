@@ -18,6 +18,8 @@ package com.android.car.ui.plugin.oemapis.toolbar;
 
 import android.graphics.drawable.Drawable;
 
+import com.android.car.ui.plugin.oemapis.Nullable;
+
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -30,14 +32,14 @@ public interface ToolbarControllerOEMV1 {
      *
      * <p>The title may not always be shown, for example with one row layout with tabs.
      */
-    void setTitle(String title);
+    void setTitle(@Nullable String title);
 
     /**
      * Sets the subtitle of the toolbar to a String.
      *
      * <p>The title may not always be shown, for example with one row layout with tabs.
      */
-    void setSubtitle(String title);
+    void setSubtitle(@Nullable String title);
 
     /**
      * Sets the tab to be shown. The implementation must copy the list once it's passed in,
@@ -46,7 +48,7 @@ public interface ToolbarControllerOEMV1 {
      * @param tabs Nullable. Must not be mutated. List of tabs to show.
      * @param selectedTab The index of the tab that is initially selected.
      */
-    void setTabs(List<TabOEMV1> tabs, int selectedTab);
+    void setTabs(@Nullable List<TabOEMV1> tabs, int selectedTab);
 
     /**
      * Selects a tab added to this toolbar. See
@@ -59,10 +61,10 @@ public interface ToolbarControllerOEMV1 {
      * Sets the logo to display in this toolbar. If navigation icon is being displayed, this logo
      * will be displayed next to the title.
      */
-    void setLogo(Drawable drawable);
+    void setLogo(@Nullable Drawable drawable);
 
     /** Sets the hint for the search bar. */
-    void setSearchHint(String hint);
+    void setSearchHint(@Nullable String hint);
 
     /**
      * Sets the icon to display in the search box.
@@ -70,12 +72,12 @@ public interface ToolbarControllerOEMV1 {
      * <p>The icon will be lost on configuration change, make sure to set it in onCreate() or
      * a similar place.
      */
-    void setSearchIcon(Drawable d);
+    void setSearchIcon(@Nullable Drawable d);
 
     /**
      * Sets the search query.
      */
-    void setSearchQuery(String query);
+    void setSearchQuery(@Nullable String query);
 
     int SEARCH_MODE_DISABLED = 0;
     int SEARCH_MODE_SEARCH = 1;
@@ -92,6 +94,7 @@ public interface ToolbarControllerOEMV1 {
      * with the static library to support showing search results in the IME. It should return
      * the same object every time it's called. It may return null if this feature is not supported.
      */
+    @Nullable
     ImeSearchInterfaceOEMV1 getImeSearchInterface();
 
     /** Don't show the nav button */
@@ -119,7 +122,7 @@ public interface ToolbarControllerOEMV1 {
     /**
      * Sets the {@link MenuItemOEMV1 Menuitems} to display.
      */
-    void setMenuItems(List<MenuItemOEMV1> items);
+    void setMenuItems(@Nullable List<MenuItemOEMV1> items);
 
     /**
      * Sets a {@code Consumer<String>} to be called whenever the text in the search box
@@ -127,7 +130,7 @@ public interface ToolbarControllerOEMV1 {
      *
      * Must accept {@code null} to unset the listener.
      */
-    void setSearchListener(Consumer<String> listener);
+    void setSearchListener(@Nullable Consumer<String> listener);
 
     /**
      * Sets a {@link Runnable} to be called whenever the user indicates that they're done searching.
@@ -136,16 +139,17 @@ public interface ToolbarControllerOEMV1 {
      *
      * Must accept {@code null} to unset the listener.
      */
-    void setSearchCompletedListener(Runnable listener);
+    void setSearchCompletedListener(@Nullable Runnable listener);
 
     /**
      * Sets a {@link Runnable} to be called whenever the back button is pressed.
      *
      * Must accept {@code null} to unset the listener.
      */
-    void setBackListener(Runnable listener);
+    void setBackListener(@Nullable Runnable listener);
 
     /** Gets a {@link ProgressBarControllerOEMV1 ProgressBarController} */
+    @Nullable
     ProgressBarControllerOEMV1 getProgressBar();
 
     /**
