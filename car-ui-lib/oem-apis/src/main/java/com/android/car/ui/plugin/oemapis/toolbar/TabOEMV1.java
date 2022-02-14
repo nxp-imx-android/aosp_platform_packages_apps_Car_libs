@@ -36,6 +36,7 @@ public final class TabOEMV1 {
     }
 
     /** Constructs a new {@link Builder} to build a tab with */
+    @NonNull
     public static Builder builder() {
         return new Builder();
     }

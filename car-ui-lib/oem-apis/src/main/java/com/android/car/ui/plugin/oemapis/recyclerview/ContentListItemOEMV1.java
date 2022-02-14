@@ -321,7 +321,7 @@ public final class ContentListItemOEMV1 implements ListItemOEMV1 {
          * @param type the icon type for the item.
          */
         @NonNull
-        public Builder setIcon(@NonNull Drawable icon, IconType type) {
+        public Builder setIcon(@NonNull Drawable icon, @NonNull IconType type) {
             mIcon = icon;
             mPrimaryIconType = type;
             return this;
@@ -377,6 +377,7 @@ public final class ContentListItemOEMV1 implements ListItemOEMV1 {
          *
          * @param secure If the list item is secure or not.
          */
+        @NonNull
         public Builder setSecure(boolean secure) {
             mIsSecure = secure;
             return this;
