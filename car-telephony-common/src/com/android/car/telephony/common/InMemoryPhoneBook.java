@@ -26,8 +26,8 @@ import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.Transformations;
@@ -36,7 +36,6 @@ import com.android.car.apps.common.log.L;
 import com.android.car.telephony.common.QueryParam.QueryBuilder.Condition;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -173,7 +172,7 @@ public class InMemoryPhoneBook implements Observer<List<Contact>> {
      * Looks up a {@link Contact} by the given phone number. Returns null if can't find a Contact or
      * the {@link InMemoryPhoneBook} is still loading.
      *
-     * @deprecated Use {@link #lookupContactByKey(String, String)} instead.
+     * @deprecated Use {@link #lookupContactEntry(String, String)} instead.
      */
     @Deprecated
     @Nullable
@@ -198,7 +197,7 @@ public class InMemoryPhoneBook implements Observer<List<Contact>> {
     }
 
     /**
-     * Looks up a {@link Contact} by the given phone number and account name.
+     * Looks up the in memory cache for a {@link Contact} by the given phone number and account.
      */
     @Nullable
     public Contact lookupContactEntry(String phoneNumber, @Nullable String accountName) {
@@ -215,6 +214,20 @@ public class InMemoryPhoneBook implements Observer<List<Contact>> {
         }
 
         return null;
+    }
+
+    /**
+     * Looks up a {@link Contact} by the given phone number and account name. If it fails to hit the
+     * in memory cache, do a phone look up. This api should only be used for displaying caller info
+     * for HUN and ongoing calls before the in memory cache fully loads.
+     */
+    @WorkerThread
+    public Contact lookupContactEntryAsync(String phoneNumber, @Nullable String accountName) {
+        Contact contact = lookupContactEntry(phoneNumber, accountName);
+        if (contact == null) {
+            contact = TelecomUtils.lookupContactEntryAsync(mContext, phoneNumber, accountName);
+        }
+        return contact;
     }
 
     /**
@@ -235,32 +248,6 @@ public class InMemoryPhoneBook implements Observer<List<Contact>> {
         }
 
         return null;
-    }
-
-    /**
-     * Iterates all the accounts and returns a list of contacts that match the lookup key. This API
-     * is discouraged to use whenever the account name is available where {@link
-     * #lookupContactByKey(String, String)} should be used instead.
-     */
-    @NonNull
-    public List<Contact> lookupContactByKey(String lookupKey) {
-        if (!isLoaded()) {
-            L.w(TAG, "looking up a contact while loading.");
-        }
-
-        if (TextUtils.isEmpty(lookupKey)) {
-            L.w(TAG, "looking up an empty lookup key.");
-            return Collections.emptyList();
-        }
-        List<Contact> results = new ArrayList<>();
-        // Iterate all the accounts to get all the match contacts with given lookup key.
-        for (Map<String, Contact> subMap : mLookupKeyContactMap.values()) {
-            if (subMap.containsKey(lookupKey)) {
-                results.add(subMap.get(lookupKey));
-            }
-        }
-
-        return results;
     }
 
     private List<Contact> onCursorLoaded(Cursor cursor) {

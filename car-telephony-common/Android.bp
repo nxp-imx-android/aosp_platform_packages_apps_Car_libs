@@ -25,7 +25,6 @@ car_telephony_common_static_libs = [
     "car-apps-common-prebuilt",
     "glide-prebuilt",
     "guava",
-    "libphonenumber",
 ]
 
 android_library {

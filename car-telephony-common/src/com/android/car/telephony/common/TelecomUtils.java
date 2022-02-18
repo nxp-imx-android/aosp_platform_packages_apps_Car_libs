@@ -52,9 +52,6 @@ import com.android.car.apps.common.log.L;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.i18n.phonenumbers.NumberParseException;
-import com.google.i18n.phonenumbers.PhoneNumberUtil;
-import com.google.i18n.phonenumbers.Phonenumber;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -180,19 +177,6 @@ public class TelecomUtils {
     }
 
     /**
-     * Creates a new instance of {@link Phonenumber.PhoneNumber} base on the given number and sim
-     * card country code. Returns {@code null} if the number in an invalid number.
-     */
-    @Nullable
-    public static Phonenumber.PhoneNumber createI18nPhoneNumber(Context context, String number) {
-        try {
-            return PhoneNumberUtil.getInstance().parse(number, getCurrentCountryIso(context));
-        } catch (NumberParseException e) {
-            return null;
-        }
-    }
-
-    /**
      * Contains all the info used to display a phone number on the screen. Returned by {@link
      * #getPhoneNumberInfo(Context, String)}
      */
@@ -258,10 +242,7 @@ public class TelecomUtils {
      * Gets all the info needed to properly display a phone number to the UI. (e.g. if it's the
      * voicemail number, return a string and a uri that represents voicemail, if it's a contact, get
      * the contact's name, its avatar uri, the phone number's label, etc).
-     *
-     * @deprecated use {@link InMemoryPhoneBook#lookupContactEntry(String, String)} instead.
      */
-    @Deprecated
     public static CompletableFuture<PhoneNumberInfo> getPhoneNumberInfo(
             Context context, String number) {
         return CompletableFuture.supplyAsync(() -> lookupNumberInBackground(context, number));
@@ -270,7 +251,7 @@ public class TelecomUtils {
     /**
      * Lookup phone number info in background.
      *
-     * @deprecated use {@link InMemoryPhoneBook#lookupContactEntry(String, String)} instead.
+     * @deprecated Use {@link InMemoryPhoneBook#lookupContactEntryAsync(String, String)} instead.
      */
     @Deprecated
     @WorkerThread
@@ -391,6 +372,53 @@ public class TelecomUtils {
             readableNumber = context.getString(R.string.unknown);
         }
         return readableNumber;
+    }
+
+    /**
+     * Lookup a contact for the given number and account in background.
+     */
+    static Contact lookupContactEntryAsync(
+            Context context, String number, String accountName) {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS)
+                != PackageManager.PERMISSION_GRANTED || TextUtils.isEmpty(number)) {
+            return null;
+        }
+
+        ContentResolver cr = context.getContentResolver();
+        Cursor lookupCursor = null;
+        Cursor loadCursor = null;
+        Contact contact = null;
+        try {
+            lookupCursor = cr.query(
+                    Uri.withAppendedPath(PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number)),
+                    null, null, null, null);
+            if (lookupCursor == null) {
+                return null;
+            }
+
+            while (lookupCursor.moveToNext()) {
+                int lookupKeyColumn = lookupCursor.getColumnIndex(PhoneLookup.LOOKUP_KEY);
+                String lookupKey = lookupCursor.getString(lookupKeyColumn);
+                String selection = Phone.LOOKUP_KEY + " = ?"
+                        + " AND "
+                        + ContactsContract.RawContacts.ACCOUNT_NAME + " = ?";
+                String[] selectionArgs = new String[]{lookupKey, accountName};
+                loadCursor = cr.query(Phone.CONTENT_URI, null, selection, selectionArgs, null);
+                if (loadCursor.moveToFirst()) {
+                    contact = Contact.fromCursor(context, loadCursor);
+                    break;
+                }
+            }
+        } finally {
+            if (lookupCursor != null) {
+                lookupCursor.close();
+            }
+            if (loadCursor != null) {
+                loadCursor.close();
+            }
+        }
+
+        return contact;
     }
 
     /**
