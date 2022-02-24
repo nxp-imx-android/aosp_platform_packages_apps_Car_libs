@@ -41,7 +41,6 @@ import com.android.car.ui.toolbar.ToolbarController;
  * Sample activity to show app styled Dialog fragment.
  */
 public class AppStyledViewSampleActivity extends AppCompatActivity {
-
     private AppStyledDialogController mAppStyledDialogController;
 
     @Override
@@ -57,7 +56,7 @@ public class AppStyledViewSampleActivity extends AppCompatActivity {
         toolbar.setLogo(R.drawable.ic_launcher);
 
         mAppStyledDialogController = new AppStyledDialogController(this);
-        int width = mAppStyledDialogController.getAppStyledViewDialogWidth();
+        int width = mAppStyledDialogController.getContentAreaWidth();
         Resources resources = getResources();
         Configuration config = resources.getConfiguration();
 

@@ -25,16 +25,18 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 
 import com.android.car.ui.plugin.oemapis.appstyledview.AppStyledViewControllerOEMV1;
+import com.android.car.ui.plugin.oemapis.appstyledview.AppStyledViewControllerOEMV2;
 
 import com.chassis.car.ui.plugin.R;
 
 /**
  * The OEM implementation for {@link AppStyledViewControllerOEMV1} for a AppStyledView.
  */
-public class AppStyleViewControllerImpl implements AppStyledViewControllerOEMV1 {
-
+public class AppStyleViewControllerImpl implements AppStyledViewControllerOEMV2 {
     private final Context mPluginContext;
     private final View mAppStyleView;
+    private int mWidth;
+    private int mHeight;
 
     public AppStyleViewControllerImpl(Context pluginContext) {
         mPluginContext = pluginContext;
@@ -79,15 +81,28 @@ public class AppStyleViewControllerImpl implements AppStyledViewControllerOEMV1 
 
     @Override
     public LayoutParams getDialogWindowLayoutParam(LayoutParams params) {
-        params.width = Math.round(
+        mWidth = Math.round(
                 mPluginContext.getResources().getDimension(R.dimen.app_styled_dialog_width));
-        params.height = Math.round(
+        params.width = mWidth;
+        mHeight = Math.round(
                 mPluginContext.getResources().getDimension(R.dimen.app_styled_dialog_height));
+        params.height = mHeight;
         params.gravity = Gravity.TOP | Gravity.START;
         params.x = Math.round(
                 mPluginContext.getResources().getDimension(R.dimen.app_styled_dialog_position_x));
         params.y = Math.round(
                 mPluginContext.getResources().getDimension(R.dimen.app_styled_dialog_position_y));
         return params;
+    }
+
+    @Override
+    public int getContentAreaWidth() {
+        return mWidth - mPluginContext.getResources().getDimensionPixelSize(
+                R.dimen.app_styled_dialog_nav_bar_width);
+    }
+
+    @Override
+    public int getContentAreaHeight() {
+        return mHeight;
     }
 }

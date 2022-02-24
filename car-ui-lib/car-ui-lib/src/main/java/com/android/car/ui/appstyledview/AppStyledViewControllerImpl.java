@@ -43,13 +43,14 @@ import com.android.car.ui.R;
  */
 @TargetApi(MIN_TARGET_API)
 public class AppStyledViewControllerImpl implements AppStyledViewController {
-
     private static final double VISIBLE_SCREEN_PERCENTAGE = 0.9;
 
     private final Context mContext;
     @AppStyledViewNavIcon
     private int mAppStyleViewNavIcon;
     private Runnable mAppStyledVCloseClickListener = null;
+    private int mWidth;
+    private int mHeight;
 
     public AppStyledViewControllerImpl(Context context) {
         mContext = context;
@@ -70,7 +71,6 @@ public class AppStyledViewControllerImpl implements AppStyledViewController {
 
     @Override
     public LayoutParams getDialogWindowLayoutParam(LayoutParams params) {
-
         DisplayMetrics displayMetrics = new DisplayMetrics();
         WindowManager wm = mContext.getSystemService(WindowManager.class);
         wm.getDefaultDisplay().getMetrics(displayMetrics);
@@ -88,13 +88,15 @@ public class AppStyledViewControllerImpl implements AppStyledViewController {
             params.gravity = Gravity.START;
         }
 
-        int width = mContext.getResources().getDimensionPixelSize(
+        int configuredWidth = mContext.getResources().getDimensionPixelSize(
                 R.dimen.car_ui_app_styled_dialog_width);
-        int height = mContext.getResources().getDimensionPixelSize(
+        mWidth = configuredWidth != 0 ? configuredWidth : Math.min(displayWidth, maxWidth);
+        int configuredHeight = mContext.getResources().getDimensionPixelSize(
                 R.dimen.car_ui_app_styled_dialog_height);
+        mHeight = configuredHeight != 0 ? configuredHeight : Math.min(displayHeight, maxHeight);
 
-        params.width = width != 0 ? width : Math.min(displayWidth, maxWidth);
-        params.height = height != 0 ? height : Math.min(displayHeight, maxHeight);
+        params.width = mWidth;
+        params.height = mHeight;
 
         int posX = mContext.getResources().getDimensionPixelSize(
                 R.dimen.car_ui_app_styled_dialog_position_x);
@@ -111,6 +113,28 @@ public class AppStyledViewControllerImpl implements AppStyledViewController {
     }
 
     @Override
+    public int getContentAreaWidth() {
+        int orientation = mContext.getResources().getConfiguration().orientation;
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            return mWidth - mContext.getResources().getDimensionPixelSize(
+                    R.dimen.car_ui_toolbar_first_row_height);
+        }
+
+        return mWidth;
+    }
+
+    @Override
+    public int getContentAreaHeight() {
+        int orientation = mContext.getResources().getConfiguration().orientation;
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            return mHeight;
+        }
+
+        return mHeight - mContext.getResources().getDimensionPixelSize(
+                R.dimen.car_ui_toolbar_first_row_height);
+    }
+
+    @Override
     public View getAppStyledView(@Nullable View contentView) {
         // create ContextThemeWrapper from the original Activity Context with the custom theme
         final Context contextThemeWrapper = new ContextThemeWrapper(mContext, R.style.Theme_CarUi);
@@ -121,15 +145,15 @@ public class AppStyledViewControllerImpl implements AppStyledViewController {
         // clone the inflater using the ContextThemeWrapper
         LayoutInflater localInflater = inflater.cloneInContext(contextThemeWrapper);
 
-        View appStyleView = localInflater.inflate(R.layout.car_ui_app_styled_view, null, false);
-        appStyleView.setClipToOutline(true);
-        RecyclerView rv = appStyleView.findViewById(R.id.car_ui_app_styled_content);
+        View appStyledView = localInflater.inflate(R.layout.car_ui_app_styled_view, null, false);
+        appStyledView.setClipToOutline(true);
+        RecyclerView rv = appStyledView.findViewById(R.id.car_ui_app_styled_content);
 
         AppStyledRecyclerViewAdapter adapter = new AppStyledRecyclerViewAdapter(contentView);
         rv.setLayoutManager(new LinearLayoutManager(mContext));
         rv.setAdapter(adapter);
 
-        ImageView close = appStyleView.findViewById(R.id.car_ui_app_styled_view_icon_close);
+        ImageView close = appStyledView.findViewById(R.id.car_ui_app_styled_view_icon_close);
         if (mAppStyleViewNavIcon == AppStyledViewNavIcon.BACK) {
             close.setImageResource(R.drawable.car_ui_icon_arrow_back);
         } else if (mAppStyleViewNavIcon == AppStyledViewNavIcon.CLOSE) {
@@ -139,13 +163,13 @@ public class AppStyledViewControllerImpl implements AppStyledViewController {
         }
 
         FrameLayout navContainer =
-                appStyleView.findViewById(R.id.car_ui_app_styled_view_nav_icon_container);
+                appStyledView.findViewById(R.id.car_ui_app_styled_view_nav_icon_container);
         if (mAppStyledVCloseClickListener != null && navContainer != null) {
             navContainer.setOnClickListener((v) -> {
                 mAppStyledVCloseClickListener.run();
             });
         }
 
-        return appStyleView;
+        return appStyledView;
     }
 }

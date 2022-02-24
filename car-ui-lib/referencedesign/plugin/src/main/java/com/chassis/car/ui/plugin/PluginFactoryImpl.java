@@ -23,8 +23,8 @@ import androidx.annotation.Nullable;
 import com.android.car.ui.plugin.oemapis.FocusAreaOEMV1;
 import com.android.car.ui.plugin.oemapis.FocusParkingViewOEMV1;
 import com.android.car.ui.plugin.oemapis.InsetsOEMV1;
-import com.android.car.ui.plugin.oemapis.PluginFactoryOEMV2;
-import com.android.car.ui.plugin.oemapis.appstyledview.AppStyledViewControllerOEMV1;
+import com.android.car.ui.plugin.oemapis.PluginFactoryOEMV3;
+import com.android.car.ui.plugin.oemapis.appstyledview.AppStyledViewControllerOEMV2;
 import com.android.car.ui.plugin.oemapis.recyclerview.AdapterOEMV1;
 import com.android.car.ui.plugin.oemapis.recyclerview.ListItemOEMV1;
 import com.android.car.ui.plugin.oemapis.recyclerview.RecyclerViewAttributesOEMV1;
@@ -45,7 +45,7 @@ import java.util.function.Function;
  * car-ui-lib components.
  */
 @SuppressWarnings("AndroidJdkLibsChecker")
-public class PluginFactoryImpl implements PluginFactoryOEMV2 {
+public class PluginFactoryImpl implements PluginFactoryOEMV3 {
 
     private final Context mPluginContext;
     @Nullable
@@ -90,7 +90,7 @@ public class PluginFactoryImpl implements PluginFactoryOEMV2 {
     }
 
     @Override
-    public AppStyledViewControllerOEMV1 createAppStyledView(Context sourceContext) {
+    public AppStyledViewControllerOEMV2 createAppStyledView(Context sourceContext) {
         //return new AppStyleViewControllerImpl(mPluginContext);
         return null;
     }
