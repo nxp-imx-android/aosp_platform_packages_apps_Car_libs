@@ -48,8 +48,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import android.annotation.TargetApi;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.view.KeyEvent;
 import android.view.View;
@@ -1109,25 +1107,6 @@ public class PreferenceTest {
         // Confirm progress is set to 0
         assertEquals(0, preference.getProgress());
         assertEquals(20, preference.getMaxProgress());
-    }
-
-    @Test
-    public void test_defaultDialogFragmentCallbacks_doNothing() {
-        DialogFragmentCallbacks callbacks = new DialogFragmentCallbacks() {
-        };
-
-        callbacks.onBindDialogView(new View(mActivity));
-        callbacks.onClick(new DialogInterface() {
-            @Override
-            public void cancel() {
-            }
-
-            @Override
-            public void dismiss() {
-            }
-        }, 0);
-        callbacks.onDialogClosed(true);
-        callbacks.onPrepareDialogBuilder(new AlertDialog.Builder(mActivity));
     }
 
     @Test
