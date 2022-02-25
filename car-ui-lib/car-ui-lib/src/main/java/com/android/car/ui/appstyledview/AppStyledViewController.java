@@ -31,7 +31,6 @@ import java.lang.annotation.Retention;
  * represented.
  */
 public interface AppStyledViewController {
-
     /**
      * The possible values for AppStyledViewNavIcon.
      */
@@ -74,4 +73,14 @@ public interface AppStyledViewController {
      * Returns the layout params for the AppStyledView dialog
      */
     WindowManager.LayoutParams getDialogWindowLayoutParam(WindowManager.LayoutParams params);
+
+    /**
+     * Returns the maximum width for content to be rendered in the AppStyledView.
+     */
+    int getContentAreaWidth();
+
+    /**
+     * Returns the maximum height for content to be rendered in the AppStyledView.
+     */
+    int getContentAreaHeight();
 }

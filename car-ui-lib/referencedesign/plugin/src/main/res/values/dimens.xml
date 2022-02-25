@@ -19,6 +19,7 @@
     <dimen name="app_styled_dialog_height">600dp</dimen>
     <dimen name="app_styled_dialog_position_x">20dp</dimen>
     <dimen name="app_styled_dialog_position_y">40dp</dimen>
+    <dimen name="app_styled_dialog_nav_bar_width">20dp</dimen>
 
     <!-- Rotary focus highlight  -->
     <dimen name="rotary_focus_stroke_width">8dp</dimen>

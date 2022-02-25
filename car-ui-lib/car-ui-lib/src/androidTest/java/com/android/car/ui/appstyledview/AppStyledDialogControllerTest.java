@@ -20,6 +20,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.isDialog;
+import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -33,10 +34,11 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import android.annotation.TargetApi;
-import android.app.Dialog;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
 import com.android.car.ui.TestActivity;
@@ -56,7 +58,6 @@ import org.junit.runners.Parameterized;
 @RunWith(Parameterized.class)
 @TargetApi(MIN_TARGET_API)
 public class AppStyledDialogControllerTest {
-
     private AppStyledDialogController mAppStyledDialogController;
 
     @Rule
@@ -96,7 +97,6 @@ public class AppStyledDialogControllerTest {
         });
 
         String text = "app styled view";
-
         onView(withText(text))
                 .inRoot(isDialog())
                 .check(matches(isDisplayed()));
@@ -113,8 +113,6 @@ public class AppStyledDialogControllerTest {
             mAppStyledDialogController.setNavIcon(AppStyledViewNavIcon.CLOSE);
             mAppStyledDialogController.show();
         });
-
-        Dialog dialog = mAppStyledDialogController.getAppStyledDialog();
 
         onView(withId(R.id.car_ui_app_styled_view_icon_close))
                 .inRoot(isDialog())
@@ -173,13 +171,36 @@ public class AppStyledDialogControllerTest {
         mActivity.runOnUiThread(() -> {
             mAppStyledDialogController.setContentView(appStyledTestView);
             mAppStyledDialogController.show();
+            assertEquals(appStyledTestView, mAppStyledDialogController.getContentView());
         });
-
-        assertEquals(appStyledTestView, mAppStyledDialogController.getContentView());
     }
 
     @Test
     public void getContentView_nullWhenNotSet() {
         assertNull(mAppStyledDialogController.getContentView());
+    }
+
+    @Test
+    public void testContentViewSize() {
+        LayoutInflater inflater = LayoutInflater.from(mActivity);
+        View appStyledTestView = inflater.inflate(R.layout.app_styled_view_sample, null,
+                false);
+        TextView testTextView = appStyledTestView.requireViewById(R.id.test_textview);
+
+        mActivity.runOnUiThread(() -> {
+            mAppStyledDialogController.setContentView(appStyledTestView);
+            testTextView.setLayoutParams(new ConstraintLayout.LayoutParams(
+                    ConstraintLayout.LayoutParams.MATCH_PARENT,
+                    mAppStyledDialogController.getContentAreaHeight()));
+            mAppStyledDialogController.show();
+        });
+
+        String text = "app styled view";
+        onView(withText(text))
+                .inRoot(isDialog())
+                .check(matches(isCompletelyDisplayed()));
+
+        mActivity.runOnUiThread(() -> assertEquals(mAppStyledDialogController.getContentAreaWidth(),
+                testTextView.getWidth()));
     }
 }

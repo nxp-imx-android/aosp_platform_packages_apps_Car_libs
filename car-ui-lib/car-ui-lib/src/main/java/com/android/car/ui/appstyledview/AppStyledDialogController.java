@@ -39,7 +39,6 @@ import java.util.Objects;
  */
 @TargetApi(MIN_TARGET_API)
 public final class AppStyledDialogController {
-
     @NonNull
     private AppStyledViewController mAppStyledViewController;
     @NonNull
@@ -124,6 +123,22 @@ public final class AppStyledDialogController {
     public int getAppStyledViewDialogHeight() {
         return mAppStyledViewController.getDialogWindowLayoutParam(
                 mDialog.getWindowLayoutParams()).height;
+    }
+
+    /**
+     * Returns the maximum width for content to be rendered in the AppStyledView. A value of -1 will
+     * be returned if content area size cannot be determined.
+     */
+    public int getContentAreaWidth() {
+        return mAppStyledViewController.getContentAreaWidth();
+    }
+
+    /**
+     * Returns the maximum height for content to be rendered in the AppStyledView. A value of -1
+     * will be returned if content area size cannot be determined.
+     */
+    public int getContentAreaHeight() {
+        return mAppStyledViewController.getContentAreaHeight();
     }
 
     @VisibleForTesting

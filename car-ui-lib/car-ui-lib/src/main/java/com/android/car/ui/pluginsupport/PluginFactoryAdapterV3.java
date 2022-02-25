@@ -37,14 +37,14 @@ import com.android.car.ui.FocusParkingView;
 import com.android.car.ui.FocusParkingViewAdapterV1;
 import com.android.car.ui.R;
 import com.android.car.ui.appstyledview.AppStyledViewController;
-import com.android.car.ui.appstyledview.AppStyledViewControllerAdapterV1;
+import com.android.car.ui.appstyledview.AppStyledViewControllerAdapterV2;
 import com.android.car.ui.appstyledview.AppStyledViewControllerImpl;
 import com.android.car.ui.baselayout.Insets;
 import com.android.car.ui.baselayout.InsetsChangedListener;
 import com.android.car.ui.plugin.oemapis.InsetsOEMV1;
-import com.android.car.ui.plugin.oemapis.PluginFactoryOEMV2;
+import com.android.car.ui.plugin.oemapis.PluginFactoryOEMV3;
 import com.android.car.ui.plugin.oemapis.TextOEMV1;
-import com.android.car.ui.plugin.oemapis.appstyledview.AppStyledViewControllerOEMV1;
+import com.android.car.ui.plugin.oemapis.appstyledview.AppStyledViewControllerOEMV2;
 import com.android.car.ui.plugin.oemapis.recyclerview.AdapterOEMV1;
 import com.android.car.ui.plugin.oemapis.recyclerview.ContentListItemOEMV1;
 import com.android.car.ui.plugin.oemapis.recyclerview.HeaderListItemOEMV1;
@@ -73,20 +73,19 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * This class is an wrapper around {@link PluginFactoryOEMV2} that implements {@link PluginFactory},
+ * This class is an wrapper around {@link PluginFactoryOEMV3} that implements {@link PluginFactory},
  * to provide a version-agnostic way of interfacing with the OEM's PluginFactory.
  */
 @SuppressWarnings("AndroidJdkLibsChecker")
 @TargetApi(MIN_TARGET_API)
-public final class PluginFactoryAdapterV2 implements PluginFactory {
+public final class PluginFactoryAdapterV3 implements PluginFactory {
     @NonNull
-    private final PluginFactoryOEMV2 mOem;
+    private final PluginFactoryOEMV3 mOem;
     @NonNull
     private final PluginFactoryStub mFactoryStub = new PluginFactoryStub();
 
-    public PluginFactoryAdapterV2(@NonNull PluginFactoryOEMV2 oem) {
+    public PluginFactoryAdapterV3(@NonNull PluginFactoryOEMV3 oem) {
         mOem = oem;
-
         mOem.setRotaryFactories(
                 c -> new FocusParkingViewAdapterV1(new FocusParkingView(c)),
                 c -> new FocusAreaAdapterV1(new FocusArea(c)));
@@ -124,11 +123,11 @@ public final class PluginFactoryAdapterV2 implements PluginFactory {
 
     @Override
     public AppStyledViewController createAppStyledView(Context activityContext) {
-        AppStyledViewControllerOEMV1 appStyledViewControllerOEMV1 = mOem.createAppStyledView(
+        AppStyledViewControllerOEMV2 appStyledViewControllerOEMV2 = mOem.createAppStyledView(
                 activityContext);
-        return appStyledViewControllerOEMV1 == null ? new AppStyledViewControllerImpl(
-                activityContext) : new AppStyledViewControllerAdapterV1(
-                appStyledViewControllerOEMV1);
+        return appStyledViewControllerOEMV2 == null ? new AppStyledViewControllerImpl(
+                activityContext) : new AppStyledViewControllerAdapterV2(
+                appStyledViewControllerOEMV2);
     }
 
     private Insets adaptInsets(InsetsOEMV1 insetsOEM) {
@@ -154,7 +153,7 @@ public final class PluginFactoryAdapterV2 implements PluginFactory {
     public RecyclerView.Adapter<? extends RecyclerView.ViewHolder> createListItemAdapter(
             List<? extends CarUiListItem> items) {
         List<ListItemOEMV1> oemItems = CarUiUtils.convertList(items,
-                PluginFactoryAdapterV2::toOemListItem);
+                PluginFactoryAdapterV3::toOemListItem);
 
         AdapterOEMV1<? extends ViewHolderOEMV1> oemAdapter = mOem.createListItemAdapter(oemItems);
 
@@ -169,7 +168,7 @@ public final class PluginFactoryAdapterV2 implements PluginFactory {
             public void onChanged() {
                 oemItems.clear();
                 oemItems.addAll(
-                        CarUiUtils.convertList(items, PluginFactoryAdapterV2::toOemListItem));
+                        CarUiUtils.convertList(items, PluginFactoryAdapterV3::toOemListItem));
             }
 
             @Override
