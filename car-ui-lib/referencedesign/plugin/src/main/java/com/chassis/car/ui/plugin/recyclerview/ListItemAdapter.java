@@ -179,6 +179,9 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.BaseVi
             return;
         }
         mAdapterDataObservers.add(observer);
+        if (!super.hasObservers()) {
+            super.registerAdapterDataObserver(mAdapterDataObserver);
+        }
     }
 
     @Override
@@ -187,6 +190,9 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.BaseVi
             return;
         }
         mAdapterDataObservers.remove(observer);
+        if (mAdapterDataObservers.isEmpty()) {
+            super.unregisterAdapterDataObserver(mAdapterDataObserver);
+        }
     }
 
     @Override
