@@ -32,6 +32,7 @@ import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -59,6 +60,9 @@ public class MediaItemMetadata implements Parcelable {
     private static final String TAG = "MediaItemMetadata";
 
     static final int INVALID_MEDIA_ART_TINT_COLOR = Color.argb(200, 255, 0, 0);
+
+    public static final int     NO_PLAYBACK_STATUS = -1;
+    public static final double  NO_PROGRESS = -1.0;
 
     @NonNull
     private final MediaDescriptionCompat mMediaDescription;
@@ -261,6 +265,95 @@ public class MediaItemMetadata implements Parcelable {
                 == MediaDescriptionCompat.STATUS_DOWNLOADED;
     }
 
+    /**
+     * Checks {@link MediaConstants#DESCRIPTION_EXTRAS_KEY_COMPLETION_STATUS}
+     * @return
+     */
+    public boolean hasPlaybackStatus() {
+        if (mMediaDescription.getExtras() != null) {
+            return mMediaDescription.getExtras().getInt(
+                    MediaConstants.DESCRIPTION_EXTRAS_KEY_COMPLETION_STATUS,
+                    NO_PLAYBACK_STATUS)
+                    != NO_PLAYBACK_STATUS;
+        }
+        return false;
+    }
+
+    /**
+     * <p></p>
+     * Returns the playback status
+     * {@link MediaConstants#DESCRIPTION_EXTRAS_KEY_COMPLETION_STATUS}
+     * optionally stored in the {@link MediaItemMetadata#getExtras()}.
+     * </p>
+     * <p>
+     * Can return:
+     *
+     * {@link MediaConstants#DESCRIPTION_EXTRAS_VALUE_COMPLETION_STATUS_NOT_PLAYED}
+     * {@link MediaConstants#DESCRIPTION_EXTRAS_VALUE_COMPLETION_STATUS_PARTIALLY_PLAYED}
+     * {@link MediaConstants#DESCRIPTION_EXTRAS_VALUE_COMPLETION_STATUS_FULLY_PLAYED}
+     * </p>
+     * <p>
+     * Defaults to DESCRIPTION_EXTRAS_VALUE_COMPLETION_STATUS_NO_VALUE
+     * if the optional value is not in the bundle.
+     * </p>
+     * <p>
+     * If status {@link MediaConstants#DESCRIPTION_EXTRAS_VALUE_COMPLETION_STATUS_PARTIALLY_PLAYED}
+     * call {@link MediaItemMetadata#getProgress} to get the progress percentage
+     * </p>
+     *
+     * @return playback status
+     * @see MediaConstants#DESCRIPTION_EXTRAS_KEY_COMPLETION_STATUS
+     */
+    public int getPlaybackStatus() {
+        if (mMediaDescription.getExtras() != null) {
+            return mMediaDescription.getExtras().getInt(
+                    MediaConstants.DESCRIPTION_EXTRAS_KEY_COMPLETION_STATUS,
+                    NO_PLAYBACK_STATUS);
+        }
+        return NO_PLAYBACK_STATUS;
+    }
+
+    /**
+     * Checks {@link MediaConstants#DESCRIPTION_EXTRAS_KEY_COMPLETION_PERCENTAGE}
+     * @return
+     */
+    public boolean hasProgress() {
+        if (mMediaDescription.getExtras() != null) {
+            return mMediaDescription.getExtras().getDouble(
+                    MediaConstants.DESCRIPTION_EXTRAS_KEY_COMPLETION_PERCENTAGE,
+                    NO_PROGRESS)
+                    > NO_PROGRESS;
+        }
+        return false;
+    }
+
+    /**
+     * Returns the playback percentage stored in {@link MediaItemMetadata#getExtras()}
+     * Value is stored with key {@link MediaConstants#DESCRIPTION_EXTRAS_KEY_COMPLETION_PERCENTAGE}
+     *
+     * @return progress 0.0 - 1.0 inclusive , default to -1.0
+     * {@link MediaItemMetadata#NO_PROGRESS} if optional key in not
+     * present @see MediaConstants#DESCRIPTION_EXTRAS_KEY_COMPLETION_PERCENTAGE
+     */
+    public double getProgress() {
+        if (mMediaDescription.getExtras() != null) {
+            return mMediaDescription.getExtras().getDouble(
+                    MediaConstants.DESCRIPTION_EXTRAS_KEY_COMPLETION_PERCENTAGE,
+                    NO_PROGRESS);
+        }
+        return NO_PROGRESS;
+    }
+
+    /**
+     * Update progress
+     */
+    public void setProgress(double progress) {
+        if (mMediaDescription.getExtras() != null) {
+            mMediaDescription.getExtras().putDouble(
+                    MediaConstants.DESCRIPTION_EXTRAS_KEY_COMPLETION_PERCENTAGE, progress);
+        }
+    }
+
     private static Map<PlaceholderType, List<Drawable>> sPlaceHolders = new HashMap<>();
 
     private static List<Drawable> getPlaceHolders(PlaceholderType type, Context context) {
@@ -354,7 +447,25 @@ public class MediaItemMetadata implements Parcelable {
                 && Objects.equals(getAlbumTitle(), that.getAlbumTitle())
                 && Objects.equals(getArtist(), that.getArtist())
                 && Objects.equals(getNonEmptyArtworkUri(), that.getNonEmptyArtworkUri())
-                && Objects.equals(mQueueId, that.mQueueId);
+                && Objects.equals(mQueueId, that.mQueueId)
+                && Objects.equals(hasPlaybackStatus(), that.hasPlaybackStatus())
+                && Objects.equals(hasProgress(), that.hasProgress())
+                && areDoublesClose(getProgress(), that.getProgress(),  .0001);
+    }
+
+    /**
+     * Checks whether 2 doubles are within the given threshold.
+     * Threshold is the maximum difference before it's considered unequal.
+     *
+     * @param threshold Usually accurate to .001 or .0001
+     * @return if equal
+     */
+    public static boolean areDoublesClose(double first, double second, double threshold) {
+        if (threshold < 0.0) {
+            Log.w(TAG, "areDoublesClose threshold less than 0.0");
+            threshold = 0.0;
+        }
+        return Math.abs(first - second) < threshold;
     }
 
     @Override
