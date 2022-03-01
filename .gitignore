@@ -1,6 +1,5 @@
 # Local configuration
 local.properties
-gradle-wrapper.properties
 
 # Gradle
 .gradle/
