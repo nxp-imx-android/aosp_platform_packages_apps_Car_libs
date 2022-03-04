@@ -26,7 +26,7 @@ car_assist_lib_static_libs = [
 ]
 
 android_library {
-    name: "car-assist-lib",
+    name: "car-assist-lib-source",
 
     srcs: ["src/**/*.java"],
 
@@ -46,7 +46,7 @@ android_library {
 java_genrule {
     name: "car-assist-lib-aar",
     srcs: [
-        ":car-assist-lib{.aar}",
+        ":car-assist-lib-source{.aar}",
         "res/**/*",
     ],
     out: ["car-assist-lib.aar"],
@@ -54,7 +54,8 @@ java_genrule {
         "make_slim_aar",
     ],
     cmd: "dir=packages/apps/Car/libs/car-assist-lib && " +
-        "$(location make_slim_aar) --classes-allowlist com/android/car/assist $(out) $(location :car-assist-lib{.aar})",
+        "$(location make_slim_aar) --classes-allowlist com/android/car/assist $(out) " +
+        "$(location :car-assist-lib-source{.aar})",
     dist: {
         targets: ["car-assist-lib-aar",]
     },

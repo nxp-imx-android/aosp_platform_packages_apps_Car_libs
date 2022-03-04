@@ -25,7 +25,7 @@ car_uxr_client_lib_static_libs = [
 
 android_library {
 
-    name: "car-uxr-client-lib",
+    name: "car-uxr-client-lib-source",
 
     srcs: ["src/**/*.java"],
 
@@ -47,7 +47,7 @@ android_library {
 java_genrule {
     name: "car-uxr-client-lib-aar",
     srcs: [
-        ":car-uxr-client-lib{.aar}",
+        ":car-uxr-client-lib-source{.aar}",
         "res/**/*",
     ],
     out: ["car-uxr-client-lib.aar"],
@@ -55,7 +55,8 @@ java_genrule {
         "make_slim_aar",
     ],
     cmd: "dir=packages/apps/Car/libs/car-uxr-client-lib && " +
-        "$(location make_slim_aar) --classes-allowlist com/android/car/uxr $(out) $(location :car-uxr-client-lib{.aar}) $$dir/res",
+        "$(location make_slim_aar) --classes-allowlist com/android/car/uxr $(out) " +
+        "$(location :car-uxr-client-lib-source{.aar}) $$dir/res",
     dist: {
         targets: ["car-uxr-client-lib-aar",]
     },

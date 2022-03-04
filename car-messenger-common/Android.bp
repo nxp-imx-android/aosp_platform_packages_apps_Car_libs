@@ -52,7 +52,7 @@ car_messaging_models_static_libs = [
 
 // Car Messaging Models, Unbundled
 android_library {
-    name: "car-messaging-models",
+    name: "car-messaging-models-source",
 
     manifest: "AndroidManifest-unbundled.xml",
 
@@ -76,7 +76,7 @@ android_library {
 java_genrule {
     name: "car-messaging-models-aar",
     srcs: [
-        ":car-messaging-models{.aar}",
+        ":car-messaging-models-source{.aar}",
         "res/**/*",
     ],
     out: ["car-messaging-models.aar"],
@@ -84,7 +84,9 @@ java_genrule {
         "make_slim_aar",
     ],
     cmd: "dir=packages/apps/Car/libs/car-messaging-models && " +
-        "$(location make_slim_aar) --classes-allowlist com/android/car/messenger/common/Conversation $(out) $(location :car-messaging-models{.aar})",
+        "$(location make_slim_aar) " +
+        "--classes-allowlist com/android/car/messenger/common/Conversation $(out) " +
+        "$(location :car-messaging-models-source{.aar})",
     dist: {
         targets: ["car-messaging-models-aar",]
     },
