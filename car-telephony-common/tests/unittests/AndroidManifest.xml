@@ -18,7 +18,7 @@
 <manifest
     xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.android.car.telephony.common.unittests">
-    <uses-sdk android:minSdkVersion="28" android:targetSdkVersion="29" />
+    <uses-sdk android:minSdkVersion="28" android:targetSdkVersion="32" />
 
     <application android:testOnly="false"
                  android:debuggable="true">

@@ -16,8 +16,8 @@
 
 rootProject.name='AAOS Apps'
 
-gradle.ext.aaosLatestSDK = 31
-gradle.ext.aaosTargetSDK = 31
+gradle.ext.aaosLatestSDK = 32
+gradle.ext.aaosTargetSDK = 32
 
 gradle.ext.lib_car_system_stubs = rootDir.absolutePath + "../../../../../../prebuilts/sdk/" + gradle.ext.aaosLatestSDK + "/system/android.car-system-stubs.jar"
 gradle.ext.lib_system_stubs = rootDir.absolutePath + "../../../../../../prebuilts/sdk/" + gradle.ext.aaosLatestSDK + "/system/android.jar"
