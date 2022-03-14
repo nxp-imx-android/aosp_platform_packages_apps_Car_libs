@@ -51,7 +51,7 @@ class AppStyledDialog extends Dialog implements DialogInterface.OnDismissListene
     private View mContent;
     private final Context mContext;
 
-    public AppStyledDialog(@NonNull Context context, @NonNull AppStyledViewController controller) {
+    AppStyledDialog(@NonNull Activity context, @NonNull AppStyledViewController controller) {
         super(context);
         // super.getContext() returns a ContextThemeWrapper which is not an Activity which we need 
         // in order to get call getWindow()

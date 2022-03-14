@@ -19,6 +19,7 @@ package com.android.car.ui.appstyledview;
 import static com.android.car.ui.core.CarUi.MIN_TARGET_API;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 
@@ -44,15 +45,31 @@ public final class AppStyledDialogController {
     @NonNull
     private AppStyledDialog mDialog;
 
-    public AppStyledDialogController(@NonNull Context context) {
+    public AppStyledDialogController(@NonNull Activity context) {
         Objects.requireNonNull(context);
         mAppStyledViewController = PluginFactorySingleton.get(context)
                 .createAppStyledView(context);
         mDialog = new AppStyledDialog(context, mAppStyledViewController);
     }
 
+    /**
+     * @deprecated Use {@link #AppStyledDialogController(Activity)} instead
+     */
+    @Deprecated
+    public AppStyledDialogController(@NonNull Context context) {
+        Objects.requireNonNull(context);
+
+        if (context instanceof Activity) {
+            throw new IllegalArgumentException();
+        }
+
+        mAppStyledViewController = PluginFactorySingleton.get(context)
+                .createAppStyledView(context);
+        mDialog = new AppStyledDialog((Activity) context, mAppStyledViewController);
+    }
+
     @VisibleForTesting
-    void setAppStyledViewController(AppStyledViewController controller, Context context) {
+    void setAppStyledViewController(AppStyledViewController controller, Activity context) {
         mAppStyledViewController = controller;
         mDialog = new AppStyledDialog(context, mAppStyledViewController);
     }
