@@ -68,7 +68,8 @@ final class OemApiUtil {
         } catch (ClassNotFoundException e) {
             Log.i(TAG, "PluginVersionProviderImpl not found.", e);
         } catch (ReflectiveOperationException e) {
-            Log.e(TAG, "PluginVersionProviderImpl could not be instantiated!", e);
+            Log.e(TAG, "PluginVersionProviderImpl could not be instantiated!",
+                    e.getCause() == null ? e : e.getCause());
         }
 
         // Add new version providers in an if-else chain here, in descending version order so

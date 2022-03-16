@@ -289,7 +289,9 @@ public class CarUiInstaller extends ContentProvider {
             method.setAccessible(true);
             return method.invoke(instance, args);
         } catch (ReflectiveOperationException | SecurityException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to make reflective call to "
+                    + methodName + " on " + instance,
+                    e.getCause() == null ? e : e.getCause());
         }
     }
 
@@ -311,7 +313,7 @@ public class CarUiInstaller extends ContentProvider {
                     src.getRight(),
                     src.getBottom());
         } catch (ReflectiveOperationException | SecurityException e) {
-            throw new RuntimeException();
+            throw new RuntimeException(e);
         }
     }
 

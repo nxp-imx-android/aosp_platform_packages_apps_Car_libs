@@ -398,7 +398,8 @@ public abstract class PreferenceFragment extends PreferenceFragmentCompat implem
                                 .getDeclaredConstructor(Context.class)
                                 .newInstance(preference.getContext()));
                     } catch (ReflectiveOperationException e) {
-                        throw new RuntimeException(e);
+                        throw new RuntimeException("Failed to copy Preference " + preference,
+                                e.getCause() == null ? e : e.getCause());
                     }
                 } else if (clazz == target || source == Preference.class) {
                     // Don't warn about subclasses of Preference because there are many legitimate
