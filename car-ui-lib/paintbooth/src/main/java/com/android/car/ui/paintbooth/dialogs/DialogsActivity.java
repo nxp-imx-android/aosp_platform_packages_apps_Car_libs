@@ -39,8 +39,6 @@ import com.android.car.ui.core.CarUi;
 import com.android.car.ui.paintbooth.R;
 import com.android.car.ui.recyclerview.CarUiContentListItem;
 import com.android.car.ui.recyclerview.CarUiListItemAdapter;
-import com.android.car.ui.recyclerview.CarUiRadioButtonListItem;
-import com.android.car.ui.recyclerview.CarUiRadioButtonListItemAdapter;
 import com.android.car.ui.recyclerview.CarUiRecyclerView;
 import com.android.car.ui.toolbar.NavButtonMode;
 import com.android.car.ui.toolbar.ToolbarController;
@@ -73,8 +71,8 @@ public class DialogsActivity extends Activity implements InsetsChangedListener {
                 v -> showDialogWithOnlyPositiveButton()));
         mButtons.add(Pair.create(R.string.dialog_show_dialog_no_button,
                 v -> showDialogWithNoButtonProvided()));
-        mButtons.add(Pair.create(R.string.dialog_show_dialog_checkbox,
-                v -> showDialogWithCheckbox()));
+        mButtons.add(Pair.create(R.string.dialog_show_multiple_choice,
+                v -> showDialogWithMultipleChoiceItems()));
         mButtons.add(Pair.create(R.string.dialog_show_dialog_no_title,
                 v -> showDialogWithoutTitle()));
         mButtons.add(Pair.create(R.string.dialog_show_toast,
@@ -133,12 +131,12 @@ public class DialogsActivity extends Activity implements InsetsChangedListener {
                 .show();
     }
 
-    private void showDialogWithCheckbox() {
+    private void showDialogWithMultipleChoiceItems() {
         new AlertDialogBuilder(this)
                 .setTitle(R.string.custom_dialog_box)
                 .setMultiChoiceItems(
-                        new CharSequence[]{"I am a checkbox"},
-                        new boolean[]{false},
+                        new CharSequence[]{"Checkbox 1", "Checkbox 2", "Checkbox 3"},
+                        new boolean[]{false, true, false},
                         (dialog, which, isChecked) -> {
                         })
                 .setPositiveButton(getString(R.string.ok), (dialogInterface, which) -> {
@@ -191,24 +189,13 @@ public class DialogsActivity extends Activity implements InsetsChangedListener {
     }
 
     private void showDialogWithSingleChoiceItems() {
-        ArrayList<CarUiRadioButtonListItem> data = new ArrayList<>();
-
-        CarUiRadioButtonListItem item = new CarUiRadioButtonListItem();
-        item.setTitle(getString(R.string.first_item));
-        data.add(item);
-
-        item = new CarUiRadioButtonListItem();
-        item.setTitle(getString(R.string.second_item));
-        data.add(item);
-
-        item = new CarUiRadioButtonListItem();
-        item.setTitle(getString(R.string.third_item));
-        data.add(item);
+        CharSequence[] items = new CharSequence[]{getString(R.string.first_item), getString(
+                R.string.second_item), getString(R.string.third_item)};
 
         new AlertDialogBuilder(this)
                 .setTitle(R.string.select_one_option)
                 .setSubtitle(R.string.select_one_option_at_a_time)
-                .setSingleChoiceItems(new CarUiRadioButtonListItemAdapter(data), null)
+                .setSingleChoiceItems(items, 1, null)
                 .show();
     }
 
@@ -220,7 +207,6 @@ public class DialogsActivity extends Activity implements InsetsChangedListener {
         item.setTitle("First item");
         item.setOnItemClickedListener(i -> dialog[0].dismiss());
         data.add(item);
-
 
         item = new CarUiContentListItem(CarUiContentListItem.Action.NONE);
         item.setTitle("Second item");
@@ -314,11 +300,11 @@ public class DialogsActivity extends Activity implements InsetsChangedListener {
     private void showMultiPermissionDialog() {
         if (checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
                 && checkSelfPermission(Manifest.permission.SEND_SMS)
-                    == PackageManager.PERMISSION_GRANTED
+                == PackageManager.PERMISSION_GRANTED
                 && checkSelfPermission(Manifest.permission.READ_CONTACTS)
-                    == PackageManager.PERMISSION_GRANTED) {
+                == PackageManager.PERMISSION_GRANTED) {
             Toast.makeText(this, "Permissions are already granted. Remove CAMERA, SEND_SMS or "
-                    + "READ_CONTACTS permission from Settings > All apps > PaintBooth",
+                            + "READ_CONTACTS permission from Settings > All apps > PaintBooth",
                     Toast.LENGTH_SHORT).show();
             return;
         }
