@@ -16,8 +16,13 @@
 
 package com.android.car.media.common.browse;
 
+import static com.android.car.media.common.MediaConstants.BROWSER_SERVICE_EXTRAS_KEY_APPLICATION_PREFERENCES_USING_CAR_APP_LIBRARY_INTENT;
+
+import android.app.PendingIntent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.media.MediaBrowserCompat;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -38,6 +43,8 @@ import java.util.stream.Collectors;
  * Provides utility methods for {@link MediaBrowserCompat}.
  */
 public class MediaBrowserViewModelImpl {
+
+    private static final String TAG = "MediaBrViewModelImpl";
 
     private MediaBrowserViewModelImpl() {
     }
@@ -129,5 +136,35 @@ public class MediaBrowserViewModelImpl {
         HashSet<MediaItemMetadata> itemsById = new HashSet<>(oldList);
         itemsById.removeAll(newList);
         return itemsById;
+    }
+
+    /**
+     * Returns the {@link PendingIntent} set in the MediaConstants.
+     * BROWSER_SERVICE_EXTRAS_KEY_APPLICATION_PREFERENCES_USING_CAR_APP_LIBRARY_INTENT extra.
+     */
+    public static @Nullable PendingIntent getSettingsIntent(
+            @Nullable MediaBrowserCompat mediaBrowserCompat) {
+        if (mediaBrowserCompat == null) {
+            return null;
+        }
+        Bundle extras = mediaBrowserCompat.getExtras();
+        if (extras == null) {
+            return null;
+        }
+
+        Parcelable parcelable = extras.getParcelable(
+                BROWSER_SERVICE_EXTRAS_KEY_APPLICATION_PREFERENCES_USING_CAR_APP_LIBRARY_INTENT);
+        if (parcelable == null) {
+            return null;
+        }
+
+        if (parcelable instanceof PendingIntent) {
+            return (PendingIntent) parcelable;
+        } else {
+            if (Log.isLoggable(TAG, Log.WARN)) {
+                Log.w(TAG, "Settings extra isn't a PendingIntent: " + parcelable);
+            }
+            return null;
+        }
     }
 }
