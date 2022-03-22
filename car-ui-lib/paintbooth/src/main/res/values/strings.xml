@@ -312,9 +312,10 @@
   <string name="widget_checkbox_text">I\'m a check box</string>
   <!-- Text for switch [CHAR_LIMIT=25]-->
   <string name="widget_switch_text">I\'m a switch</string>
-  <!-- Text for button toggle -->
-  <string name="widget_toggle_button_text">I\'m a toggle button</string>
-
+  <!-- Text for radio button -->
+  <string name="widget_radio_button_text">I\'m a radio button</string>
+  <!-- Text for button to toggle enabled state of widgets -->
+  <string name="widget_enable_button_text">Toggle Enabled</string>
 
   <!-- ListItem related resources  -->
   <string name="first_header">First header</string>
