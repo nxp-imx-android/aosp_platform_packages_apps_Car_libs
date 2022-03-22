@@ -59,9 +59,14 @@ import androidx.core.view.OneShotPreDrawListener;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.car.ui.recyclerview.CarUiContentListItem;
 import com.android.car.ui.recyclerview.CarUiListItemAdapter;
+import com.android.car.ui.recyclerview.CarUiRadioButtonListItem;
 import com.android.car.ui.recyclerview.CarUiRadioButtonListItemAdapter;
 import com.android.car.ui.utils.CarUiUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Wrapper for AlertDialog.Builder
@@ -73,6 +78,7 @@ import com.android.car.ui.utils.CarUiUtils;
 public class AlertDialogBuilder {
 
     private AlertDialog.Builder mBuilder;
+    private AlertDialog mDialog;
     private Context mContext;
     private boolean mPositiveButtonSet;
     private boolean mNeutralButtonSet;
@@ -496,9 +502,8 @@ public class AlertDialogBuilder {
      */
     public AlertDialogBuilder setMultiChoiceItems(@ArrayRes int itemsId, boolean[] checkedItems,
             final DialogInterface.OnMultiChoiceClickListener listener) {
-        mBuilder.setMultiChoiceItems(itemsId, checkedItems, listener);
-        mHasSingleChoiceBodyButton = false;
-        return this;
+        CharSequence[] itemText = mContext.getResources().getTextArray(itemsId);
+        return setMultiChoiceItems(itemText, checkedItems, listener);
     }
 
     /**
@@ -519,7 +524,23 @@ public class AlertDialogBuilder {
      */
     public AlertDialogBuilder setMultiChoiceItems(CharSequence[] items, boolean[] checkedItems,
             final DialogInterface.OnMultiChoiceClickListener listener) {
-        mBuilder.setMultiChoiceItems(items, checkedItems, listener);
+        List<CarUiContentListItem> carUiItems = new ArrayList<>();
+        for (int i = 0; i < items.length; i++) {
+            CarUiContentListItem item = new CarUiContentListItem(
+                    CarUiContentListItem.Action.CHECK_BOX);
+            item.setTitle(items[i]);
+            item.setChecked(checkedItems[i]);
+            int index = i;
+            item.setOnCheckedChangeListener(
+                    (item1, isChecked) -> {
+                        if (listener != null) {
+                            listener.onClick(mDialog, index, isChecked);
+                        }
+                    });
+            carUiItems.add(item);
+        }
+
+        setAdapter(new CarUiListItemAdapter(carUiItems));
         mHasSingleChoiceBodyButton = false;
         return this;
     }
@@ -545,9 +566,19 @@ public class AlertDialogBuilder {
     public AlertDialogBuilder setMultiChoiceItems(Cursor cursor, String isCheckedColumn,
             String labelColumn,
             final DialogInterface.OnMultiChoiceClickListener listener) {
-        mBuilder.setMultiChoiceItems(cursor, isCheckedColumn, labelColumn, listener);
-        mHasSingleChoiceBodyButton = false;
-        return this;
+        int size = cursor.getCount();
+        CharSequence[] items = new CharSequence[size];
+        boolean[] checkedItems = new boolean[size];
+
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            int index = cursor.getPosition();
+            CharSequence text = cursor.getString(cursor.getColumnIndex(labelColumn));
+            int isChecked = cursor.getInt(cursor.getColumnIndex(isCheckedColumn));
+            items[index] = text;
+            checkedItems[index] = isChecked != 0;
+        }
+
+        return setMultiChoiceItems(items, checkedItems, listener);
     }
 
     /**
@@ -567,9 +598,8 @@ public class AlertDialogBuilder {
      */
     public AlertDialogBuilder setSingleChoiceItems(@ArrayRes int itemsId, int checkedItem,
             final DialogInterface.OnClickListener listener) {
-        mBuilder.setSingleChoiceItems(itemsId, checkedItem, listener);
-        mHasSingleChoiceBodyButton = true;
-        return this;
+        CharSequence[] itemText = mContext.getResources().getTextArray(itemsId);
+        return setSingleChoiceItems(itemText, checkedItem, listener);
     }
 
     /**
@@ -591,9 +621,16 @@ public class AlertDialogBuilder {
     public AlertDialogBuilder setSingleChoiceItems(Cursor cursor, int checkedItem,
             String labelColumn,
             final DialogInterface.OnClickListener listener) {
-        mBuilder.setSingleChoiceItems(cursor, checkedItem, labelColumn, listener);
-        mHasSingleChoiceBodyButton = true;
-        return this;
+        int size = cursor.getCount();
+        CharSequence[] items = new CharSequence[size];
+
+        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
+            int index = cursor.getPosition();
+            CharSequence text = cursor.getString(cursor.getColumnIndex(labelColumn));
+            items[index] = text;
+        }
+
+        return setSingleChoiceItems(items, checkedItem, listener);
     }
 
     /**
@@ -612,7 +649,22 @@ public class AlertDialogBuilder {
      */
     public AlertDialogBuilder setSingleChoiceItems(CharSequence[] items, int checkedItem,
             final DialogInterface.OnClickListener listener) {
-        mBuilder.setSingleChoiceItems(items, checkedItem, listener);
+        List<CarUiRadioButtonListItem> carUiItems = new ArrayList<>();
+        for (int i = 0; i < items.length; i++) {
+            CarUiRadioButtonListItem item = new CarUiRadioButtonListItem();
+            item.setTitle(items[i]);
+            item.setChecked(i == checkedItem);
+            int index = i;
+            item.setOnCheckedChangeListener(
+                    (item1, isChecked) -> {
+                        if (listener != null) {
+                            listener.onClick(mDialog, index);
+                        }
+                    });
+            carUiItems.add(item);
+        }
+
+        setAdapter(new CarUiRadioButtonListItemAdapter(carUiItems));
         mHasSingleChoiceBodyButton = true;
         return this;
     }
@@ -620,8 +672,7 @@ public class AlertDialogBuilder {
     /**
      * This was not supposed to be in the Chassis API because it allows custom views.
      *
-     * @deprecated Use {@link #setSingleChoiceItems(CarUiRadioButtonListItemAdapter,
-     * DialogInterface.OnClickListener)} instead.
+     * @deprecated Use {@link #setSingleChoiceItems(CarUiRadioButtonListItemAdapter)} instead.
      */
     @Deprecated
     public AlertDialogBuilder setSingleChoiceItems(ListAdapter adapter, int checkedItem,
@@ -839,13 +890,13 @@ public class AlertDialogBuilder {
      */
     public AlertDialog create() {
         prepareDialog();
-        AlertDialog alertDialog = mBuilder.create();
+        mDialog = mBuilder.create();
 
         // Put a FocusParkingView at the end of dialog window to prevent rotary controller
         // wrap-around. Android will focus on the first view automatically when the dialog is shown,
         // and we want it to focus on the title instead of the FocusParkingView, so we put the
         // FocusParkingView at the end of dialog window.
-        mRoot = (ViewGroup) alertDialog.getWindow().getDecorView().getRootView();
+        mRoot = (ViewGroup) mDialog.getWindow().getDecorView().getRootView();
         FocusParkingView fpv = new FocusParkingView(mContext);
         mRoot.addView(fpv);
 
@@ -853,7 +904,7 @@ public class AlertDialogBuilder {
         mRoot.setOnApplyWindowInsetsListener(mOnApplyWindowInsetsListener);
         setOnDismissListener(mOnDismissListener);
 
-        return alertDialog;
+        return mDialog;
     }
 
     /**
@@ -861,8 +912,8 @@ public class AlertDialogBuilder {
      * displays the dialog.
      */
     public AlertDialog show() {
-        AlertDialog alertDialog = create();
-        alertDialog.show();
-        return alertDialog;
+        mDialog = create();
+        mDialog.show();
+        return mDialog;
     }
 }

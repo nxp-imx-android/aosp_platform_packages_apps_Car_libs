@@ -285,6 +285,9 @@
   <!-- Text to show Dialog with single choice items-->
   <string name="dialog_show_single_choice">Show with single choice items</string>
 
+  <!-- Text for show Dialog With with multiple choice items [CHAR_LIMIT=41]-->
+  <string name="dialog_show_multiple_choice">Show with multiple choice items</string>
+
   <!-- Text to show a dialog with single choice items and no default button [CHAR_LIMIT=200] -->
   <string name="dialog_show_list_items_without_default_button">Show with single choice items and no default button</string>
 
