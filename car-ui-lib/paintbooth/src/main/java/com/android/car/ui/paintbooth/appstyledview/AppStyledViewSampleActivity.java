@@ -72,10 +72,8 @@ public class AppStyledViewSampleActivity extends AppCompatActivity {
                 .inflate(R.layout.app_styled_view_test_sample, null, false);
 
         mAppStyledDialogController.setOnNavIconClickListener(
-                () -> {
-                    mAppStyledDialogController.dismiss();
-                    showSystemBars();
-                });
+                () -> mAppStyledDialogController.dismiss());
+        mAppStyledDialogController.setOnDismissListener(() -> showSystemBars());
 
         Button btn = findViewById(R.id.show_app_styled_fragment);
         btn.setOnClickListener(v -> {
