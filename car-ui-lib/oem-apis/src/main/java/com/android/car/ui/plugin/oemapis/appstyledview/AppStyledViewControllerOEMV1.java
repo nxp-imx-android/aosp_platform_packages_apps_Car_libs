@@ -22,7 +22,12 @@ import android.view.WindowManager;
 import com.android.car.ui.plugin.oemapis.NonNull;
 import com.android.car.ui.plugin.oemapis.Nullable;
 
-/** The OEM interface for a AppStyledView. */
+/**
+ * The OEM interface for a AppStyledView.
+ *
+ * @deprecated Please use {@link AppStyledViewControllerOEMV2} instead
+ */
+@Deprecated
 public interface AppStyledViewControllerOEMV1 {
     /**
      * Gets the view to display. This view will contain the content view set in {@link #setContent}.
@@ -47,8 +52,8 @@ public interface AppStyledViewControllerOEMV1 {
     int NAV_ICON_CLOSE = 2;
 
     /**
-     * Sets the nav icon to be used. Can be set to one of {@link #NAV_ICON_DISABLED},
-     * {@link #NAV_ICON_BACK} or {@link #NAV_ICON_CLOSE}.
+     * Sets the nav icon to be used. Can be set to one of {@link #NAV_ICON_DISABLED}, {@link
+     * #NAV_ICON_BACK} or {@link #NAV_ICON_CLOSE}.
      */
     void setNavIcon(int navIcon);
 

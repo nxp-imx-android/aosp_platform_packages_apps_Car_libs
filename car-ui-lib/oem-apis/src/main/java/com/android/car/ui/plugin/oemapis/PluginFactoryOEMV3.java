@@ -31,8 +31,14 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
- * This plugin factory is not finalized and thus not ready for production use.
- * Please use {@link PluginFactoryOEMV2} instead.
+ * This interface contains methods to create customizable Car UI components.
+ * <p>
+ * It returns them as their OEM-versioned interfaces (i.e. ToolbarControllerOEMV1) and is versioned
+ * itself so that no additional reflection or casting is necessary once the PluginFactory has
+ * been created.
+ * <p>
+ * Multiple of these can be provided via {@link PluginVersionProviderOEMV1} to allow plugins
+ * to provide an old implementation for old apps, and a newer implementation for newer apps.
  */
 @SuppressWarnings("AndroidJdkLibsChecker")
 public interface PluginFactoryOEMV3 {

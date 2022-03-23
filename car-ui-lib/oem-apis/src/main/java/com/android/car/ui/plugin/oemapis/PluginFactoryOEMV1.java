@@ -25,7 +25,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
- * This interface contains methods to create customizable carui components.
+ * This interface contains methods to create customizable Car UI components.
  * <p>
  * It returns them as their OEM-versioned interfaces (i.e. ToolbarControllerOEMV1) and is versioned
  * itself so that no additional reflection or casting is necessary once the PluginFactory has
@@ -33,8 +33,11 @@ import java.util.function.Function;
  * <p>
  * Multiple of these can be provided via {@link PluginVersionProviderOEMV1} to allow plugins
  * to provide an old implementation for old apps, and a newer implementation for newer apps.
+ *
+ * @deprecated Use {@link PluginFactoryOEMV3} instead
  */
 @SuppressWarnings("AndroidJdkLibsChecker")
+@Deprecated
 public interface PluginFactoryOEMV1 {
 
     /**
