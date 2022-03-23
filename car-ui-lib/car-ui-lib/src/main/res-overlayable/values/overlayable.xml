@@ -389,6 +389,7 @@ limitations under the License.-->
       <item type="id" name="car_ui_ime_surface"/>
       <item type="id" name="car_ui_inputExtractActionAutomotive"/>
       <item type="id" name="car_ui_inputExtractEditTextContainer"/>
+      <item type="id" name="car_ui_link"/>
       <item type="id" name="car_ui_list_item_action_container"/>
       <item type="id" name="car_ui_list_item_action_container_touch_interceptor"/>
       <item type="id" name="car_ui_list_item_action_divider"/>
@@ -493,6 +494,7 @@ limitations under the License.-->
       <item type="layout" name="car_ui_preference_chevron"/>
       <item type="layout" name="car_ui_preference_dialog_edittext"/>
       <item type="layout" name="car_ui_preference_dropdown"/>
+      <item type="layout" name="car_ui_preference_footer"/>
       <item type="layout" name="car_ui_preference_fragment"/>
       <item type="layout" name="car_ui_preference_fragment_with_toolbar"/>
       <item type="layout" name="car_ui_preference_primary_switch"/>

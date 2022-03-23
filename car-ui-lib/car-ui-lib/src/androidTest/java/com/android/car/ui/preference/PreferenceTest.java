@@ -40,6 +40,7 @@ import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 
 import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.eq;
@@ -1188,6 +1189,112 @@ public class PreferenceTest {
         onView(withText(R.string.title_seek_bar_preference)).perform(click());
         verify(restrictedClickListener, times(1)).accept(preference);
     }
+
+    @Test
+    public void testFooterPreference_noLink() {
+        // Create footer preference (no link) and add to screen
+        CarUiFooterPreference preference = new CarUiFooterPreference(mActivity);
+        preference.setKey("footer");
+        preference.setOrder(0);
+        preference.setTitle(R.string.title);
+        preference.setSummary(R.string.footer_preference_summary);
+        // the icon we use doesn't matter, so testing with car_ui_icon_search
+        preference.setIcon(R.drawable.car_ui_icon_search);
+        mActivity.addPreference(preference);
+
+        // Scroll until footer preference is visible
+        mActivity.runOnUiThread(() -> mActivity.scrollToPreference("footer"));
+
+        // Check summary/title is displayed as expected.
+        onView(withIndex(withId(android.R.id.summary), 0)).check(matches(
+                withText(mActivity.getString(R.string.footer_preference_summary))));
+        onView(withIndex(withId(android.R.id.title), 0)).check(matches(
+                withText(mActivity.getString(R.string.title))));
+
+        // Check that link is not enabled or displayed
+        assertFalse(preference.isLinkEnabled());
+        onView(withIndex(withId(R.id.car_ui_link), 0)).check(matches(not(isDisplayed())));
+    }
+
+    @Test
+    public void testFooterPreference_invalidInputSetLink() {
+        // Create footer preference and add to screen
+        CarUiFooterPreference preference = new CarUiFooterPreference(mActivity);
+        preference.setKey("footer");
+        preference.setOrder(0);
+        preference.setTitle(R.string.title);
+        preference.setSummary(R.string.footer_preference_summary);
+        mActivity.addPreference(preference);
+
+        // Test both combinations of invalid inputs (either but not both args are null)
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+                () -> preference.setLink("test", null));
+        assertEquals("Error: Both or neither argument must be null", ex.getMessage());
+
+        ex = assertThrows(IllegalArgumentException.class,
+                () -> preference.setLink(null, mock(Runnable.class)));
+        assertEquals("Error: Both or neither argument must be null", ex.getMessage());
+    }
+
+    @Test
+    public void testFooterPreference_link() {
+        // Create footer preference (link) and add to screen
+        CarUiFooterPreference preference = new CarUiFooterPreference(mActivity);
+        preference.setKey("footer");
+        preference.setOrder(0);
+        Runnable clickListener = mock(Runnable.class);
+        preference.setLink(mActivity.getString(R.string.footer_preference_link_text),
+                clickListener);
+
+        mActivity.addPreference(preference);
+
+        // Verify that link is enabled via method
+        assertTrue(preference.isLinkEnabled());
+
+        // Scroll until footer preference is visible
+        mActivity.runOnUiThread(() -> mActivity.scrollToPreference("footer"));
+
+        // Link should now be displayed
+        onView(withIndex(withId(R.id.car_ui_link), 0)).check(matches(isDisplayed()));
+
+        // Validate that car_ui_link text matches actual text
+        onView(withIndex(withId(R.id.car_ui_link), 0)).check(matches(
+                withText(mActivity.getString(R.string.footer_preference_link_text))));
+
+        // Confirm other CarUiFooterPreference methods work as intended
+        assertEquals(preference.getLinkText(),
+                mActivity.getString(R.string.footer_preference_link_text));
+
+        // Click link once and verify that it was clicked once.
+        onView(withIndex(withId(R.id.car_ui_link), 0)).perform(click());
+        verify(clickListener, times(1)).run();
+    }
+
+    @Test
+    public void testFooterPreference_removeLink() {
+        // Create footer preference  with a link
+        CarUiFooterPreference preference = new CarUiFooterPreference(mActivity);
+        preference.setKey("footer");
+        preference.setOrder(0);
+        preference.setTitle(R.string.title);
+        Runnable clickListener = mock(Runnable.class);
+        preference.setLink(mActivity.getString(R.string.footer_preference_link_text),
+                clickListener);
+
+        // Add the preference
+        mActivity.addPreference(preference);
+
+        // Scroll until footer preference is visible
+        mActivity.runOnUiThread(() -> mActivity.scrollToPreference("footer"));
+
+        // Remove link
+        preference.setLink(null, null);
+
+        // Link should not be enabled or displayed
+        onView(withIndex(withId(R.id.car_ui_link), 0)).check(matches(not(isDisplayed())));
+        assertFalse(preference.isLinkEnabled());
+    }
+
 
     /** An action which focuses the given view or the nearest focusable ancestor. */
     private static class FocusAncestorAction implements ViewAction {

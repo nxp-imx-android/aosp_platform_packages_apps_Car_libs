@@ -155,6 +155,21 @@
   <!-- Title of a Intent preference [CHAR_LIMIT=28]-->
   <string name="intent_preference">Intent preference</string>
 
+  <!-- Footer sample preference strings -->
+
+  <!-- Title for footer with link to Dialog Activity [CHAR_LIMIT=52]-->
+  <string name="footer_dialog_title">Dialog Footer</string>
+  <!-- Summary for footer with link to Dialog Activity [CHAR_LIMIT=162]-->
+  <string name="footer_dialog_summary">This footer when clicked will take you to Dialog Activity. Here is some more text so that this summary displays on multiple lines.</string>
+  <!-- Summary for footer with link to Google [CHAR_LIMIT=162]-->
+  <string name="footer_link_summary">This link will take you to google.com</string>
+  <!-- Title for footer with link to Settings [CHAR_LIMIT=52]-->
+  <string name="footer_settings_title">This is a Footer with a title and link to settings</string>
+  <!-- Title for footer with no link [CHAR_LIMIT=52]-->
+  <string name="footer_no_link_title">No Link Footer</string>
+  <!-- Summary for footer with no link [CHAR_LIMIT=162]-->
+  <string name="footer_no_link_summary">Here\'s a footer with no link.</string>
+
   <!--This section is for toolbar attributes -->
   <eat-comment/>
 
@@ -364,7 +379,6 @@
   <string name="select_one_option_at_a_time">Ony one option may be selected at a time</string>
   <string name="long_title">This is a very long title. It should likely span across multiple lines or something. It shouldn\'t get cut off.</string>
   <string name="long_subtitle">This is a very long subtitle. It should likely span across  multiple lines or something. It shouldn\'t get cut off.</string>
-
 
   <!--  Theme related screens-->
   <string name="theme_activity_name">AAE Theme Playground2</string>

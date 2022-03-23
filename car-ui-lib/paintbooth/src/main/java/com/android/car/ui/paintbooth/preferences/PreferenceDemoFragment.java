@@ -17,6 +17,8 @@
 package com.android.car.ui.paintbooth.preferences;
 
 import android.car.drivingstate.CarUxRestrictions;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -25,6 +27,8 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceGroup;
 
 import com.android.car.ui.paintbooth.R;
+import com.android.car.ui.paintbooth.dialogs.DialogsActivity;
+import com.android.car.ui.preference.CarUiFooterPreference;
 import com.android.car.ui.preference.CarUiTwoActionBasePreference;
 import com.android.car.ui.preference.CarUiTwoActionIconPreference;
 import com.android.car.ui.preference.CarUiTwoActionSwitchPreference;
@@ -79,6 +83,9 @@ public class PreferenceDemoFragment extends PreferenceFragment {
         setupTwoActionPreferenceClickListeners(requirePreference("twoactiontextborderless"));
         setupTwoActionPreferenceClickListeners(requirePreference("twoactionicon"));
         setupTwoActionPreferenceClickListeners(requirePreference("twoactionswitch"));
+        setupFooterClickListenerDialog(requirePreference("footerdialog"));
+        setupFooterClickListenerWebLink(requirePreference("footerweblink"));
+        setupFooterClickListenerSettings(requirePreference("footersettings"));
     }
 
     @Override
@@ -115,6 +122,29 @@ public class PreferenceDemoFragment extends PreferenceFragment {
                         !preference.isSecondaryActionVisible());
             }
             return true;
+        });
+    }
+
+    private void setupFooterClickListenerDialog(CarUiFooterPreference footer) {
+        footer.setLink("Click me to navigate to Dialog Activity",
+                () -> startActivity(new Intent(getContext(), DialogsActivity.class)));
+    }
+
+    private void setupFooterClickListenerWebLink(CarUiFooterPreference footer) {
+        footer.setLink("Click me to learn more",
+                () -> startActivity(new Intent(Intent.ACTION_VIEW).setData(
+                Uri.parse("http://www.google.com"))));
+    }
+
+    private void setupFooterClickListenerSettings(CarUiFooterPreference footer) {
+        footer.setLink("Click me to navigate to Settings", () -> {
+            Intent launchIntent = new Intent(android.provider.Settings.ACTION_SETTINGS);
+            if (launchIntent != null) {
+                startActivity(launchIntent); //null pointer check in case package name was not found
+            } else {
+                Toast.makeText(getContext(), "Error: Unable to launch Settings",
+                        Toast.LENGTH_LONG).show();
+            }
         });
     }
 

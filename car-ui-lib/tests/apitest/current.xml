@@ -298,6 +298,7 @@
   <public type="id" name="car_ui_ime_surface"/>
   <public type="id" name="car_ui_inputExtractActionAutomotive"/>
   <public type="id" name="car_ui_inputExtractEditTextContainer"/>
+  <public type="id" name="car_ui_link"/>
   <public type="id" name="car_ui_list_item_action_container"/>
   <public type="id" name="car_ui_list_item_action_container_touch_interceptor"/>
   <public type="id" name="car_ui_list_item_action_divider"/>
@@ -402,6 +403,7 @@
   <public type="layout" name="car_ui_preference_chevron"/>
   <public type="layout" name="car_ui_preference_dialog_edittext"/>
   <public type="layout" name="car_ui_preference_dropdown"/>
+  <public type="layout" name="car_ui_preference_footer"/>
   <public type="layout" name="car_ui_preference_fragment"/>
   <public type="layout" name="car_ui_preference_fragment_with_toolbar"/>
   <public type="layout" name="car_ui_preference_primary_switch"/>

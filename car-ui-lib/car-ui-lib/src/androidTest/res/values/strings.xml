@@ -40,6 +40,9 @@
     <string name="title_twoaction_preference">TwoAction preference</string>
     <string name="summary_twoaction_preference">A widget should be visible on the right</string>
     <string name="twoaction_secondary_text">Secondary text</string>
+    <string name="footer_preference_summary">This is a footer preference\nmore lines</string>
+    <string name="footer_preference_link_text">This is a link to google</string>
+    <string name="footer_preference_url">"https://www.google.com"</string>
     <string name="title">Title!</string>
     <string name="subtitle">Subtitle!</string>
     <string name="message">Message!</string>

@@ -189,4 +189,20 @@
             android:title="@string/title_parent_preference"/>
     </PreferenceCategory>
 
+    <com.android.car.ui.preference.CarUiFooterPreference
+        android:key="footerdialog"
+        android:title="@string/footer_dialog_title"
+        android:icon="@drawable/ic_info"
+        android:summary="@string/footer_dialog_summary"/>
+    <com.android.car.ui.preference.CarUiFooterPreference
+        android:key="footerweblink"
+        android:icon="@drawable/ic_info"
+        android:summary="@string/footer_link_summary"/>
+    <com.android.car.ui.preference.CarUiFooterPreference
+        android:title="@string/footer_settings_title"
+        android:key="footersettings" />
+    <com.android.car.ui.preference.CarUiFooterPreference
+        android:key="footernolink"
+        android:icon="@drawable/ic_info"
+        android:summary="@string/footer_no_link_summary"/>
 </PreferenceScreen>
