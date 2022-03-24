@@ -349,9 +349,9 @@
   <string name="standard_alert_dialog">Standard Alert Dialog</string>
   <string name="my_message">My message</string>
   <string name="alert_dialog_with_icon">Alert dialog with icon</string>
-  <string name="neutral">NEUTRAL</string>
-  <string name="ok">OK</string>
-  <string name="cancel">CANCEL</string>
+  <string name="neutral">Neutral</string>
+  <string name="ok">Ok</string>
+  <string name="cancel">Cancel</string>
   <string name="custom_dialog_box">Custom Dialog Box</string>
   <string name="edit_me_please">Edit me please</string>
   <string name="no_title_message">I don\'t have a title.</string>
