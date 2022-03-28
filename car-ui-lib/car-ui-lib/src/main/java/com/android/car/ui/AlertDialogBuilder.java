@@ -572,8 +572,8 @@ public class AlertDialogBuilder {
 
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             int index = cursor.getPosition();
-            CharSequence text = cursor.getString(cursor.getColumnIndex(labelColumn));
-            int isChecked = cursor.getInt(cursor.getColumnIndex(isCheckedColumn));
+            CharSequence text = cursor.getString(cursor.getColumnIndexOrThrow(labelColumn));
+            int isChecked = cursor.getInt(cursor.getColumnIndexOrThrow(isCheckedColumn));
             items[index] = text;
             checkedItems[index] = isChecked != 0;
         }
@@ -626,7 +626,7 @@ public class AlertDialogBuilder {
 
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             int index = cursor.getPosition();
-            CharSequence text = cursor.getString(cursor.getColumnIndex(labelColumn));
+            CharSequence text = cursor.getString(cursor.getColumnIndexOrThrow(labelColumn));
             items[index] = text;
         }
 
