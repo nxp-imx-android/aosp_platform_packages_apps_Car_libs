@@ -74,6 +74,17 @@
             app:layout_constraintBottom_toBottomOf="parent"/>
     </com.android.car.ui.uxr.DrawableStateConstraintLayout>
 
+    <View
+        android:id="@+id/car_ui_divider"
+        android:layout_width="@dimen/car_ui_divider_width"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/car_ui_preference_content_margin_bottom"
+        android:layout_marginTop="@dimen/car_ui_preference_content_margin_top"
+        app:layout_constraintStart_toEndOf="@id/car_ui_first_action_container"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        style="@style/Preference.CarUi.Divider"/>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/car_ui_second_action_container"
         android:layout_height="wrap_content"
@@ -83,24 +94,12 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <View
-            android:id="@+id/car_ui_divider"
-            android:layout_width="@dimen/car_ui_divider_width"
-            android:layout_height="0dp"
-            android:layout_marginBottom="@dimen/car_ui_preference_content_margin_bottom"
-            android:layout_marginTop="@dimen/car_ui_preference_content_margin_top"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/car_ui_secondary_action"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            style="@style/Preference.CarUi.Divider"/>
-
         <com.android.car.ui.uxr.DrawableStateFrameLayout
             android:id="@+id/car_ui_secondary_action"
             android:layout_width="?android:attr/listPreferredItemHeightSmall"
             android:layout_height="match_parent"
             android:background="?android:attr/selectableItemBackground"
-            app:layout_constraintStart_toEndOf="@id/car_ui_divider"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@android:id/widget_frame"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent">
