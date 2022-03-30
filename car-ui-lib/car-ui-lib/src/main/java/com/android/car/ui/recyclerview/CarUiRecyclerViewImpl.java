@@ -56,6 +56,7 @@ import androidx.recyclerview.widget.RecyclerView.OnFlingListener;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import com.android.car.ui.R;
+import com.android.car.ui.plugin.oemapis.recyclerview.RecyclerViewAttributesOEMV1;
 import com.android.car.ui.preference.PreferenceFragment.AndroidxRecyclerViewProvider;
 import com.android.car.ui.recyclerview.decorations.grid.GridDividerItemDecoration;
 import com.android.car.ui.recyclerview.decorations.linear.LinearDividerItemDecoration;
@@ -144,7 +145,7 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
             };
 
     public CarUiRecyclerViewImpl(@NonNull Context context) {
-        this(context, null);
+        this(context, null, 0);
     }
 
     public CarUiRecyclerViewImpl(@NonNull Context context, @Nullable AttributeSet attrs) {
@@ -155,8 +156,16 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
             int defStyle) {
         super(context, attrs, defStyle);
         mCarUxRestrictionsUtil = CarUxRestrictionsUtil.getInstance(context);
-        init(context, attrs, defStyle);
+        init(context, attrs, null, defStyle);
     }
+
+    // ONLY available from the Plugin as the OEM api will not be on the static class path
+    public CarUiRecyclerViewImpl(@NonNull Context context, RecyclerViewAttributesOEMV1 attrs) {
+        super(context, null, 0);
+        mCarUxRestrictionsUtil = CarUxRestrictionsUtil.getInstance(context);
+        init(context, null, attrs, 0);
+    }
+
 
     @Override
     public boolean canScrollHorizontally(int direction) {
@@ -168,7 +177,16 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
         return mRecyclerView.canScrollVertically(direction);
     }
 
-    private void init(Context context, AttributeSet attrs, int defStyleAttr) {
+    /**
+     * Initialize the state of the recyclerview
+     *
+     * @param attrs AttributeSet that came via xml layout files
+     * @param attrs2 RecyclerViewAttributesOEMV1 that are only available through the plugin system
+     */
+    private void init(Context context,
+            @Nullable AttributeSet attrs,
+            @Nullable RecyclerViewAttributesOEMV1 attrs2,
+            int defStyleAttr) {
         TypedArray a = context.obtainStyledAttributes(
                 attrs,
                 R.styleable.CarUiRecyclerView,
@@ -178,7 +196,8 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
         mScrollBarEnabled = context.getResources().getBoolean(R.bool.car_ui_scrollbar_enable);
         @LayoutRes int layout = R.layout.car_ui_recycler_view_no_scrollbar;
 
-        mSize = a.getInt(R.styleable.CarUiRecyclerView_carUiSize, SIZE_LARGE);
+        mSize = (attrs2 != null) ? attrs2.getSize() :
+            a.getInt(R.styleable.CarUiRecyclerView_carUiSize, SIZE_LARGE);
         if (mScrollBarEnabled) {
             switch (mSize) {
                 case SIZE_SMALL:
@@ -203,38 +222,43 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
             mRecyclerView = (RecyclerView) recyclerViewContainer;
         }
 
-        boolean rotaryScrollEnabled = a.getBoolean(
-                R.styleable.CarUiRecyclerView_rotaryScrollEnabled, /* defValue=*/ false);
-        int orientation = a.getInt(R.styleable.CarUiRecyclerView_android_orientation,
-                LinearLayout.VERTICAL);
+        boolean rotaryScrollEnabled = (attrs2 != null) ? attrs2.isRotaryScrollEnabled() :
+                a.getBoolean(
+                    R.styleable.CarUiRecyclerView_rotaryScrollEnabled, /* defValue=*/ false);
+        int orientation = (attrs2 != null) ? attrs2.getLayoutStyle().getOrientation() :
+                a.getInt(R.styleable.CarUiRecyclerView_android_orientation,
+                    LinearLayout.VERTICAL);
         initRotaryScroll(mRecyclerView, rotaryScrollEnabled, orientation);
 
         mScrollBarPaddingTop = context.getResources()
-                .getDimensionPixelSize(R.dimen.car_ui_scrollbar_padding_top);
+            .getDimensionPixelSize(R.dimen.car_ui_scrollbar_padding_top);
         mScrollBarPaddingBottom = context.getResources()
-                .getDimensionPixelSize(R.dimen.car_ui_scrollbar_padding_bottom);
+            .getDimensionPixelSize(R.dimen.car_ui_scrollbar_padding_bottom);
 
-        @CarUiRecyclerViewLayout int carUiRecyclerViewLayout =
+        @CarUiRecyclerViewLayout int carUiRecyclerViewLayout = (attrs2 != null)
+                ? attrs2.getLayoutStyle().getLayoutType() :
                 a.getInt(R.styleable.CarUiRecyclerView_layoutStyle, CarUiRecyclerViewLayout.LINEAR);
-        mNumOfColumns = a.getInt(R.styleable.CarUiRecyclerView_numOfColumns, /* defValue= */ 2);
-        mEnableDividers =
-                a.getBoolean(R.styleable.CarUiRecyclerView_enableDivider, /* defValue= */ false);
+        mNumOfColumns = (attrs2 != null) ? attrs2.getLayoutStyle().getSpanCount() :
+            a.getInt(R.styleable.CarUiRecyclerView_numOfColumns, /* defValue= */ 2);
+        mEnableDividers = (attrs2 != null) ? false :
+            a.getBoolean(R.styleable.CarUiRecyclerView_enableDivider, /* defValue= */ false);
 
         mDividerItemDecorationLinear = new LinearDividerItemDecoration(
-                ContextCompat.getDrawable(context, R.drawable.car_ui_recyclerview_divider));
+            ContextCompat.getDrawable(context, R.drawable.car_ui_recyclerview_divider));
 
         mDividerItemDecorationGrid =
-                new GridDividerItemDecoration(
-                        ContextCompat.getDrawable(context, R.drawable.car_ui_divider),
-                        ContextCompat.getDrawable(context, R.drawable.car_ui_divider),
-                        mNumOfColumns);
+            new GridDividerItemDecoration(
+                ContextCompat.getDrawable(context, R.drawable.car_ui_divider),
+                ContextCompat.getDrawable(context, R.drawable.car_ui_divider),
+                mNumOfColumns);
 
         mIsInitialized = true;
 
         // Set to false so the items below the toolbar are visible.
         mRecyclerView.setClipToPadding(false);
         // Check if a layout manager has already been set via XML
-        String layoutManagerInXml = a.getString(R.styleable.CarUiRecyclerView_layoutManager);
+        String layoutManagerInXml = (attrs2 != null) ? null :
+                a.getString(R.styleable.CarUiRecyclerView_layoutManager);
         if (!TextUtils.isEmpty(layoutManagerInXml)) {
             createLayoutManager(context, layoutManagerInXml, attrs, defStyleAttr, 0);
         } else if (carUiRecyclerViewLayout == CarUiRecyclerViewLayout.GRID) {
