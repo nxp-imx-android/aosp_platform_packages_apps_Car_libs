@@ -18,7 +18,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.android.car.ui.paintbooth">
   <uses-sdk
-      android:minSdkVersion="28" />
+      android:minSdkVersion="31" />
   <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS"/>
   <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL"/>
   <uses-permission android:name="android.permission.CHANGE_OVERLAY_PACKAGES"/>
@@ -122,11 +122,67 @@
         android:name=".caruirecyclerview.CarUiListItemActivity"
         android:exported="false"
         android:parentActivityName=".MainActivity"/>
-    <activity
-        android:name=".button.CarUiButtonActivity"
-        android:exported="false"
-        android:parentActivityName=".MainActivity"/>
 
+
+    <activity android:name=".theme.TextSamples"
+        android:label="@string/theme_activity_name"
+        android:windowSoftInputMode="stateUnchanged"
+        android:resizeableActivity="true"
+        android:allowEmbedded="true"
+        android:exported="true">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN"/>
+        <category android:name="android.intent.category.LAUNCHER"/>
+      </intent-filter>
+    </activity>
+    <activity android:name=".theme.ButtonSamples"
+        android:label="@string/button_elements"
+        android:windowSoftInputMode="stateUnchanged"
+        android:resizeableActivity="true"
+        android:allowEmbedded="true">
+    </activity>
+    <activity android:name=".theme.ColorSamples"
+        android:label="@string/panel_elements"
+        android:windowSoftInputMode="stateUnchanged"
+        android:resizeableActivity="true"
+        android:allowEmbedded="true">
+    </activity>
+    <activity android:name=".theme.MaterialUColorPalette"
+        android:label="@string/palette_elements"
+        android:windowSoftInputMode="stateUnchanged"
+        android:resizeableActivity="true"
+        android:allowEmbedded="true">
+    </activity>
+    <activity android:name=".theme.ProgressBarSamples"
+        android:label="@string/progress_bar_elements"
+        android:windowSoftInputMode="stateUnchanged"
+        android:resizeableActivity="true"
+        android:allowEmbedded="true">
+    </activity>
+    <activity android:name=".theme.DialogSamples"
+        android:label="@string/dialog_elements"
+        android:parentActivityName="com.android.car.ui.paintbooth.theme.TextSamples">
+    </activity>
+    <activity android:name=".theme.WidgetsSamples"
+        android:label="@string/widgets"
+        android:parentActivityName="com.android.car.ui.paintbooth.theme.TextSamples">
+    </activity>
+    <activity android:name=".theme.RecyclerViewSamples"
+        android:label="@string/recycler_view"
+        android:parentActivityName="com.android.car.ui.paintbooth.theme.TextSamples">
+    </activity>
+    <activity android:name=".theme.CarUiRecyclerViewSamples"
+        android:label="@string/car_ui_recycler_view"
+        android:parentActivityName="com.android.car.ui.paintbooth.theme.TextSamples">
+    </activity>
+    <activity android:name=".theme.DefaultThemeSamples"
+        android:label="@string/default_themes"
+        android:parentActivityName="com.android.car.ui.paintbooth.theme.TextSamples">
+    </activity>
+    <activity android:name=".theme.MultipleIntentSamples"
+        android:label="@string/multiple_intent"
+        android:parentActivityName="com.android.car.ui.paintbooth.theme.TextSamples">
+    </activity>
     <service
         android:label="Current Activity Service"
         android:exported="false"
