@@ -50,6 +50,18 @@ public class PlaybackProgress {
     }
 
     /**
+     * Returns the progress fraction as determined by {@link  PlaybackProgress#getProgress()} /
+     * {@link  PlaybackProgress#getMaxProgress()}
+     *
+     * @return progress fraction as a double
+     */
+    public double getProgressFraction() {
+        double currProgress = Long.valueOf(getProgress()).doubleValue();
+        double maxProgress = Long.valueOf(getMaxProgress()).doubleValue();
+        return currProgress / maxProgress;
+    }
+
+    /**
      * Returns the current track's progress in text form
      */
     public CharSequence getCurrentTimeText() {
