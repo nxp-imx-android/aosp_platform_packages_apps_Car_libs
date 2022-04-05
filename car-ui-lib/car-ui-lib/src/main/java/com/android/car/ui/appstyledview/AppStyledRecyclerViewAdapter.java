@@ -33,7 +33,6 @@ import com.android.car.ui.appstyledview.AppStyledRecyclerViewAdapter.AppStyledRe
  */
 public class AppStyledRecyclerViewAdapter extends
         RecyclerView.Adapter<AppStyledRecyclerViewHolder> {
-
     @Nullable
     private final View mContent;
 
@@ -44,14 +43,23 @@ public class AppStyledRecyclerViewAdapter extends
     @NonNull
     @Override
     public AppStyledRecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflator = LayoutInflater.from(parent.getContext());
-        View view = inflator.inflate(R.layout.car_ui_app_styled_view_item, parent, false);
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        View view = inflater.inflate(R.layout.car_ui_app_styled_view_item, parent, false);
         return new AppStyledRecyclerViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull AppStyledRecyclerViewHolder holder, int position) {
-        FrameLayout frameLayout = holder.mView.findViewById(R.id.car_ui_app_styled_item);
+        if (mContent == null) {
+            return;
+        }
+
+        FrameLayout frameLayout = holder.itemView.findViewById(R.id.car_ui_app_styled_item);
+        // Remove content ViewGroup from any existing view hierarchies
+        if (mContent.getParent() != null) {
+            ((ViewGroup) mContent.getParent()).removeView(mContent);
+        }
+
         frameLayout.addView(mContent);
     }
 
@@ -64,12 +72,8 @@ public class AppStyledRecyclerViewAdapter extends
      * Holds views for each element in the list.
      */
     public static class AppStyledRecyclerViewHolder extends RecyclerView.ViewHolder {
-
-        View mView;
-
         AppStyledRecyclerViewHolder(@NonNull View itemView) {
             super(itemView);
-            mView = itemView;
         }
     }
 }
