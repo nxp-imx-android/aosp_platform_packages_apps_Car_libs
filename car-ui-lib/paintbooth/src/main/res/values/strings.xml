@@ -365,4 +365,26 @@
   <string name="long_title">This is a very long title. It should likely span across multiple lines or something. It shouldn\'t get cut off.</string>
   <string name="long_subtitle">This is a very long subtitle. It should likely span across  multiple lines or something. It shouldn\'t get cut off.</string>
 
+
+  <!--  Theme related screens-->
+  <string name="theme_activity_name">AAE Theme Playground2</string>
+  <string name="text_elements">Text Elements</string>
+  <string name="button_elements">Button Elements</string>
+  <string name="progress_bar_elements">Progress Bar Elements</string>
+  <string name="panel_elements">Color Panels</string>
+  <string name="palette_elements">Material U Palettes</string>
+  <string name="dialog_elements">Dialogs</string>
+  <string name="toggle_theme">Change configuration(Day/Night)</string>
+  <string name="apply">Apply</string>
+  <string name="recycler_view">Recycler View</string>
+  <string name="car_ui_recycler_view">Car UI Recycler View</string>
+  <string name="widget_checkbox">Checkbox</string>
+  <string name="toggle_switch">Toggle Switch</string>
+  <string name="reset">Reset</string>
+  <string name="progress_bar">Progress Bar</string>
+  <string name="background_name">Set background color :</string>
+  <string name="default_themes">Apply Themes</string>
+  <string name="theme_name">Theme Name:</string>
+  <string name="multiple_intent">Chooser Activity</string>
+  <string name="default_background_color">#90CAF9</string>
 </resources>

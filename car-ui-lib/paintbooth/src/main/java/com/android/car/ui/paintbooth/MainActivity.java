@@ -52,6 +52,7 @@ import com.android.car.ui.paintbooth.dialogs.DialogsActivity;
 import com.android.car.ui.paintbooth.overlays.OverlayActivity;
 import com.android.car.ui.paintbooth.preferences.PreferenceActivity;
 import com.android.car.ui.paintbooth.preferences.SplitPreferenceActivity;
+import com.android.car.ui.paintbooth.theme.TextSamples;
 import com.android.car.ui.paintbooth.toolbar.NoCarUiToolbarActivity;
 import com.android.car.ui.paintbooth.toolbar.ToolbarActivity;
 import com.android.car.ui.paintbooth.widescreenime.WideScreenImeActivity;
@@ -80,6 +81,7 @@ public class MainActivity extends Activity implements InsetsChangedListener {
             new ServiceElement("Simulate Screen Bounds", VisibleBoundsSimulator.class),
             new SwitchElement("Add PaintBooth to plugin deny-list", this::isInPluginDenyList,
                     this::onPluginSwitchChanged),
+            new ActivityElement("Theme samples", TextSamples.class),
             new ActivityElement("Dialogs sample", DialogsActivity.class),
             new ActivityElement("App Styled View Modal", AppStyledViewSampleActivity.class),
             new ActivityElement("List sample", CarUiRecyclerViewActivity.class),
