@@ -112,6 +112,10 @@ class AppStyledDialog extends Dialog implements DialogInterface.OnDismissListene
         getWindow().getDecorView().setSystemUiVisibility(
                 ((Activity) mContext).getWindow().getDecorView().getSystemUiVisibility()
         );
+        getWindow().getDecorView().setOnSystemUiVisibilityChangeListener(
+                i -> getWindow().getDecorView().setSystemUiVisibility(
+                        ((Activity) mContext).getWindow().getDecorView().getSystemUiVisibility()
+                ));
     }
 
     /**
