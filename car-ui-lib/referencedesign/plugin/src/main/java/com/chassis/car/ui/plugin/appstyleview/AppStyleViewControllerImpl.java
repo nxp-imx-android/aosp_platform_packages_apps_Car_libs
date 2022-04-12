@@ -20,6 +20,7 @@ import android.content.Context;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager.LayoutParams;
 import android.widget.ImageView;
 import android.widget.ScrollView;
@@ -53,6 +54,12 @@ public class AppStyleViewControllerImpl implements AppStyledViewControllerOEMV2 
     public void setContent(View content) {
         ScrollView scrollview = mAppStyleView.requireViewById(R.id.app_styled_content);
         scrollview.removeAllViews();
+
+        // Remove content ViewGroup from any existing view hierarchies
+        if (content.getParent() != null) {
+            ((ViewGroup) content.getParent()).removeView(content);
+        }
+
         scrollview.addView(content);
     }
 
