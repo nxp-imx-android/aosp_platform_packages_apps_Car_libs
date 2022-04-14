@@ -43,7 +43,6 @@ import androidx.annotation.VisibleForTesting;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 import androidx.media.utils.MediaConstants;
 
 import com.android.car.media.common.CustomPlaybackAction;
@@ -51,6 +50,7 @@ import com.android.car.media.common.MediaItemMetadata;
 import com.android.car.media.common.R;
 import com.android.car.media.common.source.MediaBrowserConnector;
 import com.android.car.media.common.source.MediaBrowserConnector.ConnectionStatus;
+import com.android.car.media.common.source.MediaSource;
 import com.android.car.media.common.source.MediaSourceColors;
 import com.android.car.media.common.source.MediaSourceViewModel;
 
@@ -125,8 +125,7 @@ public class PlaybackViewModel extends AndroidViewModel {
     private static final MediaMetadata EMPTY_MEDIA_METADATA = new MediaMetadata.Builder().build();
 
     private final MediaControllerCallback mMediaControllerCallback = new MediaControllerCallback();
-    private final Observer<MediaBrowserConnector.BrowsingState> mMediaBrowsingObserver =
-            mMediaControllerCallback::onMediaBrowsingStateChanged;
+    private final MutableLiveData<MediaSource> mMediaSourceLiveData = dataOf(null);
 
     private final MediaSourceColors.Factory mColorsFactory;
     private final MutableLiveData<MediaSourceColors> mColors = dataOf(null);
@@ -162,7 +161,23 @@ public class PlaybackViewModel extends AndroidViewModel {
         super(application);
         mInputFactory =  factory;
         mColorsFactory = new MediaSourceColors.Factory(application);
-        browsingState.observeForever(mMediaBrowsingObserver);
+        browsingState.observeForever(this::onBrowsingStateChanged);
+    }
+
+    private void onBrowsingStateChanged(MediaBrowserConnector.BrowsingState browsingState) {
+        mMediaControllerCallback.onMediaBrowsingStateChanged(browsingState);
+        mMediaSourceLiveData.setValue(browsingState.mMediaSource);
+    }
+
+    /**
+     * Returns a LiveData that emits the current playback media source.
+     *
+     * @return LiveData<MediaSource>
+     */
+    public LiveData<MediaSource> getMediaSource() {
+        //MediaSourceViewModel.get(application, mode).getBrowsingState() which is set in
+        // constructor as browsingState.observeForever(this::onBrowsingStateChanged)
+        return mMediaSourceLiveData;
     }
 
     /**
@@ -234,6 +249,7 @@ public class PlaybackViewModel extends AndroidViewModel {
     MediaMetadataCompat getMediaMetadata() {
         return mMediaControllerCallback.mMediaMetadata;
     }
+
 
 
     private class MediaControllerCallback extends MediaControllerCompat.Callback {

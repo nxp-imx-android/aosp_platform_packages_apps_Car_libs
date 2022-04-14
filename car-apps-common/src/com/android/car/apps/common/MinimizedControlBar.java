@@ -16,8 +16,6 @@
 
 package com.android.car.apps.common;
 
-import static com.android.car.apps.common.ControlBar.INVALID_VIEW_INDEX;
-
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
@@ -51,6 +49,7 @@ public class MinimizedControlBar extends ConstraintLayout implements CarControlB
     protected TextView mTitle;
     protected TextView mSubtitle;
     protected ImageView mContentTile;
+    protected ImageView mAppIcon;
 
     private static final int NUM_COLUMNS = 3;
 
@@ -61,7 +60,6 @@ public class MinimizedControlBar extends ConstraintLayout implements CarControlB
     public MinimizedControlBar(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
-
 
     public MinimizedControlBar(Context context, AttributeSet attrs, int defStyleAttrs) {
         this(context, attrs, defStyleAttrs, R.layout.minimized_control_bar);
@@ -79,6 +77,7 @@ public class MinimizedControlBar extends ConstraintLayout implements CarControlB
         mTitle = findViewById(R.id.minimized_control_bar_title);
         mSubtitle = findViewById(R.id.minimized_control_bar_subtitle);
         mContentTile = findViewById(R.id.minimized_control_bar_content_tile);
+        mAppIcon = findViewById(R.id.minimized_control_bar_app_icon);
 
         mSlots = new FrameLayout[NUM_COLUMNS];
 

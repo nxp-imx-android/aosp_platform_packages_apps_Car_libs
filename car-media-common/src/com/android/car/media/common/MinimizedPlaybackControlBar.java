@@ -68,17 +68,16 @@ public class MinimizedPlaybackControlBar extends MinimizedControlBar {
         mShowLinearProgressBar = context.getResources().getBoolean(R.bool.show_linear_progress_bar);
         mLinearProgressBar = findViewById(R.id.linear_progress_bar);
 
-        mShowCircularProgressBar = context.getResources().getBoolean(
-                R.bool.show_circular_progress_bar);
+        mShowCircularProgressBar =
+                context.getResources().getBoolean(R.bool.show_circular_progress_bar);
         mCircularProgressBar = findViewById(R.id.circular_progress_bar);
 
         BackgroundImageView artBackground = findViewById(R.id.art_background);
         if (artBackground != null) {
             int max = getResources().getInteger(R.integer.media_items_bitmap_max_size_px);
             Size maxArtSize = new Size(max, max);
-            mArtBinder = new ImageBinder<>(
-                    ImageBinder.PlaceholderType.BACKGROUND, maxArtSize,
-                    drawable -> artBackground.setBackgroundDrawable(drawable));
+            mArtBinder = new ImageBinder<>(ImageBinder.PlaceholderType.BACKGROUND, maxArtSize,
+                    artBackground::setBackgroundDrawable);
         }
     }
 
@@ -86,8 +85,8 @@ public class MinimizedPlaybackControlBar extends MinimizedControlBar {
     public void setModel(@NonNull PlaybackViewModel model, @NonNull LifecycleOwner owner,
             @NonNull Size maxArtSize) {
         mMediaButtonController.setModel(model, owner);
-        mMetadataController = new MetadataController(owner, model,
-                mTitle, mSubtitle, null, null, null, null, null, null, mContentTile, maxArtSize);
+        mMetadataController = new MetadataController(owner, model, mTitle, mSubtitle, null, null,
+                null, null, null, null, mContentTile, mAppIcon, maxArtSize);
         mPlaybackViewModel = model;
 
         ControlBarHelper.initProgressBar(getContext(), owner, mPlaybackViewModel,
