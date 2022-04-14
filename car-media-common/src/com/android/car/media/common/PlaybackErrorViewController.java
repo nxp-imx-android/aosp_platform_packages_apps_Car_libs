@@ -19,13 +19,13 @@ package com.android.car.media.common;
 import android.app.PendingIntent;
 import android.car.drivingstate.CarUxRestrictions;
 import android.content.res.Resources;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
 
 import com.android.car.apps.common.UxrButton;
 import com.android.car.apps.common.UxrTextView;
+import com.android.car.apps.common.util.IntentUtils;
 import com.android.car.apps.common.util.ViewUtils;
 
 
@@ -76,15 +76,7 @@ public class PlaybackErrorViewController {
                     ? CarUxRestrictions.UX_RESTRICTIONS_BASELINE
                     : CarUxRestrictions.UX_RESTRICTIONS_NO_SETUP);
 
-            mErrorButton.setOnClickListener(v -> {
-                try {
-                    pendingIntent.send();
-                } catch (PendingIntent.CanceledException e) {
-                    if (Log.isLoggable(TAG, Log.ERROR)) {
-                        Log.e(TAG, "Pending intent canceled");
-                    }
-                }
-            });
+            mErrorButton.setOnClickListener(v -> IntentUtils.sendIntent(pendingIntent));
             ViewUtils.showViewAnimated(mErrorButton, mFadeDuration);
         } else {
             ViewUtils.hideViewAnimated(mErrorButton, mFadeDuration);

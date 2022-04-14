@@ -173,7 +173,7 @@ public class PlaybackFragment extends Fragment {
 
             @Override
             public void handleNewPlaybackState(String displayedMessage, PendingIntent intent,
-                    String label) {
+                    boolean canAutoLaunch, String label) {
                 mIsFatalError = false;
                 if (!TextUtils.isEmpty(displayedMessage)) {
                     Boolean hasChildren = mInnerViewModel.getBrowseTreeHasChildren().getValue();

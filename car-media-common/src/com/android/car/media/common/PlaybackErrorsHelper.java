@@ -16,9 +16,13 @@
 
 package com.android.car.media.common;
 
+import static androidx.media.utils.MediaConstants.PLAYBACK_STATE_EXTRAS_KEY_ERROR_RESOLUTION_ACTION_INTENT;
+import static androidx.media.utils.MediaConstants.PLAYBACK_STATE_EXTRAS_KEY_ERROR_RESOLUTION_USING_CAR_APP_LIBRARY_INTENT;
+
 import android.app.PendingIntent;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.text.TextUtils;
 import android.util.Log;
@@ -37,6 +41,8 @@ import java.util.Map;
  * Abstract class to factorize most of the error handling logic.
  */
 public abstract class PlaybackErrorsHelper {
+
+    private static final String TAG = "PlaybackErrorsHelper";
 
     private static final Map<Integer, Integer> ERROR_CODE_MESSAGES_MAP;
 
@@ -71,7 +77,7 @@ public abstract class PlaybackErrorsHelper {
     }
 
     protected abstract void handleNewPlaybackState(String displayedMessage, PendingIntent intent,
-            String label);
+            boolean canAutoLaunch, String label);
 
     /**
      * Triggers updates of the error state.
@@ -108,9 +114,18 @@ public abstract class PlaybackErrorsHelper {
 
         mCurrentPlaybackStateWrapper = state;
 
-        PendingIntent intent = getErrorResolutionIntent(state);
+        boolean canAutoLaunch = false;
+        PendingIntent intent = getErrorResolutionIntent(state,
+                PLAYBACK_STATE_EXTRAS_KEY_ERROR_RESOLUTION_USING_CAR_APP_LIBRARY_INTENT);
+        if (intent != null) {
+            canAutoLaunch = true;
+        } else {
+            intent = getErrorResolutionIntent(state,
+                    PLAYBACK_STATE_EXTRAS_KEY_ERROR_RESOLUTION_ACTION_INTENT);
+        }
+
         String label = getErrorResolutionLabel(state);
-        handleNewPlaybackState(displayedMessage, intent, label);
+        handleNewPlaybackState(displayedMessage, intent, canAutoLaunch, label);
     }
 
 
@@ -135,10 +150,26 @@ public abstract class PlaybackErrorsHelper {
     }
 
     @Nullable
-    private PendingIntent getErrorResolutionIntent(@NonNull PlaybackStateWrapper state) {
+    private PendingIntent getErrorResolutionIntent(@NonNull PlaybackStateWrapper state,
+                                                   @NonNull String key) {
         Bundle extras = state.getExtras();
-        return extras == null ? null : extras.getParcelable(
-                MediaConstants.PLAYBACK_STATE_EXTRAS_KEY_ERROR_RESOLUTION_ACTION_INTENT);
+        if (extras == null) {
+            return null;
+        }
+
+        Parcelable parcelable = extras.getParcelable(key);
+        if (parcelable == null) {
+            return null;
+        }
+
+        if (parcelable instanceof PendingIntent) {
+            return (PendingIntent) parcelable;
+        } else {
+            if (Log.isLoggable(TAG, Log.WARN)) {
+                Log.w(TAG, "Extra " + key + " isn't a PendingIntent: " + parcelable);
+            }
+            return null;
+        }
     }
 
     @Nullable
