@@ -63,6 +63,9 @@ project(':car-media-app').projectDir = new File('../../Media')
 
 include ':test-media-app'
 project(':test-media-app').projectDir = new File('../../tests/TestMediaApp')
+include 'test-media-app:common'
+include 'test-media-app:mobile'
+include 'test-media-app:automotive'
 
 include ':test-rotary-playground'
 project(':test-rotary-playground').projectDir = new File('../../tests/RotaryPlayground')
