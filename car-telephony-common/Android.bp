@@ -25,7 +25,11 @@ car_telephony_common_static_libs = [
     "car-apps-common-prebuilt",
     "car-ui-lib-prebuilt",
     "glide-prebuilt",
+    "glide-gifdecoder-prebuilt",
+    "glide-disklrucache-prebuilt",
+    "glide-annotation-and-compiler-prebuilt",
     "guava",
+    "androidx.exifinterface_exifinterface",
 ]
 
 android_library {
