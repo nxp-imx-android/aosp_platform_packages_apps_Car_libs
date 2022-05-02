@@ -108,7 +108,8 @@ public class PlaybackFragment extends Fragment {
                     ViewUtils.setVisible(playbackControls,
                             (state != null) && state.shouldDisplay());
                     if (mErrorsHelper != null) {
-                        mErrorsHelper.handlePlaybackState(TAG, state, /*ignoreSameState*/ true);
+                        mErrorsHelper.handlePlaybackState(TAG, state, /*ignoreSameState*/  true,
+                                null);
                     }
                 });
 
@@ -173,7 +174,7 @@ public class PlaybackFragment extends Fragment {
 
             @Override
             public void handleNewPlaybackState(String displayedMessage, PendingIntent intent,
-                    boolean canAutoLaunch, String label) {
+                    boolean canAutoLaunch, String label, @Nullable MediaSource mediaSource) {
                 mIsFatalError = false;
                 if (!TextUtils.isEmpty(displayedMessage)) {
                     Boolean hasChildren = mInnerViewModel.getBrowseTreeHasChildren().getValue();
@@ -206,7 +207,7 @@ public class PlaybackFragment extends Fragment {
     private void onBrowseTreeHasChildrenChanged(@Nullable Boolean hasChildren) {
         if (hasChildren != null && mErrorsHelper != null) {
             PlaybackStateWrapper state = mPlaybackViewModel.getPlaybackStateWrapper().getValue();
-            mErrorsHelper.handlePlaybackState(TAG, state, /*ignoreSameState*/ false);
+            mErrorsHelper.handlePlaybackState(TAG, state, /*ignoreSameState*/ false, null);
         }
     }
 

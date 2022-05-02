@@ -44,6 +44,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/minimized_control_bar_title"/>
 
+    <ImageView
+        android:id="@+id/minimized_control_bar_app_icon"
+        android:layout_width="@dimen/minimized_control_bar_app_icon_size"
+        android:layout_height="@dimen/minimized_control_bar_app_icon_size"
+        app:layout_constraintBottom_toBottomOf="@+id/minimized_control_bar_content_tile"
+        app:layout_constraintEnd_toEndOf="@+id/minimized_control_bar_content_tile"/>
+
     <TextView
         android:id="@+id/minimized_control_bar_title"
         style="@style/MinimizedControlBarTitle"
@@ -114,6 +121,5 @@
                 layout="@layout/control_bar_slot"/>
         </LinearLayout>
     </LinearLayout>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

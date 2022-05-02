@@ -40,6 +40,7 @@
     <!-- Minimized Control Bar -->
     <dimen name="minimized_control_bar_height">128dp</dimen>
     <dimen name="minimized_control_bar_content_tile_size">96dp</dimen>
+    <dimen name="minimized_control_bar_app_icon_size">28dp</dimen>
     <dimen name="minimized_control_bar_radius">0dp</dimen>
     <dimen name="minimized_control_bar_margin_x">0dp</dimen>
     <dimen name="minimized_control_bar_margin_bottom">0dp</dimen>

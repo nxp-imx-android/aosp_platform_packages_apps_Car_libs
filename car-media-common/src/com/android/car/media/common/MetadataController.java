@@ -20,6 +20,7 @@ import static com.android.car.apps.common.util.LiveDataFunctions.combine;
 import static com.android.car.apps.common.util.LiveDataFunctions.pair;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.Size;
 import android.view.View;
@@ -43,7 +44,7 @@ public class MetadataController {
     private final ImageViewBinder<MediaItemMetadata.ArtworkRef> mAlbumArtBinder;
 
     private boolean mTrackingTouch;
-    private SeekBar.OnSeekBarChangeListener mOnSeekBarChangeListener =
+    private final SeekBar.OnSeekBarChangeListener mOnSeekBarChangeListener =
             new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -89,6 +90,7 @@ public class MetadataController {
      * @param maxTime           Displays the track's duration as text. May be {@code null}.
      * @param seekBar           Displays the track's progress visually. May be {@code null}.
      * @param albumArt          Displays the track's album art. May be {@code null}.
+     * @param appIcon           Displays the app icon.
      * @param maxArtSize        Maximum size of the track's album art.
      */
     public MetadataController(@NonNull LifecycleOwner lifecycleOwner,
@@ -96,13 +98,15 @@ public class MetadataController {
             @Nullable TextView artist, @Nullable TextView albumTitle,
             @Nullable TextView outerSeparator, @Nullable TextView currentTime,
             @Nullable TextView innerSeparator, @Nullable TextView maxTime,
-            @Nullable SeekBar seekBar, @Nullable ImageView albumArt, Size maxArtSize) {
+            @Nullable SeekBar seekBar, @Nullable ImageView albumArt,
+            @Nullable ImageView appIcon, Size maxArtSize) {
 
         Context context = title.getContext();
         mAlbumArtBinder = new ImageViewBinder<>(maxArtSize, albumArt);
 
         playbackViewModel.getPlaybackController().observe(lifecycleOwner,
                 controller -> mController = controller);
+
         playbackViewModel.getMetadata().observe(lifecycleOwner,
                 metadata -> {
                     if (metadata == null) {
@@ -196,6 +200,16 @@ public class MetadataController {
                             ViewUtils.setInvisible(albumTitle, true);
                         } else {
                             ViewUtils.setVisible(albumTitle, false);
+                        }
+                    });
+        }
+
+        if (appIcon != null) {
+            playbackViewModel.getMediaSource()
+                    .observe(lifecycleOwner, mediaSource -> {
+                        if (mediaSource != null) {
+                            Drawable icon = mediaSource.getIcon();
+                            appIcon.setImageDrawable(icon);
                         }
                     });
         }

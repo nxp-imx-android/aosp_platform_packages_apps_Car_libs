@@ -32,6 +32,7 @@ import androidx.annotation.Nullable;
 import androidx.media.utils.MediaConstants;
 
 import com.android.car.media.common.playback.PlaybackViewModel.PlaybackStateWrapper;
+import com.android.car.media.common.source.MediaSource;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -77,20 +78,22 @@ public abstract class PlaybackErrorsHelper {
     }
 
     protected abstract void handleNewPlaybackState(String displayedMessage, PendingIntent intent,
-            boolean canAutoLaunch, String label);
+            boolean canAutoLaunch, String label, @Nullable MediaSource mediaSource);
 
     /**
      * Triggers updates of the error state.
      * Must be called when the children list of the root of the browse tree changes AND when
      * the playback state changes.
+     * MediaSource can be used to determine the source of the error.
      */
     public void handlePlaybackState(@NonNull String tag, PlaybackStateWrapper state,
-            boolean ignoreSameState) {
+            boolean ignoreSameState, @Nullable MediaSource mediaSource) {
         if (Log.isLoggable(tag, Log.DEBUG)) {
             Log.d(tag,
                     "handlePlaybackState(); state change: " + (mCurrentPlaybackStateWrapper != null
                             ? mCurrentPlaybackStateWrapper.getState() : null) + " -> " + (
-                            state != null ? state.getState() : null));
+                            state != null ? state.getState() : null) + " source: " + (
+                            mediaSource != null ? mediaSource.getDisplayName().toString() : null));
         }
 
         if (state == null) {
@@ -125,7 +128,7 @@ public abstract class PlaybackErrorsHelper {
         }
 
         String label = getErrorResolutionLabel(state);
-        handleNewPlaybackState(displayedMessage, intent, canAutoLaunch, label);
+        handleNewPlaybackState(displayedMessage, intent, canAutoLaunch, label, mediaSource);
     }
 
 
