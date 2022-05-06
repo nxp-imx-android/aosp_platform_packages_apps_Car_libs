@@ -17,10 +17,8 @@
 package com.android.car.ui.preference;
 
 import static com.android.car.ui.core.CarUi.MIN_REQUIRED_API;
-import static com.android.car.ui.core.CarUi.MIN_TARGET_API;
 import static com.android.car.ui.utils.CarUiUtils.requireViewByRefId;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -75,7 +73,6 @@ import java.util.Map;
  * defaultValue, and enabled state.
  */
 @SuppressWarnings("AndroidJdkLibsChecker")
-@TargetApi(MIN_TARGET_API)
 @RequiresApi(MIN_REQUIRED_API)
 public abstract class PreferenceFragment extends PreferenceFragmentCompat implements
         InsetsChangedListener {

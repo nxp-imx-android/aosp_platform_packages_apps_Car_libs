@@ -17,6 +17,9 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.android.car.ui.plugin.oemapis">
-  <uses-sdk
-      android:minSdkVersion="16" />
+  <!-- copybara:strip_begin(need 16 for GAS apps) -->
+  <uses-sdk android:minSdkVersion="28" />
+  <!-- copybara:strip_end_and_replace_begin -->
+  <!-- <uses-sdk android:minSdkVersion="16" /> -->
+  <!-- copybara:replace_end -->
 </manifest>

@@ -26,11 +26,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
-import static com.android.car.ui.core.CarUi.MIN_TARGET_API;
 import static com.android.car.ui.matchers.ViewMatchers.withPadding;
 import static com.android.car.ui.matchers.ViewMatchers.withPaddingAtLeast;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -54,7 +52,6 @@ import com.android.car.ui.toolbar.ToolbarController;
 
 import org.junit.Test;
 
-@TargetApi(MIN_TARGET_API)
 public class NonFullscreenPreferenceFragmentTest {
 
     private static final String EXTRA_FULLSCREEN = "fullscreen";

@@ -15,7 +15,6 @@
  */
 package com.android.car.ui.recyclerview;
 
-import static com.android.car.ui.core.CarUi.MIN_TARGET_API;
 import static com.android.car.ui.utils.CarUiUtils.requireViewByRefId;
 import static com.android.car.ui.utils.RotaryConstants.ROTARY_CONTAINER;
 import static com.android.car.ui.utils.RotaryConstants.ROTARY_HORIZONTALLY_SCROLLABLE;
@@ -40,7 +39,6 @@ import android.widget.LinearLayout;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup;
@@ -76,7 +74,6 @@ import java.util.Set;
  * similar to a {@code RecyclerView} as it takes the same adapter and the layout manager.
  */
 @SuppressLint("CustomViewStyleable")
-@RequiresApi(MIN_TARGET_API)
 public final class CarUiRecyclerViewImpl extends FrameLayout
         implements CarUiRecyclerView, LazyLayoutView, AndroidxRecyclerViewProvider {
 
