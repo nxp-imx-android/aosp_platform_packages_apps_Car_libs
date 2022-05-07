@@ -19,8 +19,6 @@ import static android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_ENABLED;
 import static android.content.pm.PackageManager.MATCH_ALL;
 import static android.content.pm.PackageManager.MATCH_DISABLED_COMPONENTS;
 
-import static com.android.car.ui.core.CarUi.MIN_TARGET_API;
-
 import static java.util.Objects.requireNonNull;
 
 import android.annotation.SuppressLint;
@@ -38,7 +36,6 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.annotation.VisibleForTesting;
 
 import com.android.car.ui.R;
@@ -57,7 +54,6 @@ import java.util.Set;
 @SuppressWarnings("AndroidJdkLibsChecker")
 // TODO: (b/200322953)
 @SuppressLint("LogConditional")
-@RequiresApi(MIN_TARGET_API)
 public final class PluginFactorySingleton {
     private enum TestingOverride {
         NOT_SET, ENABLED, DISABLED

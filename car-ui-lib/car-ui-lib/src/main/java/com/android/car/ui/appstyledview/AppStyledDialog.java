@@ -16,9 +16,6 @@
 
 package com.android.car.ui.appstyledview;
 
-import static com.android.car.ui.core.CarUi.MIN_TARGET_API;
-
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -44,7 +41,6 @@ import androidx.core.view.WindowInsetsControllerCompat;
  * <p>
  * Apps should not use this directly. App's should use {@link AppStyledDialogController}.
  */
-@TargetApi(MIN_TARGET_API)
 class AppStyledDialog extends Dialog implements DialogInterface.OnDismissListener {
     private final AppStyledViewController mController;
     private Runnable mOnDismissListener;

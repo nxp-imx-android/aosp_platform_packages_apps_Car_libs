@@ -21,14 +21,11 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
-import static com.android.car.ui.core.CarUi.MIN_TARGET_API;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-import android.annotation.TargetApi;
 import android.view.View;
 
 import androidx.annotation.IdRes;
@@ -51,7 +48,6 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 @RunWith(Parameterized.class)
-@TargetApi(MIN_TARGET_API)
 public class DelegatingContentLimitingAdapterTest {
 
     private boolean mIsPluginEnabled;

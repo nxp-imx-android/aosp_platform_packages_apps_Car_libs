@@ -16,9 +16,7 @@
 package com.android.car.ui.core;
 
 import static com.android.car.ui.core.BaseLayoutController.getBaseLayoutController;
-import static com.android.car.ui.core.CarUi.MIN_TARGET_API;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build.VERSION_CODES;
@@ -41,7 +39,6 @@ import java.util.Objects;
 /**
  * Public interface for general CarUi static functions.
  */
-@TargetApi(MIN_TARGET_API)
 public class CarUi {
 
     // Unfortunately, because some of our clients don't have a car specific build we can't set the

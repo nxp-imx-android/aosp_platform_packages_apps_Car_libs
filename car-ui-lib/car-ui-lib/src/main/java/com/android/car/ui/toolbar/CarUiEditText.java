@@ -16,10 +16,7 @@
 
 package com.android.car.ui.toolbar;
 
-import static com.android.car.ui.core.CarUi.MIN_TARGET_API;
-
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.AttributeSet;
@@ -35,7 +32,6 @@ import java.util.function.BiConsumer;
  */
 @SuppressLint("AppCompatCustomView")
 @SuppressWarnings("AndroidJdkLibsChecker")
-@TargetApi(MIN_TARGET_API)
 class CarUiEditText extends EditText {
 
     @Nullable
