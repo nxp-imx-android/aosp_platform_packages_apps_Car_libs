@@ -81,7 +81,8 @@ public class FocusAreaTest {
     private View mView4;
     private View mView5;
     private Button mButton5;
-    private View mView6;
+    private View mView6a;
+    private View mView6b;
     private View mNudgeShortcut6;
 
     @Before
@@ -103,8 +104,9 @@ public class FocusAreaTest {
         mView4 = mActivity.findViewById(R.id.view4);
         mView5 = mActivity.findViewById(R.id.view5);
         mButton5 = mActivity.findViewById(R.id.button5);
-        mView6 = mActivity.findViewById(R.id.view6);
+        mView6a = mActivity.findViewById(R.id.view6a);
         mNudgeShortcut6 = mActivity.findViewById(R.id.nudge_shortcut6);
+        mView6b = mActivity.findViewById(R.id.view6b);
     }
 
     @Test
@@ -187,14 +189,14 @@ public class FocusAreaTest {
     }
 
     @Test
-    public void testPerformAccessibilityAction_actionNudgeShortcut_new()throws Exception  {
+    public void testPerformAccessibilityAction_actionNudgeShortcut_new() throws Exception  {
         CountDownLatch latch1 = new CountDownLatch(1);
-        mView6.post(() -> {
-            mView6.requestFocus();
-            mView6.post(() -> latch1.countDown());
+        mView6a.post(() -> {
+            mView6a.requestFocus();
+            mView6a.post(() -> latch1.countDown());
         });
         latch1.await(WAIT_TIME_MS, TimeUnit.MILLISECONDS);
-        assertThat(mView6.isFocused()).isTrue();
+        assertThat(mView6a.isFocused()).isTrue();
 
         Bundle arguments = new Bundle();
         CountDownLatch latch2 = new CountDownLatch(1);
@@ -208,12 +210,12 @@ public class FocusAreaTest {
         assertThat(mNudgeShortcut6.isFocused()).isTrue();
 
         CountDownLatch latch3 = new CountDownLatch(1);
-        mView6.post(() -> {
-            mView6.requestFocus();
-            mView6.post(() -> latch3.countDown());
+        mView6a.post(() -> {
+            mView6a.requestFocus();
+            mView6a.post(() -> latch3.countDown());
         });
         latch3.await(WAIT_TIME_MS, TimeUnit.MILLISECONDS);
-        assertThat(mView6.isFocused()).isTrue();
+        assertThat(mView6a.isFocused()).isTrue();
 
         CountDownLatch latch4 = new CountDownLatch(1);
         mFocusArea6.post(() -> {
@@ -223,7 +225,7 @@ public class FocusAreaTest {
         });
         latch4.await(WAIT_TIME_MS, TimeUnit.MILLISECONDS);
         // No shortcut specified for given direction. The focus should stay the same.
-        assertThat(mView6.isFocused()).isTrue();
+        assertThat(mView6a.isFocused()).isTrue();
 
         CountDownLatch latch5 = new CountDownLatch(1);
         mView1.post(() -> {
@@ -245,24 +247,25 @@ public class FocusAreaTest {
     }
 
     @Test
-    public void testPerformAccessibilityAction_actionNudgeShortcut_programmatic()throws Exception  {
+    public void testPerformAccessibilityAction_actionNudgeShortcut_programmatic()
+            throws Exception {
         CountDownLatch latch1 = new CountDownLatch(1);
-        mView6.post(() -> {
-            // Programmatically change the nudge shortcut from right to left.
+        mView6a.post(() -> {
+            // Programmatically change the nudge shortcut from right to up.
             mFocusArea6.setNudgeShortcut(FOCUS_RIGHT, null);
-            mFocusArea6.setNudgeShortcut(FOCUS_LEFT, mNudgeShortcut3);
+            mFocusArea6.setNudgeShortcut(FOCUS_UP, mNudgeShortcut3);
 
-            mView6.requestFocus();
-            mView6.post(() -> latch1.countDown());
+            mView6a.requestFocus();
+            mView6a.post(() -> latch1.countDown());
         });
         latch1.await(WAIT_TIME_MS, TimeUnit.MILLISECONDS);
-        assertThat(mView6.isFocused()).isTrue();
+        assertThat(mView6a.isFocused()).isTrue();
 
         CountDownLatch latch2 = new CountDownLatch(1);
         Bundle arguments = new Bundle();
         mFocusArea6.post(() -> {
             // Nudge to the nudgeShortcut view.
-            arguments.putInt(NUDGE_DIRECTION, FOCUS_LEFT);
+            arguments.putInt(NUDGE_DIRECTION, FOCUS_UP);
             mFocusArea6.performAccessibilityAction(ACTION_NUDGE_SHORTCUT, arguments);
             mFocusArea6.post(() -> latch2.countDown());
         });
@@ -270,12 +273,12 @@ public class FocusAreaTest {
         assertThat(mNudgeShortcut3.isFocused()).isTrue();
 
         CountDownLatch latch3 = new CountDownLatch(1);
-        mView6.post(() -> {
-            mView6.requestFocus();
-            mView6.post(() -> latch3.countDown());
+        mView6a.post(() -> {
+            mView6a.requestFocus();
+            mView6a.post(() -> latch3.countDown());
         });
         latch3.await(WAIT_TIME_MS, TimeUnit.MILLISECONDS);
-        assertThat(mView6.isFocused()).isTrue();
+        assertThat(mView6a.isFocused()).isTrue();
 
         CountDownLatch latch4 = new CountDownLatch(1);
         mFocusArea6.post(() -> {
@@ -284,8 +287,8 @@ public class FocusAreaTest {
             mFocusArea6.post(() -> latch4.countDown());
         });
         latch4.await(WAIT_TIME_MS, TimeUnit.MILLISECONDS);
-        // No shortcut specified for given direction. The focus should stay the same.
-        assertThat(mView6.isFocused()).isTrue();
+        // Shortcut right was programmatically set to null, so the focus should stay the same.
+        assertThat(mView6a.isFocused()).isTrue();
 
         CountDownLatch latch5 = new CountDownLatch(1);
         mView1.post(() -> {
@@ -297,13 +300,57 @@ public class FocusAreaTest {
 
         CountDownLatch latch6 = new CountDownLatch(1);
         mFocusArea1.post(() -> {
-            arguments.putInt(NUDGE_DIRECTION, FOCUS_RIGHT);
+            arguments.putInt(NUDGE_DIRECTION, FOCUS_DOWN);
             mFocusArea1.performAccessibilityAction(ACTION_NUDGE_SHORTCUT, arguments);
             mFocusArea1.post(() -> latch6.countDown());
         });
         latch6.await(WAIT_TIME_MS, TimeUnit.MILLISECONDS);
         // No shortcut specified for any direction. The focus should stay the same.
         assertThat(mView1.isFocused()).isTrue();
+    }
+
+    @Test
+    public void testPerformAccessibilityAction_actionNudgeShortcut_nudgeBeyondShortcut()
+            throws Exception  {
+        CountDownLatch latch1 = new CountDownLatch(1);
+        mView6a.post(() -> {
+            // Focus on the leftmost view in mFocusArea6.
+            mView6a.requestFocus();
+            mView6a.post(() -> latch1.countDown());
+        });
+        latch1.await(WAIT_TIME_MS, TimeUnit.MILLISECONDS);
+        assertThat(mView6a.isFocused()).isTrue();
+
+        CountDownLatch latch2 = new CountDownLatch(1);
+        Bundle arguments = new Bundle();
+        mFocusArea6.post(() -> {
+            // The nudgeShortcut mNudgeShortcut6 is in the given direction (right of mView6a)
+            // so allow nudging to nudgeShortcut view.
+            arguments.putInt(NUDGE_DIRECTION, FOCUS_RIGHT);
+            mFocusArea6.performAccessibilityAction(ACTION_NUDGE_SHORTCUT, arguments);
+            mFocusArea6.post(() -> latch2.countDown());
+        });
+        latch2.await(WAIT_TIME_MS, TimeUnit.MILLISECONDS);
+        assertThat(mNudgeShortcut6.isFocused()).isTrue();
+
+        CountDownLatch latch3 = new CountDownLatch(1);
+        mView6b.post(() -> {
+            // Focus on the rightmost view in mFocusArea6.
+            mView6b.requestFocus();
+            mView6b.post(() -> latch3.countDown());
+        });
+        latch3.await(WAIT_TIME_MS, TimeUnit.MILLISECONDS);
+        assertThat(mView6b.isFocused()).isTrue();
+
+        CountDownLatch latch4 = new CountDownLatch(1);
+        mFocusArea6.post(() -> {
+            arguments.putInt(NUDGE_DIRECTION, FOCUS_RIGHT);
+            mFocusArea6.performAccessibilityAction(ACTION_NUDGE_SHORTCUT, arguments);
+            mFocusArea6.post(() -> latch4.countDown());
+        });
+        latch4.await(WAIT_TIME_MS, TimeUnit.MILLISECONDS);
+        // Since mNudgeShortcut6 is on the left of mView6b, nudgeShortcut should be ignored.
+        assertThat(mNudgeShortcut6.isFocused()).isFalse();
     }
 
     @Test

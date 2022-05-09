@@ -26,6 +26,7 @@ import static com.android.car.ui.utils.RotaryConstants.ROTARY_VERTICALLY_SCROLLA
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.graphics.Rect;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -822,5 +823,58 @@ public final class ViewUtils {
     public static void setRotaryScrollEnabled(@NonNull View view, boolean isVertical) {
         view.setContentDescription(
                 isVertical ? ROTARY_VERTICALLY_SCROLLABLE : ROTARY_HORIZONTALLY_SCROLLABLE);
+    }
+
+    /** Returns the Rect for the bounds of a View */
+    private static Rect getBounds(@NonNull View view) {
+        int[] loc = new int[2];
+        view.getLocationOnScreen(loc);
+        return new Rect(loc[0], loc[1], loc[0] + view.getWidth(),
+                loc[1] + view.getHeight());
+    }
+
+    /**
+     * Returns whether {@code targetView} is a candidate for the next focus given the {@code
+     * direction}. srcRect and destRect representing the corner positions of the view is used to
+     * determine candidacy.
+     *
+     * For example, iff {@code destRect} is a candidate for {@link View#FOCUS_LEFT}, the following
+     * conditions must be true:
+     * <ul>
+     *  <li> {@code destRect.left} is on the left of {@code srcRect.left}
+     *  <li> and one of the following conditions must be true:
+     *  <ul>
+     *   <li> {@code destRect.right} is on the left of {@code srcRect.right}
+     *   <li> {@code destRect.right} equals or is on the left of {@code srcRect.left} (an edge case
+     *        for an empty {@code srcRect}, which is used in some cases when searching from a point
+     *        on the screen)
+     *  </ul>
+     * </ul>
+     *
+     * @param currentFocus  the source view we are searching from
+     * @param targetView    the candidate view
+     * @param direction     must be {@link View#FOCUS_UP},{@link View#FOCUS_DOWN},
+     *                  {@link View#FOCUS_LEFT},or {@link View#FOCUS_RIGHT}
+     */
+    public static boolean isCandidate(@NonNull View currentFocus, @NonNull View targetView,
+            int direction) {
+        Rect srcRect = getBounds(currentFocus);
+        Rect destRect = getBounds(targetView);
+        switch (direction) {
+            case View.FOCUS_LEFT:
+                return (srcRect.right > destRect.right || srcRect.left >= destRect.right)
+                        && srcRect.left > destRect.left;
+            case View.FOCUS_RIGHT:
+                return (srcRect.left < destRect.left || srcRect.right <= destRect.left)
+                        && srcRect.right < destRect.right;
+            case View.FOCUS_UP:
+                return (srcRect.bottom > destRect.bottom || srcRect.top >= destRect.bottom)
+                        && srcRect.top > destRect.top;
+            case View.FOCUS_DOWN:
+                return (srcRect.top < destRect.top || srcRect.bottom <= destRect.top)
+                        && srcRect.bottom < destRect.bottom;
+        }
+        throw new IllegalArgumentException("direction must be one of "
+                + "{FOCUS_UP, FOCUS_DOWN, FOCUS_LEFT, FOCUS_RIGHT}.");
     }
 }
