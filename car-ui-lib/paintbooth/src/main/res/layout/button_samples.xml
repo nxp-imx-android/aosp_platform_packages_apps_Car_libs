@@ -162,7 +162,7 @@
                 style="?android:attr/segmentedButtonStyle"/>
 
             <Button
-                android:id="@+id/button-colored"
+                android:id="@+id/buttonColored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
