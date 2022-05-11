@@ -49,7 +49,6 @@ import static com.android.car.ui.actions.LowLevelActions.pressAndHold;
 import static com.android.car.ui.actions.LowLevelActions.release;
 import static com.android.car.ui.actions.LowLevelActions.touchDownAndUp;
 import static com.android.car.ui.actions.ViewActions.waitForView;
-import static com.android.car.ui.core.CarUi.MIN_TARGET_API;
 import static com.android.car.ui.matchers.ViewMatchers.doesNotExistOrIsNotDisplayed;
 import static com.android.car.ui.recyclerview.CarUiRecyclerView.ItemCap.UNLIMITED;
 import static com.android.car.ui.utils.ViewUtils.setRotaryScrollEnabled;
@@ -80,7 +79,6 @@ import static org.mockito.Mockito.when;
 import static java.lang.Math.abs;
 import static java.lang.Math.max;
 
-import android.annotation.TargetApi;
 import android.car.drivingstate.CarUxRestrictions;
 import android.content.Context;
 import android.content.res.Resources;
@@ -134,7 +132,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Unit tests for {@link CarUiRecyclerView}.
  */
 @RunWith(Parameterized.class)
-@TargetApi(MIN_TARGET_API)
 public class CarUiRecyclerViewTest {
     @Parameterized.Parameters
     public static Object[] data() {

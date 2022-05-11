@@ -31,7 +31,6 @@ import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import static com.android.car.ui.actions.ViewActions.setProgress;
-import static com.android.car.ui.core.CarUi.MIN_TARGET_API;
 import static com.android.car.ui.matchers.ViewMatchers.isActivated;
 import static com.android.car.ui.matchers.ViewMatchers.withIndex;
 
@@ -49,7 +48,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import android.annotation.TargetApi;
 import android.content.res.Resources;
 import android.view.KeyEvent;
 import android.view.View;
@@ -79,7 +77,6 @@ import java.util.function.Consumer;
 /**
  * Unit tests for {@link CarUiPreference}.
  */
-@TargetApi(MIN_TARGET_API)
 public class PreferenceTest {
     private PreferenceTestActivity mActivity;
     private String[] mEntries;

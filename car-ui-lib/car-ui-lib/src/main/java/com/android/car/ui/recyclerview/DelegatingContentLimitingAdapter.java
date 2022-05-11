@@ -16,10 +16,7 @@
 
 package com.android.car.ui.recyclerview;
 
-import static com.android.car.ui.core.CarUi.MIN_TARGET_API;
-
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.view.ViewGroup;
 
 import androidx.annotation.IdRes;
@@ -35,7 +32,6 @@ import androidx.recyclerview.widget.RecyclerView;
  *
  * @param <T> type of the {@link RecyclerView.ViewHolder} objects used by the delegate.
  */
-@TargetApi(MIN_TARGET_API)
 public class DelegatingContentLimitingAdapter<T extends RecyclerView.ViewHolder>
         extends ContentLimitingAdapter<T> {
     private static final int SCROLLING_LIMITED_MESSAGE_VIEW_TYPE = Integer.MAX_VALUE;
