@@ -152,6 +152,13 @@
         <item name="android:scaleType">fitCenter</item>
     </style>
 
+    <style name="Widget.CarUi.AppStyledView"></style>
+
+    <style name="Widget.CarUi.AppStyledView.WindowAnimations">
+        <item name="android:windowEnterAnimation">@anim/car_ui_app_styled_view_enter_anim</item>
+        <item name="android:windowExitAnimation">@anim/car_ui_app_styled_view_exit_anim</item>
+    </style>
+
     <!-- Preference Styles -->
 
     <style name="Preference.CarUi">
