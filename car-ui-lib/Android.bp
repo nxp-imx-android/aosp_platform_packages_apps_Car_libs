@@ -16,6 +16,9 @@ package {
     default_applicable_licenses: ["Android-Apache-2.0"],
 }
 
+// Switch away from "platform"
+CERTIFICATE = ":com-android-car-apps-test"
+
 car_ui_lib_static_libs = [
     "androidx.annotation_annotation",
     "androidx.appcompat_appcompat",
@@ -189,7 +192,7 @@ android_library {
 
 android_test {
     name: "CarUILibUnitTests",
-    certificate: "platform",
+    certificate: CERTIFICATE,
     libs: [
         "android.test.runner",
         "android.test.base",
@@ -251,7 +254,7 @@ android_app {
     ],
 
     platform_apis: true,
-    certificate: "platform",
+    certificate: CERTIFICATE,
     privileged: true,
 
     export_package_resources: true,

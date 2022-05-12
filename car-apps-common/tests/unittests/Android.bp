@@ -24,8 +24,13 @@ package {
     default_applicable_licenses: ["Android-Apache-2.0"],
 }
 
+// Switch away from "platform"
+CERTIFICATE = ":com-android-car-apps-test"
+
 android_test {
     name: "car-apps-common-unit-tests",
+
+    certificate: CERTIFICATE,
 
     min_sdk_version: "29",
 
