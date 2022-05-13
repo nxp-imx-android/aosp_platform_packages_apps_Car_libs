@@ -621,6 +621,16 @@ class FocusAreaHelper {
             // nudge to another focus area.
             return false;
         }
+        View focus = mFocusArea.findFocus();
+        if (focus == null) {
+            Log.e(TAG, "Failed to nudge to nudge shortcut view because there is no focused "
+                    + "view in this FocusArea");
+            return false;
+        }
+        if (!ViewUtils.isCandidate(focus, targetView, direction)) {
+            // Don't allow nudge shortcut if the target view is not in the given direction.
+            return false;
+        }
         return ViewUtils.requestFocus(targetView);
     }
 

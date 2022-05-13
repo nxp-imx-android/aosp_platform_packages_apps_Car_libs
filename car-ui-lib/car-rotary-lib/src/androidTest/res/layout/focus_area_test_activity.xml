@@ -117,16 +117,17 @@
         android:layout_height="wrap_content"
         app:nudgeRightShortcut="@+id/nudge_shortcut6">
         <View
-            android:id="@+id/view6"
-            android:focusable="true"
-            android:layout_width="100dp"
-            android:layout_height="100dp"/>
-        <View
+            android:id="@+id/view6a"
             android:focusable="true"
             android:layout_width="100dp"
             android:layout_height="100dp"/>
         <View
             android:id="@+id/nudge_shortcut6"
+            android:focusable="true"
+            android:layout_width="100dp"
+            android:layout_height="100dp"/>
+        <View
+            android:id="@+id/view6b"
             android:focusable="true"
             android:layout_width="100dp"
             android:layout_height="100dp"/>
