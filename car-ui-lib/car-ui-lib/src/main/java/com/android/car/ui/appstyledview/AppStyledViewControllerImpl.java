@@ -105,6 +105,8 @@ public class AppStyledViewControllerImpl implements AppStyledViewController {
             params.y = posY;
         }
 
+        params.windowAnimations = R.style.Widget_CarUi_AppStyledView_WindowAnimations;
+
         return params;
     }
 

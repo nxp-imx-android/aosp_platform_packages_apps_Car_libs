@@ -1,6 +1,8 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- THIS FILE WAS AUTO GENERATED, DO NOT EDIT MANUALLY. -->
 <resources>
+  <public type="anim" name="car_ui_app_styled_view_enter_anim"/>
+  <public type="anim" name="car_ui_app_styled_view_exit_anim"/>
   <public type="array" name="car_ui_ime_wide_screen_allowed_package_list"/>
   <public type="attr" name="CarUiToolbarStyle"/>
   <public type="attr" name="actionEnabled"/>
@@ -501,6 +503,8 @@
   <public type="style" name="Widget.CarUi.AlertDialog.HeaderContainer"/>
   <public type="style" name="Widget.CarUi.AlertDialog.Icon"/>
   <public type="style" name="Widget.CarUi.AlertDialog.TitleContainer"/>
+  <public type="style" name="Widget.CarUi.AppStyledView"/>
+  <public type="style" name="Widget.CarUi.AppStyledView.WindowAnimations"/>
   <public type="style" name="Widget.CarUi.Button"/>
   <public type="style" name="Widget.CarUi.Button.Borderless.Colored"/>
   <public type="style" name="Widget.CarUi.CarUiRecyclerView"/>
