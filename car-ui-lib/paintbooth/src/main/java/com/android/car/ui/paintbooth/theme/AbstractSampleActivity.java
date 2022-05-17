@@ -131,7 +131,8 @@ public abstract class AbstractSampleActivity extends Activity {
         colorResetButton.setOnClickListener(v -> {
             try {
                 View dialogLayout = findViewById(backgroundLayoutId);
-                dialogLayout.setBackgroundColor(android.R.color.black);
+                dialogLayout.setBackgroundColor(
+                        getResources().getColor(android.R.color.black));
             } catch (Exception e) {
                 Toast.makeText(this, "Something went Wrong. Try again later.",
                         Toast.LENGTH_LONG).show();

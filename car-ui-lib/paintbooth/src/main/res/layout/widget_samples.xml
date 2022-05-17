@@ -28,7 +28,7 @@
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
              android:layout_marginTop="20dp"
-             app:layout_constraintBottom_toTopOf="@+id/widget_checkbox"
+             app:layout_constraintBottom_toTopOf="@id/checkbox_layout"
              app:layout_constraintEnd_toEndOf="parent"
              app:layout_constraintStart_toStartOf="parent"
              app:layout_constraintTop_toTopOf="parent"/>
@@ -44,7 +44,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <TextView
-            android:id="@+id/widget_checkbox"
+            android:id="@+id/widget_checkbox_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/widget_checkbox"/>

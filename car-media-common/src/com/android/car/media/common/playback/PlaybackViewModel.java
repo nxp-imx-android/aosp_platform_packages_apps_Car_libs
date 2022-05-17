@@ -165,8 +165,10 @@ public class PlaybackViewModel extends AndroidViewModel {
     }
 
     private void onBrowsingStateChanged(MediaBrowserConnector.BrowsingState browsingState) {
-        mMediaControllerCallback.onMediaBrowsingStateChanged(browsingState);
-        mMediaSourceLiveData.setValue(browsingState.mMediaSource);
+        if (browsingState != null) {
+            mMediaControllerCallback.onMediaBrowsingStateChanged(browsingState);
+            mMediaSourceLiveData.setValue(browsingState.mMediaSource);
+        }
     }
 
     /**
