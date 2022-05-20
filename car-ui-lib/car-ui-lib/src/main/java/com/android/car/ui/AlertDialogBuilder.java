@@ -52,6 +52,7 @@ import androidx.annotation.ArrayRes;
 import androidx.annotation.AttrRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.core.view.OneShotPreDrawListener;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -519,14 +520,17 @@ public class AlertDialogBuilder {
      *                     the dialog.
      * @return This Builder object to allow for chaining of calls to set methods
      */
-    public AlertDialogBuilder setMultiChoiceItems(CharSequence[] items, boolean[] checkedItems,
-            final DialogInterface.OnMultiChoiceClickListener listener) {
+    public AlertDialogBuilder setMultiChoiceItems(@NonNull CharSequence[] items,
+            @Nullable boolean[] checkedItems,
+            @Nullable final DialogInterface.OnMultiChoiceClickListener listener) {
         List<CarUiContentListItem> carUiItems = new ArrayList<>();
         for (int i = 0; i < items.length; i++) {
             CarUiContentListItem item = new CarUiContentListItem(
                     CarUiContentListItem.Action.CHECK_BOX);
             item.setTitle(items[i]);
-            item.setChecked(checkedItems[i]);
+            if (checkedItems != null) {
+                item.setChecked(checkedItems[i]);
+            }
             int index = i;
             item.setOnCheckedChangeListener(
                     (item1, isChecked) -> {
@@ -560,7 +564,7 @@ public class AlertDialogBuilder {
      *                        dismiss the dialog.
      * @return This Builder object to allow for chaining of calls to set methods
      */
-    public AlertDialogBuilder setMultiChoiceItems(Cursor cursor, String isCheckedColumn,
+    public AlertDialogBuilder setMultiChoiceItems(@NonNull Cursor cursor, String isCheckedColumn,
             String labelColumn,
             final DialogInterface.OnMultiChoiceClickListener listener) {
         int size = cursor.getCount();
@@ -570,7 +574,8 @@ public class AlertDialogBuilder {
         for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
             int index = cursor.getPosition();
             CharSequence text = cursor.getString(cursor.getColumnIndexOrThrow(labelColumn));
-            int isChecked = cursor.getInt(cursor.getColumnIndexOrThrow(isCheckedColumn));
+            int isCheckedColumnIndex = cursor.getColumnIndex(isCheckedColumn);
+            int isChecked = isCheckedColumnIndex >= 0 ? cursor.getInt(isCheckedColumnIndex) : 0;
             items[index] = text;
             checkedItems[index] = isChecked != 0;
         }
