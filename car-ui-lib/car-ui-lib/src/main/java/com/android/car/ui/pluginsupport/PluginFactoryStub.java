@@ -24,6 +24,9 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowInsets;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import androidx.annotation.LayoutRes;
@@ -48,9 +51,8 @@ import com.android.car.ui.widget.CarUiTextViewImpl;
 import java.util.List;
 
 /**
- * This is the stub implementation of {@link PluginFactory}, used when there is no plugin
- * installed on the system. It delegates to the static library implementation of the
- * necessary components.
+ * This is the stub implementation of {@link PluginFactory}, used when there is no plugin installed
+ * on the system. It delegates to the static library implementation of the necessary components.
  * <p>
  * Do not use from client apps, for car-ui-lib internal use only.
  */
@@ -108,6 +110,19 @@ public final class PluginFactoryStub implements PluginFactory {
                 toolbarController = new ToolbarControllerImpl(baseLayout);
             }
         }
+
+        // Allow for content to be rendered in display cut-out area
+        Window baseLayoutWindow = ((Activity) contentView.getContext()).getWindow();
+        WindowManager.LayoutParams lp = baseLayoutWindow.getAttributes();
+        lp.layoutInDisplayCutoutMode =
+                WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS;
+        baseLayoutWindow.setAttributes(lp);
+        // Remove display cut-out insets on DecorView
+        baseLayoutWindow.getDecorView().setOnApplyWindowInsetsListener((v, insets) -> {
+            insets = new WindowInsets.Builder(insets).setInsets(
+                    WindowInsets.Type.displayCutout(), android.graphics.Insets.NONE).build();
+            return v.onApplyWindowInsets(insets);
+        });
 
         InsetsUpdater insetsUpdater = new InsetsUpdater(baseLayout, contentView);
         insetsUpdater.replaceInsetsChangedListenerWith(insetsChangedListener);
@@ -208,9 +223,7 @@ public final class PluginFactoryStub implements PluginFactory {
          * Recalculate the amount of insets we need, and then dispatch them.
          */
         private void recalcInsets() {
-
             // Calculate how much each inset view overlays the content view
-
             // These initial values are for Media Center's implementation of base layouts.
             // They should evaluate to 0 in all other apps, because the content view and content
             // view container have the same size and position there.
@@ -226,6 +239,20 @@ public final class PluginFactoryStub implements PluginFactory {
                 top += Math.max(0,
                         getBottomOfView(mTopInsetView) - getTopOfView(mContentViewContainer));
             }
+
+            // Calculate display cut-out insets
+            WindowInsets rootInsets = mContentViewContainer.getRootWindowInsets();
+            if (rootInsets.getDisplayCutout() != null) {
+                left = Math.max(left, rootInsets.getDisplayCutout().getSafeInsetLeft()
+                        - rootInsets.getStableInsetLeft());
+                right = Math.max(right, rootInsets.getDisplayCutout().getSafeInsetRight()
+                        - rootInsets.getStableInsetRight());
+                top = Math.max(top, rootInsets.getDisplayCutout().getSafeInsetTop()
+                        - rootInsets.getStableInsetTop());
+                bottom = Math.max(bottom, rootInsets.getDisplayCutout().getSafeInsetBottom()
+                        - rootInsets.getStableInsetBottom());
+            }
+
             if (mBottomInsetView != null) {
                 bottom += Math.max(0,
                         getBottomOfView(mContentViewContainer) - getTopOfView(mBottomInsetView));
