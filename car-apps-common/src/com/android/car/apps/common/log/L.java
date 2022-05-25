@@ -36,7 +36,7 @@ public class L {
      */
     public static void v(String tag, @NonNull String msg, Object... args) {
         if (Log.isLoggable(tag, Log.VERBOSE) || TYPE_LIST.contains(Build.TYPE)) {
-            Log.v(tag, String.format(msg, args));
+            Log.v(tag, formatStr(msg, args));
         }
     }
 
@@ -47,7 +47,7 @@ public class L {
      */
     public static void d(String tag, @NonNull String msg, Object... args) {
         if (Log.isLoggable(tag, Log.DEBUG) || TYPE_LIST.contains(Build.TYPE)) {
-            Log.d(tag, String.format(msg, args));
+            Log.d(tag, formatStr(msg, args));
         }
     }
 
@@ -58,7 +58,7 @@ public class L {
      */
     public static void i(String tag, @NonNull String msg, Object... args) {
         if (Log.isLoggable(tag, Log.INFO) || TYPE_LIST.contains(Build.TYPE)) {
-            Log.i(tag, String.format(msg, args));
+            Log.i(tag, formatStr(msg, args));
         }
     }
 
@@ -69,7 +69,7 @@ public class L {
      */
     public static void w(String tag, @NonNull String msg, Object... args) {
         if (Log.isLoggable(tag, Log.WARN) || TYPE_LIST.contains(Build.TYPE)) {
-            Log.w(tag, String.format(msg, args));
+            Log.w(tag, formatStr(msg, args));
         }
     }
 
@@ -80,7 +80,7 @@ public class L {
      */
     public static void e(String tag, @NonNull String msg, Object... args) {
         if (Log.isLoggable(tag, Log.ERROR) || TYPE_LIST.contains(Build.TYPE)) {
-            Log.e(tag, String.format(msg, args));
+            Log.e(tag, formatStr(msg, args));
         }
     }
 
@@ -91,7 +91,15 @@ public class L {
      */
     public static void e(String tag, Exception e, @NonNull String msg, Object... args) {
         if (Log.isLoggable(tag, Log.ERROR) || TYPE_LIST.contains(Build.TYPE)) {
-            Log.e(tag, String.format(msg, args), e);
+            Log.e(tag, formatStr(msg, args), e);
+        }
+    }
+
+    private static String formatStr(String msg, Object... args) {
+        if (args.length == 0) {
+            return msg;
+        } else {
+            return String.format(msg, args);
         }
     }
 }
