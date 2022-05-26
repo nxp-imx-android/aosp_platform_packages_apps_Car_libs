@@ -42,6 +42,15 @@ android {
         }
     }
 
+    signingConfigs {
+        debug {
+            storeFile file('../../certs/com_android_car_apps_test.jks')
+            storePassword 'carapps'
+            keyAlias 'carapps'
+            keyPassword 'carapps'
+        }
+    }
+
     // This is the gradle equivalent of the libs: ["android.car"] in the Android.bp
     useLibrary 'android.car'
 }

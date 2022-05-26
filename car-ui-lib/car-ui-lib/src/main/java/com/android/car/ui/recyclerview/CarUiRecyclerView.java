@@ -32,6 +32,7 @@ import androidx.annotation.IdRes;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.OrientationHelper;
@@ -191,7 +192,11 @@ public interface CarUiRecyclerView {
     /** see {@link RecyclerView#addOnChildAttachStateChangeListener} */
     void addOnChildAttachStateChangeListener(OnChildAttachStateChangeListener listener);
 
-    /** see {@link View#addOnLayoutChangeListener(OnLayoutChangeListener)} */
+    /**
+     * see {@link View#addOnLayoutChangeListener(OnLayoutChangeListener)}
+     * @deprecated use {@link #getView()}
+     */
+    @Deprecated
     void addOnLayoutChangeListener(OnLayoutChangeListener listener);
 
     /** see {@link RecyclerView#addOnScrollListener(RecyclerView.OnScrollListener)} */
@@ -231,13 +236,21 @@ public interface CarUiRecyclerView {
     /** see {@link RecyclerView#findViewHolderForAdapterPosition(int)} */
     ViewHolder findViewHolderForLayoutPosition(int position);
 
-    /** see {@link ViewGroup#focusableViewAvailable(View)} */
+    /**
+     * see {@link ViewGroup#focusableViewAvailable(View)}
+     * @deprecated use {@link #getView()}
+     */
+    @Deprecated
     void focusableViewAvailable(View v);
 
     /** see {@link RecyclerView#getAdapter()} */
     Adapter<?> getAdapter();
 
-    /** see {@link View#getAlpha()} */
+    /**
+     * see {@link View#getAlpha()}
+     * @deprecated use {@link #getView()}
+     */
+    @Deprecated
     float getAlpha();
 
     /**
@@ -260,47 +273,65 @@ public interface CarUiRecyclerView {
      */
     int getChildLayoutPosition(View child);
 
-    /** see {@link View#getContentDescription()} */
+    /**
+     * see {@link View#getContentDescription()}
+     * @deprecated use {@link #getView()}
+     */
+    @Deprecated
     CharSequence getContentDescription();
 
-    /** see {@link View#getContext()} */
+    /**
+     * see {@link View#getContext()}
+     * @deprecated use {@link #getView()}
+     */
+    @Deprecated
     Context getContext();
 
     /**
      * see {@link OrientationHelper#getDecoratedEnd(View)}
      */
+    @VisibleForTesting
     int getDecoratedEnd(View child);
-
 
     /**
      * see {@link LayoutManager#getDecoratedMeasuredHeight(View)}
      */
+    @VisibleForTesting
     int getDecoratedMeasuredHeight(View child);
 
     /**
      * see {@link LayoutManager#getDecoratedMeasuredWidth(View)}
      */
+    @VisibleForTesting
     int getDecoratedMeasuredWidth(View child);
 
     /**
      * see {@link OrientationHelper#getDecoratedMeasurement(View)}
      */
+    @VisibleForTesting
     int getDecoratedMeasurement(View child);
 
     /**
      * see {@link OrientationHelper#getDecoratedMeasurementInOther(View)}
      */
+    @VisibleForTesting
     int getDecoratedMeasurementInOther(View child);
 
     /**
      * see {@link OrientationHelper#getDecoratedStart(View)}
      */
+    @VisibleForTesting
     int getDecoratedStart(View child);
 
     /** see {@link OrientationHelper#getEndAfterPadding()} */
+    @VisibleForTesting
     int getEndAfterPadding();
 
-    /** see {@link View#getHeight()} */
+    /**
+     * see {@link View#getHeight()}
+     * @deprecated use {@link #getView()}
+     */
+    @Deprecated
     int getHeight();
 
     /**
@@ -325,22 +356,46 @@ public interface CarUiRecyclerView {
     /** {@link RecyclerView#hasFixedSize()} */
     boolean hasFixedSize();
 
-    /** see {@link View#getPaddingLeft()} */
+    /**
+     * see {@link View#getPaddingLeft()}
+     * @deprecated use {@link #getView()}
+     */
+    @Deprecated
     int getPaddingLeft();
 
-    /** see {@link View#getPaddingRight()} */
+    /**
+     * see {@link View#getPaddingRight()}
+     * @deprecated use {@link #getView()}
+     */
+    @Deprecated
     int getPaddingRight();
 
-    /** see {@link View#getPaddingBottom()} */
+    /**
+     * see {@link View#getPaddingBottom()}
+     * @deprecated use {@link #getView()}
+     */
+    @Deprecated
     int getPaddingBottom();
 
-    /** see {@link View#getPaddingEnd()} */
+    /**
+     * see {@link View#getPaddingEnd()}
+     * @deprecated use {@link #getView()}
+     */
+    @Deprecated
     int getPaddingEnd();
 
-    /** see {@link View#getPaddingStart()} */
+    /**
+     * see {@link View#getPaddingStart()}
+     * @deprecated use {@link #getView()}
+     */
+    @Deprecated
     int getPaddingStart();
 
-    /** see {@link View#getPaddingTop()} */
+    /**
+     * see {@link View#getPaddingTop()}
+     * @deprecated use {@link #getView()}
+     */
+    @Deprecated
     int getPaddingTop();
 
     /**
@@ -354,6 +409,7 @@ public interface CarUiRecyclerView {
      * see {@link LayoutManager#getChildCount()}
      * Prefer this method over {@link #getChildCount()}
      */
+    @VisibleForTesting
     int getRecyclerViewChildCount();
 
     /**
@@ -361,23 +417,31 @@ public interface CarUiRecyclerView {
      * Prefer this method over {@link #getChildAt(int)}
      */
     @Nullable
+    @VisibleForTesting
     View getRecyclerViewChildAt(int index);
 
     /**
      * see {@link LayoutManager#getPosition(View)}
      */
+    @VisibleForTesting
     int getRecyclerViewChildPosition(View child);
 
     /** see {@link RecyclerView#getScrollState()} */
     int getScrollState();
 
     /** see {@link OrientationHelper#getStartAfterPadding()} */
+    @VisibleForTesting
     int getStartAfterPadding();
 
-    /** see {@link View#getTag()} */
+    /**
+     * see {@link View#getTag()}
+     * @deprecated use {@link #getView()}
+     */
+    @Deprecated
     Object getTag();
 
     /** see {@link OrientationHelper#getTotalSpace()} */
+    @VisibleForTesting
     int getTotalSpace();
 
     /**
@@ -386,7 +450,11 @@ public interface CarUiRecyclerView {
     @NonNull
     View getView();
 
-    /** see {@link View#getViewTreeObserver()} */
+    /**
+     * see {@link View#getViewTreeObserver()}
+     * @deprecated use {@link #getView()}
+     */
+    @Deprecated
     ViewTreeObserver getViewTreeObserver();
 
     /**
@@ -396,7 +464,11 @@ public interface CarUiRecyclerView {
     @Deprecated
     void invalidateItemDecorations();
 
-    /** see {@link View#post(Runnable)} */
+    /**
+     * see {@link View#post()}
+     * @deprecated use {@link #getView()}
+     */
+    @Deprecated
     boolean post(Runnable runnable);
 
     /**
@@ -416,19 +488,35 @@ public interface CarUiRecyclerView {
     /** see {@link RecyclerView#removeOnChildAttachStateChangeListener} */
     void removeOnChildAttachStateChangeListener(OnChildAttachStateChangeListener listener);
 
-    /** see {@link View#removeOnLayoutChangeListener(OnLayoutChangeListener)} */
+    /**
+     * see {@link View#removeOnLayoutChangeListener(OnLayoutChangeListener)}
+     * @deprecated use {@link #getView()}
+     */
+    @Deprecated
     void removeOnLayoutChangeListener(OnLayoutChangeListener listener);
 
-    /** see {@link View#requestLayout()} */
+    /**
+     * see {@link View#requestLayout()}
+     * @deprecated use {@link #getView()}
+     */
+    @Deprecated
     void requestLayout();
 
     /** see {@link RecyclerView#removeOnScrollListener(OnScrollListener)} */
     void removeOnScrollListener(OnScrollListener scrollListener);
 
-    /** see {@link View#requireViewById(int)} */
+    /**
+     * see {@link View#requireViewById(int)}
+     * @deprecated use {@link #getView()}
+     */
+    @Deprecated
     <T extends View> T requireViewById(int id);
 
-    /** see {@link View#scrollBy(int, int)} */
+    /**
+     * see {@link View#scrollBy(int, int)}
+     * @deprecated use {@link #getView()}
+     */
+    @Deprecated
     void scrollBy(int x, int y);
 
     /** see {@link RecyclerView#scrollToPosition(int)} */
@@ -440,13 +528,25 @@ public interface CarUiRecyclerView {
     /** see {@link RecyclerView#setAdapter(Adapter)} */
     void setAdapter(Adapter<?> adapter);
 
-    /** see {@link View#setAlpha(float)} */
+    /**
+     * see {@link View#setAlpha()}
+     * @deprecated use {@link #getView()}
+     */
+    @Deprecated
     void setAlpha(float alpha);
 
-    /** see {@link RecyclerView#setClipToPadding(boolean)} */
+    /**
+     * see {@link ViewGroup#setClipToPadding(boolean)}
+     * @deprecated use {@link #getView()}
+     */
+    @Deprecated
     void setClipToPadding(boolean enabled);
 
-    /** see {@link View#setContentDescription(CharSequence)} */
+    /**
+     * see {@link View#setContentDescription(CharSequence)}
+     * @deprecated use {@link #getView()}
+     */
+    @Deprecated
     void setContentDescription(CharSequence contentDescription);
 
     /** see {@link RecyclerView#setHasFixedSize(boolean)} */
@@ -462,7 +562,11 @@ public interface CarUiRecyclerView {
     /** see {@link RecyclerView#setOnFlingListener(OnFlingListener)} */
     void setOnFlingListener(OnFlingListener listener);
 
-    /** see {@link View#setId(int)}  */
+    /**
+     * see {@link View#setId(int)}
+     * @deprecated this will fail when there is a oem implementation
+     */
+    @Deprecated
     void setId(@IdRes int id);
 
     /**
@@ -482,19 +586,35 @@ public interface CarUiRecyclerView {
     /** Use this instead of {@link #setLayoutManager} */
     void setLayoutStyle(@Nullable CarUiLayoutStyle layoutStyle);
 
-    /** see {@link View#setOnTouchListener(OnTouchListener)} */
+    /**
+     * see {@link View#setOnTouchListener(OnTouchListener)}
+     * @deprecated use {@link #getView()}
+     */
+    @Deprecated
     void setOnTouchListener(OnTouchListener listener);
 
-    /** see {@link View#setPadding(int, int, int, int)} */
+    /**
+     * see {@link View#setPadding()}
+     * @deprecated use {@link #getView()}
+     */
+    @Deprecated
     void setPadding(int left, int top, int right, int bottom);
 
-    /** see {@link View#setPaddingRelative(int, int, int, int)} */
+    /**
+     * see {@link View#setPaddingRelative()}
+     * @deprecated use {@link #getView()}
+     */
+    @Deprecated
     void setPaddingRelative(int start, int top, int end, int bottom);
 
     /** Will get called when {@link SpanSizeLookup} changes at runtime. */
     void setSpanSizeLookup(@NonNull SpanSizeLookup spanSizeLookup);
 
-    /** see {@link View#setTag(Object)} */
+    /**
+     * see {@link View#setTag(Object)}
+     * @deprecated use {@link #getView()}
+     */
+    @Deprecated
     void setTag(Object tag);
 
     /**
@@ -518,7 +638,11 @@ public interface CarUiRecyclerView {
     @Deprecated
     void setVerticalScrollbarPosition(int position);
 
-    /** see {@link View#setVisibility(int)} */
+    /**
+     * see {@link View#setVisibility(int)}
+     * @deprecated use {@link #getView()}
+     */
+    @Deprecated
     void setVisibility(int visible);
 
     /** see {@link RecyclerView#smoothScrollBy(int, int)} */
