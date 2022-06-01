@@ -15,6 +15,9 @@
 -->
 
 <resources>
+    <!-- Specifies that the app theme has a light background with dark text on top -->
+    <bool name="car_ui_is_light_theme">false</bool>
+
     <!-- Toolbar -->
 
     <!-- Whether tabs should use flex layout or not -->

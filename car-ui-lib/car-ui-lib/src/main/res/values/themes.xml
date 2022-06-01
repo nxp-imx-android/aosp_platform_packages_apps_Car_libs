@@ -33,8 +33,10 @@
 
         <item name="colorBackgroundFloating">?android:attr/colorBackgroundFloating</item>
 
+        <!-- Support automatic WebView darkening when appropriate  -->
+        <item name="android:isLightTheme">@bool/car_ui_is_light_theme</item>
         <!-- Used by MediaRouter -->
-        <item name="isLightTheme">false</item>
+        <item name="isLightTheme">@bool/car_ui_is_light_theme</item>
 
         <item name="selectableItemBackground">?android:attr/selectableItemBackground</item>
         <item name="selectableItemBackgroundBorderless">?android:attr/selectableItemBackgroundBorderless</item>
@@ -238,5 +240,4 @@
         <item name="seekBarPreferenceStyle">@style/Preference.CarUi.SeekBarPreference</item>
         <item name="switchPreferenceStyle">@style/Preference.CarUi.SwitchPreference</item>
     </style>
-
 </resources>
