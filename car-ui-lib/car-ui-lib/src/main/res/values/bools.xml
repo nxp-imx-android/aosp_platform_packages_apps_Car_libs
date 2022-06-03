@@ -15,7 +15,7 @@
 -->
 
 <resources>
-    <!-- Specifies that the app theme has a light background with dark text on top -->
+    <!-- Specifies that the app theme has a dark background with light text on top -->
     <bool name="car_ui_is_light_theme">false</bool>
 
     <!-- Toolbar -->
