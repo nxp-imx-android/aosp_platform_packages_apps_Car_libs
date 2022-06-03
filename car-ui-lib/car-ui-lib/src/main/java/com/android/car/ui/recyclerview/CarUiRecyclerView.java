@@ -409,7 +409,6 @@ public interface CarUiRecyclerView {
      * see {@link LayoutManager#getChildCount()}
      * Prefer this method over {@link #getChildCount()}
      */
-    @VisibleForTesting
     int getRecyclerViewChildCount();
 
     /**
@@ -417,7 +416,6 @@ public interface CarUiRecyclerView {
      * Prefer this method over {@link #getChildAt(int)}
      */
     @Nullable
-    @VisibleForTesting
     View getRecyclerViewChildAt(int index);
 
     /**
@@ -465,7 +463,7 @@ public interface CarUiRecyclerView {
     void invalidateItemDecorations();
 
     /**
-     * see {@link View#post()}
+     * see {@link View#post(Runnable)}
      * @deprecated use {@link #getView()}
      */
     @Deprecated
@@ -529,7 +527,7 @@ public interface CarUiRecyclerView {
     void setAdapter(Adapter<?> adapter);
 
     /**
-     * see {@link View#setAlpha()}
+     * see {@link View#setAlpha(float)}
      * @deprecated use {@link #getView()}
      */
     @Deprecated
@@ -594,14 +592,14 @@ public interface CarUiRecyclerView {
     void setOnTouchListener(OnTouchListener listener);
 
     /**
-     * see {@link View#setPadding()}
+     * see {@link View#setPadding(int, int, int, int)}
      * @deprecated use {@link #getView()}
      */
     @Deprecated
     void setPadding(int left, int top, int right, int bottom);
 
     /**
-     * see {@link View#setPaddingRelative()}
+     * see {@link View#setPaddingRelative(int, int, int, int)}
      * @deprecated use {@link #getView()}
      */
     @Deprecated
