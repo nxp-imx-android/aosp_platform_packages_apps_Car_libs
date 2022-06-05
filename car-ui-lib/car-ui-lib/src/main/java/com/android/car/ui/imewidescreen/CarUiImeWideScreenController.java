@@ -130,9 +130,12 @@ public class CarUiImeWideScreenController {
     // key to provide the drawable resource for the icon that will be displayed in the input area.
     // If this is not provided, applications icon will be used. Value format is byteArray.
     public static final String WIDE_SCREEN_EXTRACTED_TEXT_ICON = "extracted_text_icon";
+    // key to determine if the input text field should be hidden. By default, this will always be
+    // shown. Value format is boolean.
+    public static final String WIDE_SCREEN_HIDE_EXTRACTED_TEXT_VIEW = "hide_extracted_text_view";
     // Key to determine if IME should display the content area or not. Content area is referred to
     // the area used by IME to display search results, description title and description
-    // provided by the application. By default it will be shown but this value could be ignored
+    // provided by the application. By default, it will be shown but this value could be ignored
     // if bool/car_ui_ime_wide_screen_allow_app_hide_content_area is set to false. Value format
     // is boolean.
     public static final String REQUEST_RENDER_CONTENT_AREA = "request_render_content_area";
@@ -337,7 +340,7 @@ public class CarUiImeWideScreenController {
      * {@code resetAutomotiveWideScreenViews}.
      *
      * @param action Name of the command to be performed.
-     * @param data Any data to include with the command.
+     * @param data   Any data to include with the command.
      */
     @RequiresApi(TARGET_API_R)
     public void onAppPrivateCommand(String action, Bundle data) {
@@ -403,6 +406,9 @@ public class CarUiImeWideScreenController {
             setExtractedEditTextBackground(
                     R.drawable.car_ui_ime_wide_screen_input_area_tint_color);
         }
+
+        boolean hideExtractedTextView = data.getBoolean(WIDE_SCREEN_HIDE_EXTRACTED_TEXT_VIEW);
+        updateExtractViewVisibility(!hideExtractedTextView);
 
         int extractedTextIcon = data.getInt(WIDE_SCREEN_EXTRACTED_TEXT_ICON_RES_ID);
         if (extractedTextIcon != 0) {
@@ -718,15 +724,24 @@ public class CarUiImeWideScreenController {
      * This is required as IMS checks for ExtractViewIsShown and if that is true then set the
      * touchable insets to the entire screen rather than a region. If an app hides the content area
      * in that case we want the user to be able to interact with the application.
+     *
+     * This method would always set the visibility of the extract view to true so that input field
+     * is always vivible to the users unless explicitly requested by the application to hide it.
+     * This is needed to display the extract view when triggered via webview edit text field.
      */
     public void setExtractViewShown(boolean shown) {
         if (!isWideScreenMode()) {
             return;
         }
-        if (mExtractViewHidden == !shown) {
+        // never hide the extract view unless explicitly requested by an application
+        updateExtractViewVisibility(/* visible=*/ true);
+    }
+
+    private void updateExtractViewVisibility(boolean visible) {
+        if (mExtractViewHidden == !visible) {
             return;
         }
-        mExtractViewHidden = !shown;
+        mExtractViewHidden = !visible;
         if (mExtractViewHidden) {
             mFullscreenArea.setVisibility(View.INVISIBLE);
         } else {
