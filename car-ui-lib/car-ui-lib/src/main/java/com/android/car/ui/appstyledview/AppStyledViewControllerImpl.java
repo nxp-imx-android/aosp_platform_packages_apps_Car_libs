@@ -44,7 +44,8 @@ public class AppStyledViewControllerImpl implements AppStyledViewController {
     private final Context mContext;
     @AppStyledViewNavIcon
     private int mAppStyleViewNavIcon;
-    private Runnable mAppStyledVCloseClickListener = null;
+    @Nullable private Runnable mAppStyledVCloseClickListener;
+    @Nullable private View mAppStyledView;
     private int mWidth;
     private int mHeight;
 
@@ -55,14 +56,17 @@ public class AppStyledViewControllerImpl implements AppStyledViewController {
     @Override
     public void setNavIcon(@AppStyledViewNavIcon int navIcon) {
         mAppStyleViewNavIcon = navIcon;
+        updateNavIcon();
+
     }
 
     /**
      * Sets the AppStyledVCloseClickListener on the close icon.
      */
     @Override
-    public void setOnNavIconClickListener(Runnable listener) {
+    public void setOnNavIconClickListener(@Nullable Runnable listener) {
         mAppStyledVCloseClickListener = listener;
+        updateNavIconClickListener();
     }
 
     @Override
@@ -143,15 +147,26 @@ public class AppStyledViewControllerImpl implements AppStyledViewController {
         // clone the inflater using the ContextThemeWrapper
         LayoutInflater localInflater = inflater.cloneInContext(contextThemeWrapper);
 
-        View appStyledView = localInflater.inflate(R.layout.car_ui_app_styled_view, null, false);
-        appStyledView.setClipToOutline(true);
-        RecyclerView rv = appStyledView.findViewById(R.id.car_ui_app_styled_content);
+        mAppStyledView = localInflater.inflate(R.layout.car_ui_app_styled_view, null, false);
+        mAppStyledView.setClipToOutline(true);
+        RecyclerView rv = mAppStyledView.findViewById(R.id.car_ui_app_styled_content);
 
         AppStyledRecyclerViewAdapter adapter = new AppStyledRecyclerViewAdapter(contentView);
         rv.setLayoutManager(new LinearLayoutManager(mContext));
         rv.setAdapter(adapter);
 
-        ImageView close = appStyledView.findViewById(R.id.car_ui_app_styled_view_icon_close);
+        updateNavIcon();
+        updateNavIconClickListener();
+
+        return mAppStyledView;
+    }
+
+    private void updateNavIcon() {
+        if (mAppStyledView == null) {
+            return;
+        }
+
+        ImageView close = mAppStyledView.findViewById(R.id.car_ui_app_styled_view_icon_close);
         if (mAppStyleViewNavIcon == AppStyledViewNavIcon.BACK) {
             close.setImageResource(R.drawable.car_ui_icon_arrow_back);
         } else if (mAppStyleViewNavIcon == AppStyledViewNavIcon.CLOSE) {
@@ -159,15 +174,22 @@ public class AppStyledViewControllerImpl implements AppStyledViewController {
         } else {
             close.setImageResource(R.drawable.car_ui_icon_close);
         }
+    }
+
+    private void updateNavIconClickListener() {
+        if (mAppStyledView == null) {
+            return;
+        }
 
         FrameLayout navContainer =
-                appStyledView.findViewById(R.id.car_ui_app_styled_view_nav_icon_container);
-        if (mAppStyledVCloseClickListener != null && navContainer != null) {
+                mAppStyledView.findViewById(R.id.car_ui_app_styled_view_nav_icon_container);
+        if (navContainer != null) {
             navContainer.setOnClickListener((v) -> {
+                if (mAppStyledVCloseClickListener == null) {
+                    return;
+                }
                 mAppStyledVCloseClickListener.run();
             });
         }
-
-        return appStyledView;
     }
 }
