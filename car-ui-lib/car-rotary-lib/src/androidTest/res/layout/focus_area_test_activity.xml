@@ -35,12 +35,12 @@
         <View
             android:id="@+id/view1"
             android:focusable="true"
-            android:layout_width="100dp"
-            android:layout_height="100dp"/>
+            android:layout_width="50dp"
+            android:layout_height="50dp"/>
         <Button
             android:id="@+id/button1"
-            android:layout_width="100dp"
-            android:layout_height="100dp"/>
+            android:layout_width="50dp"
+            android:layout_height="50dp"/>
     </com.android.car.ui.TestFocusArea>
     <com.android.car.ui.TestFocusArea
         android:id="@+id/focus_area2"
@@ -56,13 +56,13 @@
         <View
             android:id="@+id/view2"
             android:focusable="true"
-            android:layout_width="100dp"
-            android:layout_height="100dp"/>
+            android:layout_width="50dp"
+            android:layout_height="50dp"/>
         <View
             android:id="@+id/default_focus2"
             android:focusable="true"
-            android:layout_width="100dp"
-            android:layout_height="100dp"/>
+            android:layout_width="50dp"
+            android:layout_height="50dp"/>
     </com.android.car.ui.TestFocusArea>
     <com.android.car.ui.TestFocusArea
         android:id="@+id/focus_area3"
@@ -73,17 +73,17 @@
         <View
             android:id="@+id/view3"
             android:focusable="true"
-            android:layout_width="100dp"
-            android:layout_height="100dp"/>
+            android:layout_width="50dp"
+            android:layout_height="50dp"/>
         <View
             android:focusable="true"
-            android:layout_width="100dp"
-            android:layout_height="100dp"/>
+            android:layout_width="50dp"
+            android:layout_height="50dp"/>
         <View
             android:id="@+id/nudge_shortcut3"
             android:focusable="true"
-            android:layout_width="100dp"
-            android:layout_height="100dp"/>
+            android:layout_width="50dp"
+            android:layout_height="50dp"/>
     </com.android.car.ui.TestFocusArea>
     <com.android.car.ui.TestFocusArea
         android:id="@+id/focus_area4"
@@ -93,8 +93,8 @@
         <View
             android:id="@+id/view4"
             android:focusable="true"
-            android:layout_width="100dp"
-            android:layout_height="100dp"/>
+            android:layout_width="50dp"
+            android:layout_height="50dp"/>
     </com.android.car.ui.TestFocusArea>
     <com.android.car.ui.TestFocusArea
         android:id="@+id/focus_area5"
@@ -104,12 +104,12 @@
         <View
             android:id="@+id/view5"
             android:focusable="true"
-            android:layout_width="100dp"
-            android:layout_height="100dp"/>
+            android:layout_width="50dp"
+            android:layout_height="50dp"/>
         <Button
             android:id="@+id/button5"
-            android:layout_width="100dp"
-            android:layout_height="100dp"/>
+            android:layout_width="50dp"
+            android:layout_height="50dp"/>
     </com.android.car.ui.TestFocusArea>
     <com.android.car.ui.TestFocusArea
         android:id="@+id/focus_area6"
@@ -119,17 +119,46 @@
         <View
             android:id="@+id/view6a"
             android:focusable="true"
-            android:layout_width="100dp"
-            android:layout_height="100dp"/>
+            android:layout_width="50dp"
+            android:layout_height="50dp"/>
         <View
             android:id="@+id/nudge_shortcut6"
             android:focusable="true"
-            android:layout_width="100dp"
-            android:layout_height="100dp"/>
+            android:layout_width="50dp"
+            android:layout_height="50dp"/>
         <View
             android:id="@+id/view6b"
             android:focusable="true"
-            android:layout_width="100dp"
-            android:layout_height="100dp"/>
+            android:layout_width="50dp"
+            android:layout_height="50dp"/>
     </com.android.car.ui.TestFocusArea>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <com.android.car.ui.TestFocusArea
+            android:id="@+id/focus_area7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <View
+                android:id="@+id/view7"
+                android:focusable="true"
+                android:layout_width="50dp"
+                android:layout_height="50dp"/>
+        </com.android.car.ui.TestFocusArea>
+        <com.android.car.ui.TestFocusArea
+            android:id="@+id/focus_area8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <View
+                android:id="@+id/view8"
+                android:focusable="true"
+                android:layout_width="50dp"
+                android:layout_height="25dp"/>
+            <com.android.car.ui.recyclerview.CarUiRecyclerView
+                android:id="@+id/list8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </com.android.car.ui.TestFocusArea>
+    </LinearLayout>
 </LinearLayout>
