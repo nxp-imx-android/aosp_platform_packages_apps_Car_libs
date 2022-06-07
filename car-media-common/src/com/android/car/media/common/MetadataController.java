@@ -204,7 +204,8 @@ public class MetadataController {
                     });
         }
 
-        if (appIcon != null) {
+        if (appIcon != null && appIcon.getContext().getResources().getBoolean(
+                R.bool.show_playback_source_id)) {
             playbackViewModel.getMediaSource()
                     .observe(lifecycleOwner, mediaSource -> {
                         if (mediaSource != null) {
