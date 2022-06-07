@@ -27,6 +27,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.inputmethodservice.ExtractEditText;
@@ -36,7 +37,6 @@ import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.Parcel;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
@@ -411,8 +411,7 @@ public class CarUiImeWideScreenController {
 
         byte[] byteArray = data.getByteArray(WIDE_SCREEN_EXTRACTED_TEXT_ICON);
         if (byteArray != null) {
-            Bitmap bitmap = Bitmap.CREATOR.createFromParcel(
-                    byteArrayToParcel(byteArray));
+            Bitmap bitmap = getBitmapFromBytes(byteArray);
             mWideScreenExtractedTextIcon.setImageDrawable(
                     new BitmapDrawable(mContext.getResources(), bitmap));
             mWideScreenExtractedTextIcon.setVisibility(View.VISIBLE);
@@ -466,8 +465,7 @@ public class CarUiImeWideScreenController {
                             c.getColumnIndex(
                                     SearchResultsProvider.PRIMARY_IMAGE_BLOB));
                     if (primaryBlob != null) {
-                        Bitmap primaryBitmap = Bitmap.CREATOR.createFromParcel(
-                                byteArrayToParcel(primaryBlob));
+                        Bitmap primaryBitmap = getBitmapFromBytes(primaryBlob);
                         searchItem.setIcon(
                                 new BitmapDrawable(mContext.getResources(), primaryBitmap));
                     }
@@ -476,8 +474,7 @@ public class CarUiImeWideScreenController {
                                     SearchResultsProvider.SECONDARY_IMAGE_BLOB));
 
                     if (secondaryBlob != null) {
-                        Bitmap secondaryBitmap = Bitmap.CREATOR.createFromParcel(
-                                byteArrayToParcel(secondaryBlob));
+                        Bitmap secondaryBitmap = getBitmapFromBytes(secondaryBlob);
                         String secondaryItemId = c.getString(c.getColumnIndex(
                                 SearchResultsProvider.SECONDARY_IMAGE_ID));
                         searchItem.setSupplementalIcon(
@@ -503,11 +500,18 @@ public class CarUiImeWideScreenController {
         mInputConnection.performPrivateCommand(WIDE_SCREEN_ACTION, bundle);
     }
 
-    private static Parcel byteArrayToParcel(byte[] bytes) {
-        Parcel parcel = Parcel.obtain();
-        parcel.unmarshall(bytes, 0, bytes.length);
-        parcel.setDataPosition(0);
-        return parcel;
+    /**
+     * Converts a byte array into a bitmap.
+     *
+     * @param bytes The byte array.
+     * @return The bitmap or null if the byte array was null.
+     */
+    private static Bitmap getBitmapFromBytes(byte[] bytes) {
+        if (bytes != null) {
+            final Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            return bitmap;
+        }
+        return null;
     }
 
     /**
