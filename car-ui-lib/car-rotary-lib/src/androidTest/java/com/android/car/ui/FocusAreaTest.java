@@ -46,6 +46,7 @@ import androidx.annotation.NonNull;
 import androidx.test.rule.ActivityTestRule;
 
 import com.android.car.rotary.test.R;
+import com.android.car.ui.recyclerview.CarUiRecyclerView;
 import com.android.car.ui.utils.TestUtils;
 
 import org.junit.Before;
@@ -71,6 +72,8 @@ public class FocusAreaTest {
     private TestFocusArea mFocusArea4;
     private TestFocusArea mFocusArea5;
     private TestFocusArea mFocusArea6;
+    private TestFocusArea mFocusArea7;
+    private TestFocusArea mFocusArea8;
     private FocusParkingView mFpv;
     private View mView1;
     private Button mButton1;
@@ -84,6 +87,9 @@ public class FocusAreaTest {
     private View mView6a;
     private View mView6b;
     private View mNudgeShortcut6;
+    private View mView7;
+    private View mView8;
+    private CarUiRecyclerView mList8;
 
     @Before
     public void setUp() {
@@ -94,6 +100,8 @@ public class FocusAreaTest {
         mFocusArea4 = mActivity.findViewById(R.id.focus_area4);
         mFocusArea5 = mActivity.findViewById(R.id.focus_area5);
         mFocusArea6 = mActivity.findViewById(R.id.focus_area6);
+        mFocusArea7 = mActivity.findViewById(R.id.focus_area7);
+        mFocusArea8 = mActivity.findViewById(R.id.focus_area8);
         mFpv = mActivity.findViewById(R.id.fpv);
         mView1 = mActivity.findViewById(R.id.view1);
         mButton1 = mActivity.findViewById(R.id.button1);
@@ -107,6 +115,9 @@ public class FocusAreaTest {
         mView6a = mActivity.findViewById(R.id.view6a);
         mNudgeShortcut6 = mActivity.findViewById(R.id.nudge_shortcut6);
         mView6b = mActivity.findViewById(R.id.view6b);
+        mView7 = mActivity.findViewById(R.id.view7);
+        mView8 = mActivity.findViewById(R.id.view8);
+        mList8 = mActivity.findViewById(R.id.list8);
     }
 
     @Test
@@ -466,6 +477,56 @@ public class FocusAreaTest {
         // mView2 in mFocusArea2 should get focused.
         latch3.await(WAIT_TIME_MS, TimeUnit.MILLISECONDS);
         assertThat(mView2.isFocused()).isTrue();
+    }
+
+    @Test
+    public void testPerformAccessibilityAction_actionFocus_uninitializedLazyLayoutView()
+            throws Exception {
+        CountDownLatch latch1 = new CountDownLatch(1);
+        mView7.post(() -> {
+            mView7.requestFocus();
+            mView7.post(() -> latch1.countDown());
+        });
+        latch1.await(WAIT_TIME_MS, TimeUnit.MILLISECONDS);
+        assertThat(mView7.isFocused()).isTrue();
+
+        CountDownLatch latch2 = new CountDownLatch(1);
+        mFocusArea8.post(() -> {
+            mFocusArea8.performAccessibilityAction(ACTION_FOCUS, null);
+            mFocusArea8.post(() -> latch2.countDown());
+        });
+        latch2.await(WAIT_TIME_MS, TimeUnit.MILLISECONDS);
+        // When handling nudges, ignore unloaded LazyLayoutView rather than wait it to load, and
+        // focus another focusable view.
+        assertThat(mView8.isFocused()).isTrue();
+    }
+
+    @Test
+    public void testPerformAccessibilityAction_actionFocus_nonEmptyLazyLayoutView()
+            throws Exception {
+        CountDownLatch latch1 = new CountDownLatch(1);
+        mView7.post(() -> {
+            mView7.requestFocus();
+            mView7.post(() -> latch1.countDown());
+        });
+        latch1.await(WAIT_TIME_MS, TimeUnit.MILLISECONDS);
+        assertThat(mView7.isFocused()).isTrue();
+
+        CountDownLatch latch2 = new CountDownLatch(1);
+        mList8.getView().getRootView().post(() -> {
+            mList8.setAdapter(new TestAdapter(1));
+        });
+        latch2.await(WAIT_TIME_MS, TimeUnit.MILLISECONDS);
+
+        CountDownLatch latch3 = new CountDownLatch(1);
+        View firstItem = mList8.findViewByPosition(0);
+        mFocusArea8.post(() -> {
+            mFocusArea8.performAccessibilityAction(ACTION_FOCUS, null);
+            mFocusArea8.post(() -> latch3.countDown());
+        });
+        latch3.await(WAIT_TIME_MS, TimeUnit.MILLISECONDS);
+        // An initialized lazyLayoutView takes precedences over a regular view
+        assertThat(firstItem.isFocused()).isTrue();
     }
 
     @Test
