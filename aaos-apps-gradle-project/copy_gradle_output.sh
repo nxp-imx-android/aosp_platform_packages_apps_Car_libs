@@ -9,7 +9,19 @@ then
     exit 1
 fi
 
-cd $(dirname $0) || exit
+if [[ -f $1 ]]
+then
+    echo "target $1 exists as a file!!"
+    exit 1
+elif [[ ! -d $1 ]]
+then
+    echo "creating $1 directory"
+    mkdir $1
+else
+    echo "$1 directory already there"
+fi
+
+cd "$(dirname "$0")" || exit
 # Keep in sync with ./build.gradle
 cd ../../../../../out/aaos-apps-gradle-build/ || exit
 
