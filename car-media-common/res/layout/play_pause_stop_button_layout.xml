@@ -22,8 +22,8 @@
     android:layout_height="wrap_content">
     <com.android.car.media.common.PlayPauseStopImageView
         android:id="@+id/play_pause_stop"
-        style="@style/Widget.ActionButton"
-        android:src="@drawable/ic_play_pause_stop_animated"/>
+        android:src="@drawable/ic_play_pause_stop_animated"
+        style="@style/Widget.ActionButton.PlayPause"/>
     <ProgressBar
         android:id="@+id/circular_progress_bar"
         android:layout_width="@dimen/fab_spinner_size"

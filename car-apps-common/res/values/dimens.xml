@@ -32,6 +32,7 @@
     <dimen name="control_bar_elevation">0dp</dimen>
     <dimen name="control_bar_button_padding">30dp</dimen>
     <dimen name="control_bar_button_background_radius">52dp</dimen>
+    <dimen name="play_pause_image_size">@dimen/control_bar_button_size</dimen>
 
     <!-- Overflow button in control Bar -->
     <dimen name="overflow_button_icon_size">44dp</dimen>
