@@ -268,6 +268,11 @@ public class PlaybackViewModel extends AndroidViewModel {
                 return;
             }
 
+            if (newBrowsingState == null) {
+                Log.e(TAG, "Null browsing state (no media source!)");
+                return;
+            }
+
             // Reset the old controller if any, unregistering the callback when browsing is
             // not suspended (crashed).
             if (mMediaController != null) {

@@ -16,6 +16,8 @@ limitations under the License.-->
 <resources>
   <overlayable name="car-ui-lib">
     <policy type="odm|oem|product|signature|system|vendor">
+      <item type="anim" name="car_ui_app_styled_view_enter_anim"/>
+      <item type="anim" name="car_ui_app_styled_view_exit_anim"/>
       <item type="array" name="car_ui_ime_wide_screen_allowed_package_list"/>
       <item type="attr" name="CarUiToolbarStyle"/>
       <item type="attr" name="actionEnabled"/>
@@ -143,6 +145,7 @@ limitations under the License.-->
       <item type="bool" name="car_ui_escrow_check_components_automatically"/>
       <item type="bool" name="car_ui_ime_wide_screen_aligned_left"/>
       <item type="bool" name="car_ui_ime_wide_screen_allow_app_hide_content_area"/>
+      <item type="bool" name="car_ui_is_light_theme"/>
       <item type="bool" name="car_ui_list_item_single_line_title"/>
       <item type="bool" name="car_ui_preference_list_instant_change_callback"/>
       <item type="bool" name="car_ui_preference_list_show_full_screen"/>
@@ -592,6 +595,8 @@ limitations under the License.-->
       <item type="style" name="Widget.CarUi.AlertDialog.HeaderContainer"/>
       <item type="style" name="Widget.CarUi.AlertDialog.Icon"/>
       <item type="style" name="Widget.CarUi.AlertDialog.TitleContainer"/>
+      <item type="style" name="Widget.CarUi.AppStyledView"/>
+      <item type="style" name="Widget.CarUi.AppStyledView.WindowAnimations"/>
       <item type="style" name="Widget.CarUi.Button"/>
       <item type="style" name="Widget.CarUi.Button.Borderless.Colored"/>
       <item type="style" name="Widget.CarUi.CarUiRecyclerView"/>

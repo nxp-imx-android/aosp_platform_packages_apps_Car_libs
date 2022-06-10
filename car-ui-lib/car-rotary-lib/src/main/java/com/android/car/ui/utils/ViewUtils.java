@@ -275,6 +275,17 @@ public final class ViewUtils {
     }
 
     /**
+     * Similar to {@link #adjustFocusImmediately(View, View)} but focuses on
+     * {@code cachedFocusedView} or any other focusable view with the highest {@link FocusLevel}
+     */
+    public static boolean adjustFocusImmediately(@NonNull View root,
+            @Nullable View cachedFocusedView,
+            boolean defaultFocusOverridesHistory) {
+        return adjustFocus(root, NO_FOCUS, cachedFocusedView,
+                defaultFocusOverridesHistory, /* delayed= */ false);
+    }
+
+    /**
      * If the {@code currentFocus}'s FocusLevel is lower than REGULAR_FOCUS, adjusts focus within
      * {@code root}. See {@link #adjustFocus(View, int)}. Otherwise no-op.
      *

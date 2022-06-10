@@ -42,5 +42,8 @@ allprojects {
         options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
     }
 
-    buildDir = "/tmp/aaos-apps-gradle-build/${rootProject.name}/${project.name}"
+    // Send all the build files to the out folder under the root of the repo init.
+    // Gradle creates that folder if it doesn't exist.
+    // Keep in sync with ./copy_gradle_output.sh
+    buildDir = new File(rootProject.projectDir, "../../../../../out/aaos-apps-gradle-build/" + project.name)
 }

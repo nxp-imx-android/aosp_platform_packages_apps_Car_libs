@@ -24,6 +24,9 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowInsets;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import androidx.annotation.LayoutRes;
@@ -48,9 +51,8 @@ import com.android.car.ui.widget.CarUiTextViewImpl;
 import java.util.List;
 
 /**
- * This is the stub implementation of {@link PluginFactory}, used when there is no plugin
- * installed on the system. It delegates to the static library implementation of the
- * necessary components.
+ * This is the stub implementation of {@link PluginFactory}, used when there is no plugin installed
+ * on the system. It delegates to the static library implementation of the necessary components.
  * <p>
  * Do not use from client apps, for car-ui-lib internal use only.
  */
@@ -109,7 +111,26 @@ public final class PluginFactoryStub implements PluginFactory {
             }
         }
 
-        InsetsUpdater insetsUpdater = new InsetsUpdater(baseLayout, contentView);
+        // Allow for content to be rendered in display cut-out area
+        boolean renderInDisplayCutOut = false;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
+                && contentView.getContext() instanceof Activity) {
+            renderInDisplayCutOut = true;
+            Window baseLayoutWindow = ((Activity) contentView.getContext()).getWindow();
+            WindowManager.LayoutParams lp = baseLayoutWindow.getAttributes();
+            lp.layoutInDisplayCutoutMode =
+                    WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS;
+            baseLayoutWindow.setAttributes(lp);
+            // Remove display cut-out insets on DecorView
+            baseLayoutWindow.getDecorView().setOnApplyWindowInsetsListener((v, insets) -> {
+                insets = new WindowInsets.Builder(insets).setInsets(
+                        WindowInsets.Type.displayCutout(), android.graphics.Insets.NONE).build();
+                return v.onApplyWindowInsets(insets);
+            });
+        }
+
+        InsetsUpdater insetsUpdater = new InsetsUpdater(baseLayout, contentView,
+                renderInDisplayCutOut);
         insetsUpdater.replaceInsetsChangedListenerWith(insetsChangedListener);
 
         return toolbarController;
@@ -165,7 +186,8 @@ public final class PluginFactoryStub implements PluginFactory {
          */
         InsetsUpdater(
                 @NonNull View baseLayout,
-                @NonNull View contentView) {
+                @NonNull View contentView,
+                boolean renderInDisplayCutOut) {
             mContentView = contentView;
             mContentViewContainer = requireViewByRefId(baseLayout,
                     R.id.car_ui_base_layout_content_container);
@@ -180,7 +202,7 @@ public final class PluginFactoryStub implements PluginFactory {
                             int oldLeft, int oldTop, int oldRight, int oldBottom) -> {
                         if (left != oldLeft || top != oldTop
                                 || right != oldRight || bottom != oldBottom) {
-                            recalcInsets();
+                            recalcInsets(renderInDisplayCutOut);
                         }
                     };
 
@@ -207,10 +229,8 @@ public final class PluginFactoryStub implements PluginFactory {
         /**
          * Recalculate the amount of insets we need, and then dispatch them.
          */
-        private void recalcInsets() {
-
+        private void recalcInsets(boolean renderInDisplayCutOut) {
             // Calculate how much each inset view overlays the content view
-
             // These initial values are for Media Center's implementation of base layouts.
             // They should evaluate to 0 in all other apps, because the content view and content
             // view container have the same size and position there.
@@ -226,6 +246,22 @@ public final class PluginFactoryStub implements PluginFactory {
                 top += Math.max(0,
                         getBottomOfView(mTopInsetView) - getTopOfView(mContentViewContainer));
             }
+
+            // Calculate display cut-out insets
+            if (renderInDisplayCutOut) {
+                WindowInsets rootInsets = mContentViewContainer.getRootWindowInsets();
+                if (rootInsets.getDisplayCutout() != null) {
+                    left = Math.max(left, rootInsets.getDisplayCutout().getSafeInsetLeft()
+                            - rootInsets.getStableInsetLeft());
+                    right = Math.max(right, rootInsets.getDisplayCutout().getSafeInsetRight()
+                            - rootInsets.getStableInsetRight());
+                    top = Math.max(top, rootInsets.getDisplayCutout().getSafeInsetTop()
+                            - rootInsets.getStableInsetTop());
+                    bottom = Math.max(bottom, rootInsets.getDisplayCutout().getSafeInsetBottom()
+                            - rootInsets.getStableInsetBottom());
+                }
+            }
+
             if (mBottomInsetView != null) {
                 bottom += Math.max(0,
                         getBottomOfView(mContentViewContainer) - getTopOfView(mBottomInsetView));

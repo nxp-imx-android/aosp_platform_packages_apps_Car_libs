@@ -582,7 +582,7 @@ class FocusAreaHelper {
         switch (action) {
             case ACTION_FOCUS:
                 // Repurpose ACTION_FOCUS to focus on mFocusArea's descendant. We can do this
-                // because mFocusArea is not focusable and it didn't consume
+                // because mFocusArea is not focusable, and it didn't consume
                 // ACTION_FOCUS previously.
                 boolean success = focusOnDescendant();
                 if (success && mPreviousFocusArea != null) {
@@ -606,7 +606,8 @@ class FocusAreaHelper {
 
     private boolean focusOnDescendant() {
         View lastFocusedView = mRotaryCache.getFocusedView(SystemClock.uptimeMillis());
-        return ViewUtils.adjustFocus(mFocusArea, lastFocusedView, mDefaultFocusOverridesHistory);
+        return ViewUtils.adjustFocusImmediately(mFocusArea, lastFocusedView,
+                mDefaultFocusOverridesHistory);
     }
 
     private boolean nudgeToShortcutView(Bundle arguments) {

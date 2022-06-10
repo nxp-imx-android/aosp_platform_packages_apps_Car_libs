@@ -40,6 +40,7 @@ import static com.android.car.ui.imewidescreen.CarUiImeWideScreenController.REQU
 import static com.android.car.ui.imewidescreen.CarUiImeWideScreenController.WIDE_SCREEN_ACTION;
 import static com.android.car.ui.imewidescreen.CarUiImeWideScreenController.WIDE_SCREEN_EXTRACTED_TEXT_ICON;
 import static com.android.car.ui.imewidescreen.CarUiImeWideScreenController.WIDE_SCREEN_EXTRACTED_TEXT_ICON_RES_ID;
+import static com.android.car.ui.imewidescreen.CarUiImeWideScreenController.WIDE_SCREEN_HIDE_EXTRACTED_TEXT_VIEW;
 import static com.android.car.ui.imewidescreen.CarUiImeWideScreenController.WIDE_SCREEN_SEARCH_RESULTS;
 import static com.android.car.ui.imewidescreen.CarUiImeWideScreenTestActivity.sCarUiImeWideScreenController;
 import static com.android.car.ui.matchers.CarUiRecyclerViewMatcher.atPosition;
@@ -356,15 +357,30 @@ public class CarUiImeWideScreenControllerTest {
     }
 
     @Test
-    public void setExtractViewShown_shouldHideExtractView() {
+    public void setExtractViewShown_shouldNotHideExtractView() {
         InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> {
             sCarUiImeWideScreenController.setExtractViewShown(false);
         });
-        onView(withId(R.id.car_ui_fullscreenArea)).check(matches(not(isDisplayed())));
+        onView(withId(R.id.car_ui_fullscreenArea)).check(matches(isDisplayed()));
 
         InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> {
             sCarUiImeWideScreenController.setExtractViewShown(true);
         });
+    }
+
+    @Test
+    public void setExtractViewShown_shouldHideExtractView() {
+
+        InstrumentationRegistry.getInstrumentation().runOnMainSync(() -> {
+            sCarUiImeWideScreenController.onStartInputView(mEditorInfoMock, mInputConnectionMock,
+                    TEST);
+
+            Bundle bundle = new Bundle();
+            bundle.putBoolean(WIDE_SCREEN_HIDE_EXTRACTED_TEXT_VIEW, true);
+            sCarUiImeWideScreenController.onAppPrivateCommand(WIDE_SCREEN_SEARCH_RESULTS, bundle);
+        });
+
+        onView(withId(R.id.car_ui_fullscreenArea)).check(matches(not(isDisplayed())));
     }
 
     @Test

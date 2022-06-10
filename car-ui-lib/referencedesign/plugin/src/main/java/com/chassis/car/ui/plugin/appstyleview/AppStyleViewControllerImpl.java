@@ -25,13 +25,12 @@ import android.view.WindowManager.LayoutParams;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 
-import com.android.car.ui.plugin.oemapis.appstyledview.AppStyledViewControllerOEMV1;
 import com.android.car.ui.plugin.oemapis.appstyledview.AppStyledViewControllerOEMV2;
 
 import com.chassis.car.ui.plugin.R;
 
 /**
- * The OEM implementation for {@link AppStyledViewControllerOEMV1} for a AppStyledView.
+ * The OEM implementation for {@link AppStyledViewControllerOEMV2} for a AppStyledView.
  */
 public class AppStyleViewControllerImpl implements AppStyledViewControllerOEMV2 {
     private final Context mPluginContext;
@@ -77,11 +76,10 @@ public class AppStyleViewControllerImpl implements AppStyledViewControllerOEMV2 
     @Override
     public void setNavIcon(int navIcon) {
         ImageView navIconView = mAppStyleView.requireViewById(R.id.app_styled_view_icon_close);
-        navIconView.setVisibility(navIcon == AppStyledViewControllerOEMV1.NAV_ICON_DISABLED
-                ? View.INVISIBLE : View.VISIBLE);
-        if (navIcon == AppStyledViewControllerOEMV1.NAV_ICON_BACK) {
+        navIconView.setVisibility(navIcon == NAV_ICON_DISABLED ? View.INVISIBLE : View.VISIBLE);
+        if (navIcon == NAV_ICON_BACK) {
             navIconView.setImageResource(R.drawable.icon_back);
-        } else if (navIcon == AppStyledViewControllerOEMV1.NAV_ICON_CLOSE) {
+        } else if (navIcon == NAV_ICON_CLOSE) {
             navIconView.setImageResource(R.drawable.icon_close);
         }
     }
