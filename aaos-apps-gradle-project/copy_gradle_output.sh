@@ -23,25 +23,24 @@ fi
 
 cd "$(dirname "$0")" || exit
 # Keep in sync with ./build.gradle
-cd ../../../../../out/aaos-apps-gradle-build/ || exit
-
+OUTPUT_DIR=../../../../../out/aaos-apps-gradle-build/
 
 # APKs
-cp car-dialer-app/outputs/apk/production/release/car-dialer-app-production-release-unsigned.apk $1/CarDialerApp.apk
-cp car-media-app/outputs/apk/release/car-media-app-release-unsigned.apk $1/CarMediaApp.apk
-cp car-messenger-app/outputs/apk/release/car-messenger-app-release-unsigned.apk $1/CarMessengerApp.apk
-cp PaintBooth/outputs/apk/release/PaintBooth-release-unsigned.apk $1/PaintBooth.apk
-cp test-rotary-playground/outputs/apk/release/test-rotary-playground-release-unsigned.apk $1/RotaryPlayground.apk
+cp $OUTPUT_DIR/car-dialer-app/outputs/apk/production/release/car-dialer-app-production-release-unsigned.apk $1/CarDialerApp.apk
+cp $OUTPUT_DIR/car-media-app/outputs/apk/release/car-media-app-release-unsigned.apk $1/CarMediaApp.apk
+cp $OUTPUT_DIR/car-messenger-app/outputs/apk/release/car-messenger-app-release-unsigned.apk $1/CarMessengerApp.apk
+cp $OUTPUT_DIR/PaintBooth/outputs/apk/release/PaintBooth-release-unsigned.apk $1/PaintBooth.apk
+cp $OUTPUT_DIR/test-rotary-playground/outputs/apk/release/test-rotary-playground-release-unsigned.apk $1/RotaryPlayground.apk
 # ??? TestMediaApp
 # TODO: create gradle project for RotaryIME
 
 # AARs
-cp car-ui-lib/outputs/aar/car-ui-lib-release.aar $1/car-ui-lib.aar
-cp car-uxr-client-lib/outputs/aar/car-uxr-client-lib-release.aar $1/car-uxr-client-lib.aar
-cp car-assist-lib/outputs/aar/car-assist-lib-release.aar $1/car-assist-lib.aar
-cp car-apps-common/outputs/aar/car-apps-common-release.aar $1/car-apps-common.aar
-cp car-media-common/outputs/aar/car-media-common-release.aar $1/car-media-common.aar
-cp car-telephony-common/outputs/aar/car-telephony-common-release.aar $1/car-telephony-common-aar
+cp $OUTPUT_DIR/car-ui-lib/outputs/aar/car-ui-lib-release.aar $1/car-ui-lib.aar
+cp $OUTPUT_DIR/car-uxr-client-lib/outputs/aar/car-uxr-client-lib-release.aar $1/car-uxr-client-lib.aar
+cp $OUTPUT_DIR/car-assist-lib/outputs/aar/car-assist-lib-release.aar $1/car-assist-lib.aar
+cp $OUTPUT_DIR/car-apps-common/outputs/aar/car-apps-common-release.aar $1/car-apps-common.aar
+cp $OUTPUT_DIR/car-media-common/outputs/aar/car-media-common-release.aar $1/car-media-common.aar
+cp $OUTPUT_DIR/car-telephony-common/outputs/aar/car-telephony-common-release.aar $1/car-telephony-common-aar
 
 # ??? car-ui-lib-oem-apis-jar
 # ??? car-ui-lib-testing-support-aar
