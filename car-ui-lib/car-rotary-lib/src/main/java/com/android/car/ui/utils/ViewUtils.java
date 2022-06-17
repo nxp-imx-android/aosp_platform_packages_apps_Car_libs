@@ -391,7 +391,8 @@ public final class ViewUtils {
         initFocusDelayed(lazyLayoutView);
     }
 
-    private static void initFocusDelayed(@NonNull LazyLayoutView lazyLayoutView) {
+    @VisibleForTesting
+    static void initFocusDelayed(@NonNull LazyLayoutView lazyLayoutView) {
         if (!(lazyLayoutView instanceof View)) {
             return;
         }
@@ -423,14 +424,26 @@ public final class ViewUtils {
             lazyLayoutView.addOnLayoutCompleteListener(onLayoutCompleteListener[0]);
         }
 
-        // If the lazyLayoutView is not shown yet, try to restore focus inside it once it's shown.
-        if (!lazyView.isShown()) {
-            Log.d(TAG, "The lazyLayoutView is not shown: " + lazyLayoutView);
+        // If the lazyLayoutView has completed layout but it's not ready to restore focus, postpone
+        // restoring focus until it's ready. For example:
+        // 1. The lazyLayoutView is not shown, then try to restore focus inside it once it's shown.
+        // 2. The lazyLayoutView's descendants haven't been bind (b/236319192), then try to restore
+        //    focus inside it once its descendants are bind.
+        if (!lazyView.isShown() || findImplicitDefaultFocusView(lazyView) == null) {
+            if (!lazyView.isShown()) {
+                Log.d(TAG, "The lazyLayoutView is not shown: " + lazyLayoutView);
+            } else {
+                Log.d(TAG, "The lazyLayoutView is shown and has completed layout, but has no "
+                        + "focusable descendants: " + lazyLayoutView);
+            }
             onGlobalLayoutListener[0] = () -> {
                 Log.d(TAG, "onGlobalLayoutListener is called");
                 if (lazyView.isShown()) {
                     Log.d(TAG, "The lazyLayoutView is shown");
-                    if (initFocusImmediately(lazyLayoutView)) {
+                    View implicitDefaultFocus = findImplicitDefaultFocusView(lazyView);
+                    Log.d(TAG, "The implicitDefaultFocus of the lazyLayoutView is "
+                            + implicitDefaultFocus);
+                    if (requestFocus(implicitDefaultFocus)) {
                         Log.v(TAG, "Focus restored after showing lazyLayoutView");
                         removeCallbacks(lazyLayoutView, onGlobalLayoutListener,
                                 onLayoutCompleteListener, delayedTask);
