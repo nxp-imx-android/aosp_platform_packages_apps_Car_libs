@@ -30,7 +30,7 @@ import com.android.car.ui.TestAdapter.TestViewHolder;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class TestAdapter extends Adapter<TestViewHolder> {
+public class TestAdapter extends Adapter<TestViewHolder> {
 
     private final List<String> mItems;
 
@@ -59,7 +59,7 @@ public final class TestAdapter extends Adapter<TestViewHolder> {
         return mItems.size();
     }
 
-    static class TestViewHolder extends RecyclerView.ViewHolder {
+    public static class TestViewHolder extends RecyclerView.ViewHolder {
 
         TestViewHolder(@NonNull View itemView) {
             super(itemView);
