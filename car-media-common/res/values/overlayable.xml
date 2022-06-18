@@ -31,6 +31,8 @@ REGENERATE USING packages/apps/Car/tests/tools/rro/generate-overlayable.py
       <item type="attr" name="state_play"/>
       <item type="attr" name="state_stop"/>
       <item type="bool" name="show_circular_progress_bar"/>
+      <item type="bool" name="show_circular_progress_bar_only_when_active"/>
+      <item type="bool" name="show_disabled_skip_buttons"/>
       <item type="bool" name="show_linear_progress_bar"/>
       <item type="bool" name="show_playback_source_id"/>
       <item type="bool" name="use_media_source_color_for_fab_spinner"/>
