@@ -36,14 +36,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
+import com.android.car.ui.plugin.oemapis.BiConsumer;
+import com.android.car.ui.plugin.oemapis.Consumer;
 import com.android.car.ui.plugin.oemapis.toolbar.ToolbarControllerOEMV1;
 
 import com.chassis.car.ui.plugin.R;
 import com.chassis.car.ui.plugin.uxr.CarUxRestrictionsUtil;
 
 import java.util.Objects;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 class SearchController {
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 The Android Open Source Project
+ * Copyright 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,22 +19,19 @@ package com.android.car.ui.plugin.oemapis.recyclerview;
 import android.graphics.drawable.Drawable;
 import android.text.SpannableString;
 
+import com.android.car.ui.plugin.oemapis.Consumer;
 import com.android.car.ui.plugin.oemapis.NonNull;
 import com.android.car.ui.plugin.oemapis.Nullable;
 import com.android.car.ui.plugin.oemapis.TextOEMV1;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * The OEM interface for content list item.
- *
- * @deprecated Use {@link ContentListItemOEMV2} instead
  */
-@Deprecated
 @SuppressWarnings("AndroidJdkLibsChecker")
-public final class ContentListItemOEMV1 implements ListItemOEMV1 {
+public final class ContentListItemOEMV2 implements ListItemOEMV1 {
     public enum IconType {
         /**
          * For an icon type of CONTENT, the primary icon is a larger than {@code STANDARD}.
@@ -95,11 +92,11 @@ public final class ContentListItemOEMV1 implements ListItemOEMV1 {
     private final boolean mIsActivated;
     private final boolean mIsActionDividerVisible;
     private final boolean mIsSecure;
-    private final Consumer<ContentListItemOEMV1> mOnClickListener;
-    private final Consumer<ContentListItemOEMV1> mOnCheckedChangeListener;
-    private final Consumer<ContentListItemOEMV1> mSupplementalIconOnClickListener;
+    private final Consumer<ContentListItemOEMV2> mOnClickListener;
+    private final Consumer<ContentListItemOEMV2> mOnCheckedChangeListener;
+    private final Consumer<ContentListItemOEMV2> mSupplementalIconOnClickListener;
 
-    ContentListItemOEMV1(@NonNull Builder builder) {
+    ContentListItemOEMV2(@NonNull Builder builder) {
         mAction = builder.mAction;
         mTitle = builder.mTitle;
         mBody = builder.mBody;
@@ -205,7 +202,7 @@ public final class ContentListItemOEMV1 implements ListItemOEMV1 {
      * Returns the click listener registered for the supplemental icon on this item.
      */
     @Nullable
-    public Consumer<ContentListItemOEMV1> getSupplementalIconOnClickListener() {
+    public Consumer<ContentListItemOEMV2> getSupplementalIconOnClickListener() {
         return mSupplementalIconOnClickListener;
     }
 
@@ -213,7 +210,7 @@ public final class ContentListItemOEMV1 implements ListItemOEMV1 {
      * Returns the click listener registered for this item.
      */
     @Nullable
-    public Consumer<ContentListItemOEMV1> getOnClickListener() {
+    public Consumer<ContentListItemOEMV2> getOnClickListener() {
         return mOnClickListener;
     }
 
@@ -221,7 +218,7 @@ public final class ContentListItemOEMV1 implements ListItemOEMV1 {
      * Returns the checked change listener registered for this item.
      */
     @Nullable
-    public Consumer<ContentListItemOEMV1> getOnCheckedChangeListener() {
+    public Consumer<ContentListItemOEMV2> getOnCheckedChangeListener() {
         return mOnCheckedChangeListener;
     }
 
@@ -247,7 +244,7 @@ public final class ContentListItemOEMV1 implements ListItemOEMV1 {
     }
 
     /**
-     * A builder of {@link ContentListItemOEMV1}.
+     * A builder of {@link ContentListItemOEMV2}.
      */
     public static final class Builder {
         private final Action mAction;
@@ -261,9 +258,9 @@ public final class ContentListItemOEMV1 implements ListItemOEMV1 {
         private boolean mIsActivated = false;
         private boolean mIsActionDividerVisible = false;
         private boolean mIsSecure = false;
-        private Consumer<ContentListItemOEMV1> mOnClickListener;
-        private Consumer<ContentListItemOEMV1> mOnCheckedChangeListener;
-        private Consumer<ContentListItemOEMV1> mSupplementalIconOnClickListener;
+        private Consumer<ContentListItemOEMV2> mOnClickListener;
+        private Consumer<ContentListItemOEMV2> mOnCheckedChangeListener;
+        private Consumer<ContentListItemOEMV2> mSupplementalIconOnClickListener;
 
         /**
          * Returns a new instance of a {@link Builder}.
@@ -405,7 +402,7 @@ public final class ContentListItemOEMV1 implements ListItemOEMV1 {
          */
         @NonNull
         public Builder setSupplementalIcon(@NonNull Drawable icon,
-                @NonNull Consumer<ContentListItemOEMV1> listener) {
+                @NonNull Consumer<ContentListItemOEMV2> listener) {
             if (mAction != Action.ICON) {
                 throw new IllegalStateException(
                         "Cannot set supplemental icon on list item that does not have an action of "
@@ -423,7 +420,7 @@ public final class ContentListItemOEMV1 implements ListItemOEMV1 {
          * @param listener callback to be invoked when item is clicked.
          */
         @NonNull
-        public void setOnItemClickedListener(@NonNull Consumer<ContentListItemOEMV1> listener) {
+        public void setOnItemClickedListener(@NonNull Consumer<ContentListItemOEMV2> listener) {
             mOnClickListener = listener;
         }
 
@@ -437,17 +434,17 @@ public final class ContentListItemOEMV1 implements ListItemOEMV1 {
          */
         @NonNull
         public Builder setOnCheckedChangeListener(
-                @NonNull Consumer<ContentListItemOEMV1> listener) {
+                @NonNull Consumer<ContentListItemOEMV2> listener) {
             mOnCheckedChangeListener = listener;
             return this;
         }
 
         /**
-         * Returns a {@link ContentListItemOEMV1} for this {@link Builder}.
+         * Returns a {@link ContentListItemOEMV2} for this {@link Builder}.
          */
         @NonNull
-        public ContentListItemOEMV1 build() {
-            return new ContentListItemOEMV1(this);
+        public ContentListItemOEMV2 build() {
+            return new ContentListItemOEMV2(this);
         }
     }
 }

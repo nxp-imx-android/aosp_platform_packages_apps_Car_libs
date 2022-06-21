@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,20 +18,15 @@ package com.android.car.ui.plugin.oemapis.toolbar;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.android.car.ui.plugin.oemapis.BiConsumer;
+import com.android.car.ui.plugin.oemapis.Consumer;
 import com.android.car.ui.plugin.oemapis.Nullable;
-
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 /**
  * This is an interface (as in "bridge") between the static lib and the plugin, so that
  * the static lib can handle showing search results inside the IME.
- *
- * @deprecated Use {@link ImeSearchInterfaceOEMV2} instead
  */
-@Deprecated
-@SuppressWarnings("AndroidJdkLibsChecker")
-public interface ImeSearchInterfaceOEMV1 {
+public interface ImeSearchInterfaceOEMV2 {
     /**
      * Sets a consumer that should be called when the search TextView is ready.
      * <p>

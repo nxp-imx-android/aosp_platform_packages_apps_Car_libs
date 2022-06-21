@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 The Android Open Source Project
+ * Copyright (C) 2022 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,19 +18,13 @@ package com.android.car.ui.plugin.oemapis.toolbar;
 
 import android.graphics.drawable.Drawable;
 
+import com.android.car.ui.plugin.oemapis.Consumer;
 import com.android.car.ui.plugin.oemapis.Nullable;
 
 import java.util.List;
-import java.util.function.Consumer;
 
-/**
- * The OEM interface for a Toolbar.
- *
- * @deprecated Use {@link ToolbarControllerOEMV2} instead
- */
-@Deprecated
-@SuppressWarnings("AndroidJdkLibsChecker")
-public interface ToolbarControllerOEMV1 {
+/**The OEM interface for a Toolbar. */
+public interface ToolbarControllerOEMV2 {
 
     /**
      * Sets the title of the toolbar to a String.
@@ -100,7 +94,7 @@ public interface ToolbarControllerOEMV1 {
      * the same object every time it's called. It may return null if this feature is not supported.
      */
     @Nullable
-    ImeSearchInterfaceOEMV1 getImeSearchInterface();
+    ImeSearchInterfaceOEMV2 getImeSearchInterface();
 
     /** Don't show the nav button */
     int NAV_BUTTON_MODE_DISABLED = 0;

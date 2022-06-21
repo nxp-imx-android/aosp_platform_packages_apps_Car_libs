@@ -25,10 +25,9 @@ import com.android.car.ui.plugin.oemapis.recyclerview.RecyclerViewAttributesOEMV
 import com.android.car.ui.plugin.oemapis.recyclerview.RecyclerViewOEMV1;
 import com.android.car.ui.plugin.oemapis.recyclerview.ViewHolderOEMV1;
 import com.android.car.ui.plugin.oemapis.toolbar.ToolbarControllerOEMV1;
+import com.android.car.ui.plugin.oemapis.toolbar.ToolbarControllerOEMV2;
 
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 /**
  * This interface contains methods to create customizable Car UI components.
@@ -39,12 +38,8 @@ import java.util.function.Function;
  * <p>
  * Multiple of these can be provided via {@link PluginVersionProviderOEMV1} to allow plugins
  * to provide an old implementation for old apps, and a newer implementation for newer apps.
- *
- * @deprecated Use {@link PluginFactoryOEMV4} instead
  */
-@Deprecated
-@SuppressWarnings("AndroidJdkLibsChecker")
-public interface PluginFactoryOEMV3 {
+public interface PluginFactoryOEMV4 {
     /**
      * Gives the plugin access to two factories that will create FocusParkingViews and
      * FocusAreas. These views have their implementation in the static car-ui-lib.
@@ -81,7 +76,7 @@ public interface PluginFactoryOEMV3 {
      * @return A {@link ToolbarControllerOEMV1} or null if {@code toolbarEnabled} was false.
      */
     @Nullable
-    ToolbarControllerOEMV1 installBaseLayoutAround(
+    ToolbarControllerOEMV2 installBaseLayoutAround(
             @NonNull Context sourceContext,
             @NonNull View contentView,
             @Nullable Consumer<InsetsOEMV1> insetsChangedListener,
