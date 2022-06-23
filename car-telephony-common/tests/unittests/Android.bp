@@ -5,8 +5,13 @@ package {
     default_applicable_licenses: ["Android-Apache-2.0"],
 }
 
+// Switch away from "platform"
+CERTIFICATE = ":com-android-car-apps-test"
+
 android_test {
     name: "CarTelephonyLibTests",
+
+    certificate: CERTIFICATE,
 
     srcs: ["src/**/*.java"],
 

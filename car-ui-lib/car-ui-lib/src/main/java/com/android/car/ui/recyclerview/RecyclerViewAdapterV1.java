@@ -408,6 +408,11 @@ public final class RecyclerViewAdapterV1 extends FrameLayout
     }
 
     @Override
+    public void scrollBy(int x, int y) {
+        mOEMRecyclerView.getView().scrollBy(x, y);
+    }
+
+    @Override
     public void scrollToPosition(int position) {
         mOEMRecyclerView.scrollToPosition(position);
     }

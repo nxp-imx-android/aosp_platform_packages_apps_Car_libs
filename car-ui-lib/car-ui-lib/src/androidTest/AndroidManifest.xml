@@ -15,7 +15,7 @@
     limitations under the License.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.android.car.ui.test">
+          package="com.android.car.ui.test">
     <application
         android:debuggable="true"
         android:theme="@style/Theme.CarUi.NoToolbar">
@@ -61,11 +61,17 @@
                 android:value="true" />
         </activity>
         <provider
+            android:name="com.android.car.ui.core.CarUiInstaller"
+            android:authorities="${applicationId}.CarUiInstaller"
+            android:directBootAware="true"
+            android:exported="false"
+            android:process="@string/car_ui_installer_process_name"/>
+        <provider
             android:name="com.android.car.ui.core.SearchResultsProvider"
             android:authorities="${applicationId}.SearchResultsProvider"
             android:exported="true"
             android:process="@string/car_ui_installer_process_name"
-            android:readPermission="com.android.car.ui.READ_SEARCH_RESULTS" />
+            android:readPermission="com.android.car.ui.READ_SEARCH_RESULTS"/>
         <uses-library android:name="android.test.runner" />
     </application>
     <instrumentation

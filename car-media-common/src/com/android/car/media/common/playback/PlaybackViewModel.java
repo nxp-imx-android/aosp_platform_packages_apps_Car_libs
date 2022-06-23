@@ -165,8 +165,10 @@ public class PlaybackViewModel extends AndroidViewModel {
     }
 
     private void onBrowsingStateChanged(MediaBrowserConnector.BrowsingState browsingState) {
-        mMediaControllerCallback.onMediaBrowsingStateChanged(browsingState);
-        mMediaSourceLiveData.setValue(browsingState.mMediaSource);
+        if (browsingState != null) {
+            mMediaControllerCallback.onMediaBrowsingStateChanged(browsingState);
+            mMediaSourceLiveData.setValue(browsingState.mMediaSource);
+        }
     }
 
     /**
@@ -263,6 +265,11 @@ public class PlaybackViewModel extends AndroidViewModel {
         void onMediaBrowsingStateChanged(MediaBrowserConnector.BrowsingState newBrowsingState) {
             if (Objects.equals(mBrowsingState, newBrowsingState)) {
                 Log.w(TAG, "onMediaBrowsingStateChanged noop ");
+                return;
+            }
+
+            if (newBrowsingState == null) {
+                Log.e(TAG, "Null browsing state (no media source!)");
                 return;
             }
 

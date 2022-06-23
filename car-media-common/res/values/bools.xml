@@ -26,5 +26,7 @@
         set to 'true', the main logo (which by default appears on the left hand side on toolbar)
         will be hidden. -->
     <bool name="use_media_source_logo_for_app_selector">false</bool>
-
+    <!-- Determines if we should show the playback source id on browse screen UI elements such as
+         alert dialogs, toasts and mini playback control bar.-->
+    <bool name="show_playback_source_id">true</bool>
 </resources>

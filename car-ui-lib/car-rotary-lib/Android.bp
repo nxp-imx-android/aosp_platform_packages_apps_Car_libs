@@ -63,7 +63,8 @@ android_library {
 
 android_test {
     name: "CarRotaryLibUnitTests",
-    certificate: "platform",
+    // CERTIFICATE is defined in car-ui-lib build file.
+    certificate: CERTIFICATE,
     libs: [
         "android.test.runner",
         "android.test.base",

@@ -50,6 +50,7 @@ public class DialogSamples extends AbstractSampleActivity {
     }
 
 
+    @SuppressWarnings("SetTextI18n")
     private void openDialog(boolean showCheckbox) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this,

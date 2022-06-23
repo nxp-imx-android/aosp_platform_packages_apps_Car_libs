@@ -35,7 +35,4 @@
   <!--Theme for the dialog testing-->
   <style name="Theme.Testing.Dialog.Alert" parent="android:Theme.DeviceDefault.Dialog.Alert">
   </style>
-  <!--Theme for the app, it's defined empty here so it can be overlaid easily -->
-  <style name="Theme.App" parent="android:Theme.DeviceDefault">
-  </style>
 </resources>

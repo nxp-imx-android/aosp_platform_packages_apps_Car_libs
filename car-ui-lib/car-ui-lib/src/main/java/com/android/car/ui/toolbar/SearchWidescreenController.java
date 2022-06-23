@@ -44,7 +44,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
-import android.os.Parcel;
 import android.view.Display;
 import android.view.SurfaceControlViewHost;
 import android.view.View;
@@ -66,6 +65,7 @@ import com.android.car.ui.recyclerview.CarUiRecyclerView;
 import com.android.car.ui.toolbar.SearchConfig.OnBackClickedListener;
 import com.android.car.ui.utils.CarUiUtils;
 
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -251,10 +251,10 @@ public class SearchWidescreenController {
             values.put(SearchResultsProvider.SECONDARY_IMAGE_ID, id);
             BitmapDrawable icon = (BitmapDrawable) item.getIcon();
             values.put(SearchResultsProvider.PRIMARY_IMAGE_BLOB,
-                    icon != null ? bitmapToByteArray(icon.getBitmap()) : null);
+                    icon != null ? getBytesFromBitmap(icon.getBitmap()) : null);
             BitmapDrawable supplementalIcon = (BitmapDrawable) item.getSupplementalIcon();
             values.put(SearchResultsProvider.SECONDARY_IMAGE_BLOB,
-                    supplementalIcon != null ? bitmapToByteArray(supplementalIcon.getBitmap())
+                    supplementalIcon != null ? getBytesFromBitmap(supplementalIcon.getBitmap())
                             : null);
             values.put(SearchResultsProvider.TITLE,
                     item.getTitle() != null ? item.getTitle().getPreferredText().toString() : null);
@@ -334,7 +334,7 @@ public class SearchWidescreenController {
         if (mSearchConfig.getSearchResultsInputViewIcon() != null) {
             Bitmap bitmap = CarUiUtils.drawableToBitmap(
                     mSearchConfig.getSearchResultsInputViewIcon());
-            byte[] byteArray = bitmapToByteArray(bitmap);
+            byte[] byteArray = getBytesFromBitmap(bitmap);
             bundle.putByteArray(WIDE_SCREEN_EXTRACTED_TEXT_ICON, byteArray);
         }
 
@@ -451,11 +451,18 @@ public class SearchWidescreenController {
                 .build();
     }
 
-    private static byte[] bitmapToByteArray(Bitmap bitmap) {
-        Parcel parcel = Parcel.obtain();
-        bitmap.writeToParcel(parcel, 0);
-        byte[] bytes = parcel.marshall();
-        parcel.recycle();
-        return bytes;
+    /**
+     * Converts a bitmap into a byte array.
+     *
+     * @param bitmap The bitmap.
+     * @return The byte array or null if the bitmap was null.
+     */
+    private static byte[] getBytesFromBitmap(Bitmap bitmap) {
+        if (bitmap != null) {
+            final ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
+            return stream.toByteArray();
+        }
+        return null;
     }
 }

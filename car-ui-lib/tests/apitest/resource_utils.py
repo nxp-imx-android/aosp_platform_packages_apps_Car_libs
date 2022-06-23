@@ -98,6 +98,7 @@ def get_ids_from_layout_file(filename):
 def get_resources_from_single_file(filename):
     # defer importing lxml to here so that people who aren't editing chassis don't have to have
     # lxml installed
+    # To install: pip3 install lxml
     import lxml.etree as etree
     doc = etree.parse(filename)
     root = doc.getroot()

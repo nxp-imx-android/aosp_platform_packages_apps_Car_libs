@@ -19,3 +19,6 @@ captures/
 
 # A file created when launching android emulators
 read-snapshot.txt
+
+# MacOs
+.DS_Store

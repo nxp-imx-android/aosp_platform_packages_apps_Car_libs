@@ -271,6 +271,11 @@ public final class RecyclerViewImpl extends FrameLayout implements RecyclerViewO
     }
 
     @Override
+    public void scrollBy(int x, int y) {
+        mRecyclerView.scrollBy(x, y);
+    }
+
+    @Override
     public void scrollToPosition(int position) {
         mRecyclerView.scrollToPosition(position);
     }

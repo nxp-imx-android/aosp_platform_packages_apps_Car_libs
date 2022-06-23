@@ -420,6 +420,22 @@ public class MediaItemMetadata implements Parcelable {
     }
 
     /**
+     * @return Content style hint for single item, if provided as an extra, or 0 as default if not
+     * provided.
+     */
+    public int getSingleItemContentStyleHint() {
+        Bundle extras = mMediaDescription.getExtras();
+        if (extras != null) {
+            if (extras.containsKey(
+                    MediaConstants.DESCRIPTION_EXTRAS_KEY_CONTENT_STYLE_SINGLE_ITEM)) {
+                return extras.getInt(
+                        MediaConstants.DESCRIPTION_EXTRAS_KEY_CONTENT_STYLE_SINGLE_ITEM, 0);
+            }
+        }
+        return 0;
+    }
+
+    /**
      * @return Content style title group this item belongs to, or null if not provided
      */
     public String getTitleGrouping() {

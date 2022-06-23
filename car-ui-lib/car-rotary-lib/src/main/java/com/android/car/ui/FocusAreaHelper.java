@@ -582,7 +582,7 @@ class FocusAreaHelper {
         switch (action) {
             case ACTION_FOCUS:
                 // Repurpose ACTION_FOCUS to focus on mFocusArea's descendant. We can do this
-                // because mFocusArea is not focusable and it didn't consume
+                // because mFocusArea is not focusable, and it didn't consume
                 // ACTION_FOCUS previously.
                 boolean success = focusOnDescendant();
                 if (success && mPreviousFocusArea != null) {
@@ -606,7 +606,8 @@ class FocusAreaHelper {
 
     private boolean focusOnDescendant() {
         View lastFocusedView = mRotaryCache.getFocusedView(SystemClock.uptimeMillis());
-        return ViewUtils.adjustFocus(mFocusArea, lastFocusedView, mDefaultFocusOverridesHistory);
+        return ViewUtils.adjustFocusImmediately(mFocusArea, lastFocusedView,
+                mDefaultFocusOverridesHistory);
     }
 
     private boolean nudgeToShortcutView(Bundle arguments) {
@@ -619,6 +620,16 @@ class FocusAreaHelper {
         if (targetView.isFocused()) {
             // The nudge shortcut view is already focused; return false so that the user can
             // nudge to another focus area.
+            return false;
+        }
+        View focus = mFocusArea.findFocus();
+        if (focus == null) {
+            Log.e(TAG, "Failed to nudge to nudge shortcut view because there is no focused "
+                    + "view in this FocusArea");
+            return false;
+        }
+        if (!ViewUtils.isCandidate(focus, targetView, direction)) {
+            // Don't allow nudge shortcut if the target view is not in the given direction.
             return false;
         }
         return ViewUtils.requestFocus(targetView);
