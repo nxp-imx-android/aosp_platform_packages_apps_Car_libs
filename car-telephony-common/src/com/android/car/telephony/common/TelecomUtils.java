@@ -123,8 +123,8 @@ public class TelecomUtils {
      */
     public static String getNormalizedNumber(Context context, String number) {
         String countryIso = getCurrentCountryIsoFromLocale(context);
-        L.d(TAG, "PhoneNumberUtils.formatNumberToE164, number: " + piiLog(number)
-                + ", country: " + countryIso);
+        L.d(TAG, "PhoneNumberUtils.formatNumberToE164, number: %s, country: %s",
+                piiLog(number), countryIso);
         return PhoneNumberUtils.formatNumberToE164(number, countryIso);
     }
 
@@ -132,18 +132,18 @@ public class TelecomUtils {
      * Format a number as a phone number.
      */
     public static String getFormattedNumber(Context context, String number) {
-        L.d(TAG, "getFormattedNumber: " + piiLog(number));
+        L.d(TAG, "getFormattedNumber: %s", piiLog(number));
         if (number == null) {
             return "";
         }
 
         String countryIso = getCurrentCountryIsoFromLocale(context);
-        L.d(TAG, "PhoneNumberUtils.formatNumber, number: " + piiLog(number)
-                + ", country: " + countryIso);
+        L.d(TAG, "PhoneNumberUtils.formatNumber, number: %s, country %s",
+                piiLog(number), countryIso);
 
         String formattedNumber = PhoneNumberUtils.formatNumber(number, countryIso);
         formattedNumber = TextUtils.isEmpty(formattedNumber) ? number : formattedNumber;
-        L.d(TAG, "getFormattedNumber, result: " + piiLog(formattedNumber));
+        L.d(TAG, "getFormattedNumber, result: %s", piiLog(formattedNumber));
 
         return formattedNumber;
     }

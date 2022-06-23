@@ -295,7 +295,7 @@ public class InMemoryPhoneBook implements Observer<List<Contact>> {
 
     @Override
     public void onChanged(List<Contact> contacts) {
-        L.d(TAG, "Contacts loaded:" + (contacts == null ? 0 : contacts.size()));
+        L.d(TAG, "Contacts loaded: %d", contacts == null ? 0 : contacts.size());
         mIsLoaded = true;
     }
 }

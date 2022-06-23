@@ -109,7 +109,7 @@ public class PostalAddress implements Parcelable {
      * Returns the address Uri for {@link #mFormattedAddress}.
      */
     public Intent getAddressIntent(Resources res) {
-        L.d(TAG, "The address is: " + TelecomUtils.piiLog(mFormattedAddress));
+        L.d(TAG, "The address is: %s", TelecomUtils.piiLog(mFormattedAddress));
         return NavigationUtils.getViewAddressIntent(res, mFormattedAddress);
     }
 
@@ -117,7 +117,7 @@ public class PostalAddress implements Parcelable {
      * Returns the navigation Uri for {@link #mFormattedAddress}.
      */
     public Intent getNavigationIntent(Resources res) {
-        L.d(TAG, "The address is: " + TelecomUtils.piiLog(mFormattedAddress));
+        L.d(TAG, "The address is: %s", TelecomUtils.piiLog(mFormattedAddress));
         return NavigationUtils.getNavigationIntent(res, mFormattedAddress);
     }
 
