@@ -24,6 +24,7 @@ import androidx.annotation.Nullable;
 import com.android.car.ui.plugin.oemapis.PluginFactoryOEMV1;
 import com.android.car.ui.plugin.oemapis.PluginFactoryOEMV2;
 import com.android.car.ui.plugin.oemapis.PluginFactoryOEMV3;
+import com.android.car.ui.plugin.oemapis.PluginFactoryOEMV4;
 import com.android.car.ui.plugin.oemapis.PluginVersionProviderOEMV1;
 
 /**
@@ -96,6 +97,11 @@ final class OemApiUtil {
                     && factory instanceof PluginFactoryOEMV3) {
                 oemPluginFactory = new PluginFactoryAdapterV3(
                         (PluginFactoryOEMV3) factory);
+            } else if (classExists(
+                    "com.android.car.ui.plugin.oemapis.PluginFactoryOEMV4")
+                    && factory instanceof PluginFactoryOEMV4) {
+                oemPluginFactory = new PluginFactoryAdapterV4(
+                        (PluginFactoryOEMV4) factory);
             } else {
                 Log.e(TAG, "PluginVersionProvider found, but did not provide a"
                         + " factory implementing any known interfaces!");
