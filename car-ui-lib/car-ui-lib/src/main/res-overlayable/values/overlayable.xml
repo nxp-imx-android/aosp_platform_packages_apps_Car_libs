@@ -300,6 +300,7 @@ limitations under the License.-->
       <item type="dimen" name="car_ui_scrollbar_separator_margin"/>
       <item type="dimen" name="car_ui_scrollbar_thumb_radius"/>
       <item type="dimen" name="car_ui_scrollbar_thumb_width"/>
+      <item type="dimen" name="car_ui_shortcuts_popup_width"/>
       <item type="dimen" name="car_ui_sub1_size"/>
       <item type="dimen" name="car_ui_sub2_size"/>
       <item type="dimen" name="car_ui_sub3_size"/>
@@ -384,6 +385,8 @@ limitations under the License.-->
       <item type="id" name="car_ui_closeKeyboard"/>
       <item type="id" name="car_ui_component_reference"/>
       <item type="id" name="car_ui_contentAreaAutomotive"/>
+      <item type="id" name="car_ui_content_left_drawable"/>
+      <item type="id" name="car_ui_content_name"/>
       <item type="id" name="car_ui_divider"/>
       <item type="id" name="car_ui_first_action_container"/>
       <item type="id" name="car_ui_focus_area"/>
@@ -424,6 +427,7 @@ limitations under the License.-->
       <item type="id" name="car_ui_second_action_container"/>
       <item type="id" name="car_ui_secondary_action"/>
       <item type="id" name="car_ui_secondary_action_concrete"/>
+      <item type="id" name="car_ui_shortcuts_contentView"/>
       <item type="id" name="car_ui_toolbar_background"/>
       <item type="id" name="car_ui_toolbar_bottom_guideline"/>
       <item type="id" name="car_ui_toolbar_bottom_styleable"/>
@@ -514,6 +518,7 @@ limitations under the License.-->
       <item type="layout" name="car_ui_recycler_view_item"/>
       <item type="layout" name="car_ui_recyclerview_scrollbar"/>
       <item type="layout" name="car_ui_seekbar_dialog"/>
+      <item type="layout" name="car_ui_shortcut_popup_item"/>
       <item type="layout" name="car_ui_toolbar"/>
       <item type="layout" name="car_ui_toolbar_menu_item"/>
       <item type="layout" name="car_ui_toolbar_menu_item_primary"/>

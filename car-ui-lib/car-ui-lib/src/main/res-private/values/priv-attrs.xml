@@ -20,7 +20,9 @@
         <attr name="carUiArrowWidth" format="dimension" />
         <attr name="carUiArrowHeight" format="dimension" />
         <attr name="carUiArrowRadius" format="dimension" />
+        <!--Horizontal offset to carUiArrowGravity-->
         <attr name="carUiOffsetX" format="dimension" />
+        <!--Vertical offset to carUiArrowGravity-->
         <attr name="carUiOffsetY" format="dimension" />
         <attr name="carUiArrowGravity">
             <flag name="left" value="0x01" />
@@ -29,9 +31,10 @@
             <flag name="bottom" value="0x04" />
         </attr>
         <attr name="carUiArrowColor" format="color|reference" />
+        <!--@id of the content view -->
         <attr name="carUiContentView" format="reference" />
+        <!--Background drawable used for carUiContentView -->
         <attr name="carUiContentViewDrawable" format="reference" />
-        <attr name="carUiContentRadius" format="dimension" />
     </declare-styleable>
 
 </resources>

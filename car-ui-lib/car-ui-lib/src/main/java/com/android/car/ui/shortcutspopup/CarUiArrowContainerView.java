@@ -97,8 +97,6 @@ public class CarUiArrowContainerView extends LinearLayout {
     private static final int ARROW_GRAVITY_TOP = 0x02;
     @GravityInt
     private static final int ARROW_DEFAULT_GRAVITY = ARROW_GRAVITY_LEFT | ARROW_GRAVITY_TOP;
-    //the arrow view should slightly overlap with the content view to blend in,
-    private static final int ARROW_BLEND_IN_HEIGHT = -1;
     private static final String TAG = CarUiArrowContainerView.class.getSimpleName();
     private static final String ARROW_VIEW_ATTACHED_TOP_TAG = "CAR_UI_ARROW_VIEW_TOP_TAG";
     private static final String ARROW_VIEW_ATTACHED_BOTTOM_TAG = "CAR_UI_ARROW_VIEW_BOTTOM_TAG";
@@ -415,7 +413,7 @@ public class CarUiArrowContainerView extends LinearLayout {
         path.lineTo(0, 0 + top);
         path.close();
 
-        int blendInHeightOffset = ARROW_BLEND_IN_HEIGHT;
+        float blendInHeightOffset = mArrowOffsetY * -1;
         //arrow is attached to the top, hence need to be reversed.
         if (arrowGravityTop) {
             blendInHeightOffset = blendInHeightOffset * -1;
@@ -426,9 +424,9 @@ public class CarUiArrowContainerView extends LinearLayout {
         //position of the arrow is on the right
         if (!arrowGravityLeft) {
             path.offset(getWidth() - arrowWidth - arrowOffsetX,
-                    arrowOffsetY + blendInHeightOffset);
+                    blendInHeightOffset);
         } else {
-            path.offset(arrowOffsetX, arrowOffsetY + blendInHeightOffset);
+            path.offset(arrowOffsetX, blendInHeightOffset);
         }
         return path;
     }
