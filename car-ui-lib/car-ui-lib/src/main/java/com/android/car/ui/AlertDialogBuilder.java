@@ -498,8 +498,9 @@ public class AlertDialogBuilder {
      *                     the dialog.
      * @return This Builder object to allow for chaining of calls to set methods
      */
-    public AlertDialogBuilder setMultiChoiceItems(@ArrayRes int itemsId, boolean[] checkedItems,
-            final DialogInterface.OnMultiChoiceClickListener listener) {
+    public AlertDialogBuilder setMultiChoiceItems(@ArrayRes int itemsId,
+            @Nullable boolean[] checkedItems,
+            @Nullable final DialogInterface.OnMultiChoiceClickListener listener) {
         CharSequence[] itemText = mContext.getResources().getTextArray(itemsId);
         return setMultiChoiceItems(itemText, checkedItems, listener);
     }
