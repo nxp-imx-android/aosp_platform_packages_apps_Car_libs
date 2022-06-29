@@ -18,7 +18,7 @@ package com.android.car.ui.plugin.oemapis.toolbar;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import com.android.car.ui.plugin.oemapis.Nullable;
+import androidx.annotation.Nullable;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;

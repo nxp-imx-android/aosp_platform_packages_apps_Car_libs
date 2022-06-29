@@ -17,8 +17,8 @@ package com.android.car.ui.plugin.oemapis.recyclerview;
 
 import android.text.SpannableString;
 
-import com.android.car.ui.plugin.oemapis.NonNull;
-import com.android.car.ui.plugin.oemapis.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * The OEM interface for header list item.

@@ -17,8 +17,8 @@ package com.android.car.ui.plugin.oemapis.recyclerview;
 
 import android.graphics.drawable.Drawable;
 
-import com.android.car.ui.plugin.oemapis.NonNull;
-import com.android.car.ui.plugin.oemapis.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * Set of attributes passed from UI/layout to the oem implementation

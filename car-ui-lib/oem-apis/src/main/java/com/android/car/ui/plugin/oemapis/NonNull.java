@@ -31,9 +31,11 @@ import java.lang.annotation.Target;
  * Denotes that a parameter, field or method return value can never be null.
  * <p>
  * This is a marker annotation and it has no specific attributes.
+ * @deprecated use {@link androidx.annotation.NonNull} instead
  */
 @Documented
 @Retention(CLASS)
 @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+@Deprecated
 public @interface NonNull {
 }
