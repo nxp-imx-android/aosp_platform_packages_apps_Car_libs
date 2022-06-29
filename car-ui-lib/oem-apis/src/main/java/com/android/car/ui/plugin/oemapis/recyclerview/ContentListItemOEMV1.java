@@ -19,8 +19,9 @@ package com.android.car.ui.plugin.oemapis.recyclerview;
 import android.graphics.drawable.Drawable;
 import android.text.SpannableString;
 
-import com.android.car.ui.plugin.oemapis.NonNull;
-import com.android.car.ui.plugin.oemapis.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.android.car.ui.plugin.oemapis.TextOEMV1;
 
 import java.util.Collections;

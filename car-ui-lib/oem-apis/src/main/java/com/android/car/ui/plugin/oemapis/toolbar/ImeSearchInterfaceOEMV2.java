@@ -18,9 +18,10 @@ package com.android.car.ui.plugin.oemapis.toolbar;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+
 import com.android.car.ui.plugin.oemapis.BiConsumer;
 import com.android.car.ui.plugin.oemapis.Consumer;
-import com.android.car.ui.plugin.oemapis.Nullable;
 
 /**
  * This is an interface (as in "bridge") between the static lib and the plugin, so that
