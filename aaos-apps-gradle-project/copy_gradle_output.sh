@@ -23,7 +23,7 @@ fi
 
 cd "$(dirname "$0")" || exit
 # Keep in sync with ./build.gradle
-OUTPUT_DIR=../../../../../out/aaos-apps-gradle-build/
+OUTPUT_DIR=../../../../../out/aaos-apps-gradle-build
 
 # APKs
 cp $OUTPUT_DIR/car-dialer-app/outputs/apk/production/release/car-dialer-app-production-release-unsigned.apk $1/CarDialerApp.apk
@@ -46,4 +46,7 @@ cp $OUTPUT_DIR/car-telephony-common/outputs/aar/car-telephony-common-release.aar
 # ??? car-ui-lib-testing-support-aar
 # ??? car-messaging-models-aar
 
-# TODO CarDialerUnitTests, CarDialerAppForTesting, CarMessengerUnitTests, CarRotaryLibUnitTests, CarTelephonyLibTests, CarUILibUnitTests, car-apps-common-unit-tests
+# TODO CarMessengerUnitTests, CarRotaryLibUnitTests, CarUILibUnitTests, car-apps-common-unit-tests
+cp $OUTPUT_DIR/car-dialer-app/outputs/apk/emulator/debug/car-dialer-app-emulator-debug.apk $1/CarDialerAppForTesting.apk
+cp $OUTPUT_DIR/car-dialer-app/outputs/apk/androidTest/emulator/debug/car-dialer-app-emulator-debug-androidTest.apk $1/CarDialerUnitTests.apk
+cp $OUTPUT_DIR/car-telephony-common/outputs/apk/androidTest/debug/car-telephony-common-debug-androidTest.apk $1/CarTelephonyLibTests.apk
