@@ -43,6 +43,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -81,6 +82,11 @@ public class TelecomUtils {
      * Get the voicemail number.
      */
     public static String getVoicemailNumber(Context context) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE)
+                != PackageManager.PERMISSION_GRANTED) {
+            L.w(TAG, "Missing READ_PHONE_STATE permission; not getting voicemail number.");
+            return null;
+        }
         if (sVoicemailNumber == null) {
             sVoicemailNumber = getTelephonyManager(context).getVoiceMailNumber();
         }
@@ -99,6 +105,7 @@ public class TelecomUtils {
 
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE)
                 != PackageManager.PERMISSION_GRANTED) {
+            L.w(TAG, "Missing READ_PHONE_STATE permission; not getting voicemail number.");
             return false;
         }
 
@@ -190,7 +197,7 @@ public class TelecomUtils {
         private final String mLookupKey;
 
         public PhoneNumberInfo(String phoneNumber, String displayName, String displayNameAlt,
-                String initials, Uri avatarUri, String typeLabel, String lookupKey) {
+                               String initials, Uri avatarUri, String typeLabel, String lookupKey) {
             mPhoneNumber = phoneNumber;
             mDisplayName = displayName;
             mDisplayNameAlt = displayNameAlt;
@@ -257,8 +264,14 @@ public class TelecomUtils {
     @WorkerThread
     public static PhoneNumberInfo lookupNumberInBackground(Context context, String number) {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS)
-                != PackageManager.PERMISSION_GRANTED
-                || TextUtils.isEmpty(number)) {
+                != PackageManager.PERMISSION_GRANTED) {
+            L.w(TAG, "Missing READ_CONTACTS permission; not looking up contact.");
+            String readableNumber = getReadableNumber(context, number);
+            return new PhoneNumberInfo(number, readableNumber, readableNumber, null, null, null,
+                    null);
+        }
+
+        if (TextUtils.isEmpty(number)) {
             String readableNumber = getReadableNumber(context, number);
             return new PhoneNumberInfo(number, readableNumber, readableNumber, null, null, null,
                     null);
@@ -301,7 +314,7 @@ public class TelecomUtils {
                         contact.getLookupKey());
             }
         } else {
-          L.d(TAG, "InMemoryPhoneBook not initialized.");
+            L.d(TAG, "InMemoryPhoneBook not initialized.");
         }
 
         String name = null;
@@ -380,7 +393,11 @@ public class TelecomUtils {
     static Contact lookupContactEntryAsync(
             Context context, String number, String accountName) {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS)
-                != PackageManager.PERMISSION_GRANTED || TextUtils.isEmpty(number)) {
+                != PackageManager.PERMISSION_GRANTED) {
+            L.w(TAG, "Missing READ_CONTACTS permission; not looking up contact.");
+            return null;
+        }
+        if (TextUtils.isEmpty(number)) {
             return null;
         }
 
@@ -452,9 +469,14 @@ public class TelecomUtils {
      * Returns true if the telephony network is available.
      */
     public static boolean isNetworkAvailable(Context context) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE)
+                != PackageManager.PERMISSION_GRANTED) {
+            L.w(TAG, "Missing READ_PHONE_STATE permission, not getting network type.");
+            return false;
+        }
         TelephonyManager tm =
                 (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        return tm.getNetworkType() != TelephonyManager.NETWORK_TYPE_UNKNOWN
+        return tm.getDataNetworkType() != TelephonyManager.NETWORK_TYPE_UNKNOWN
                 && tm.getSimState() == TelephonyManager.SIM_STATE_READY;
     }
 
