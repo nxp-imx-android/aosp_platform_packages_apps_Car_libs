@@ -56,6 +56,9 @@ include ':car-messenger-common:model'
 include ':car-media-app'
 project(':car-media-app').projectDir = new File('../../Media')
 
+include ':tests' // needed to pick up the git repository
+project(':tests').projectDir = new File('../../tests')
+
 include ':test-media-app'
 project(':test-media-app').projectDir = new File('../../tests/TestMediaApp')
 include 'test-media-app:common'
