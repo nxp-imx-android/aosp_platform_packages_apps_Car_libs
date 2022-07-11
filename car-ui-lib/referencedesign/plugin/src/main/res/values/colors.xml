@@ -22,4 +22,5 @@
     <color name="rotary_focus_fill_secondary_color">#3D0059B3</color>
     <color name="rotary_focus_pressed_stroke_secondary_color">#0059B3</color>
     <color name="rotary_focus_pressed_fill_secondary_color">#8A0059B3</color>
+    <color name="app_styled_dialog_nav_icon_color">@color/text_color_primary</color>
 </resources>
