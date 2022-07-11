@@ -219,6 +219,19 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
             mRecyclerView = (RecyclerView) recyclerViewContainer;
         }
 
+        if (isVerticalFadingEdgeEnabled()) {
+            mRecyclerView.setVerticalFadingEdgeEnabled(isVerticalFadingEdgeEnabled());
+            mRecyclerView.setFadingEdgeLength(getVerticalFadingEdgeLength());
+            super.setVerticalFadingEdgeEnabled(false);
+            super.setFadingEdgeLength(0);
+        }
+        if (isHorizontalFadingEdgeEnabled()) {
+            mRecyclerView.setHorizontalFadingEdgeEnabled(isHorizontalFadingEdgeEnabled());
+            mRecyclerView.setFadingEdgeLength(getHorizontalFadingEdgeLength());
+            super.setHorizontalFadingEdgeEnabled(false);
+            super.setFadingEdgeLength(0);
+        }
+
         boolean rotaryScrollEnabled = (attrs2 != null) ? attrs2.isRotaryScrollEnabled() :
                 a.getBoolean(
                     R.styleable.CarUiRecyclerView_rotaryScrollEnabled, /* defValue=*/ false);
@@ -874,6 +887,41 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
     public int getDecoratedMeasurement(View child) {
         if (mLayoutStyle == null) return 0;
         return createOrientationHelper().getDecoratedMeasurement(child);
+    }
+
+    @Override
+    public void setFadingEdgeLength(int length) {
+        mRecyclerView.setFadingEdgeLength(length);
+    }
+
+    @Override
+    public int getVerticalFadingEdgeLength() {
+        return mRecyclerView.getVerticalFadingEdgeLength();
+    }
+
+    @Override
+    public int getHorizontalFadingEdgeLength() {
+        return mRecyclerView.getHorizontalFadingEdgeLength();
+    }
+
+    @Override
+    public boolean isHorizontalFadingEdgeEnabled() {
+        return mRecyclerView.isHorizontalFadingEdgeEnabled();
+    }
+
+    @Override
+    public void setHorizontalFadingEdgeEnabled(boolean horizontalFadingEdgeEnabled) {
+        mRecyclerView.setHorizontalFadingEdgeEnabled(horizontalFadingEdgeEnabled);
+    }
+
+    @Override
+    public boolean isVerticalFadingEdgeEnabled() {
+        return mRecyclerView.isVerticalFadingEdgeEnabled();
+    }
+
+    @Override
+    public void setVerticalFadingEdgeEnabled(boolean verticalFadingEdgeEnabled) {
+        mRecyclerView.setVerticalFadingEdgeEnabled(verticalFadingEdgeEnabled);
     }
 
     private void createScrollBarFromConfig(Context context, View scrollView) {
