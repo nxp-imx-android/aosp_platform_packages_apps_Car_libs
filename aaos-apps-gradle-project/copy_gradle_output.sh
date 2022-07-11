@@ -28,7 +28,7 @@ OUTPUT_DIR=../../../../../out/aaos-apps-gradle-build
 # APKs
 cp $OUTPUT_DIR/car-dialer-app/outputs/apk/production/release/car-dialer-app-production-release-unsigned.apk $1/CarDialerApp.apk
 cp $OUTPUT_DIR/car-media-app/outputs/apk/release/car-media-app-release-unsigned.apk $1/CarMediaApp.apk
-cp $OUTPUT_DIR/car-messenger-app/outputs/apk/release/car-messenger-app-release-unsigned.apk $1/CarMessengerApp.apk
+cp $OUTPUT_DIR/car-messenger-app/outputs/apk/prod/release/car-messenger-app-prod-release-unsigned.apk $1/CarMessengerApp.apk
 cp $OUTPUT_DIR/PaintBooth/outputs/apk/release/PaintBooth-release-unsigned.apk $1/PaintBooth.apk
 cp $OUTPUT_DIR/test-rotary-playground/outputs/apk/release/test-rotary-playground-release-unsigned.apk $1/RotaryPlayground.apk
 # ??? TestMediaApp
@@ -40,13 +40,16 @@ cp $OUTPUT_DIR/car-uxr-client-lib/outputs/aar/car-uxr-client-lib-release.aar $1/
 cp $OUTPUT_DIR/car-assist-lib/outputs/aar/car-assist-lib-release.aar $1/car-assist-lib.aar
 cp $OUTPUT_DIR/car-apps-common/outputs/aar/car-apps-common-release.aar $1/car-apps-common.aar
 cp $OUTPUT_DIR/car-media-common/outputs/aar/car-media-common-release.aar $1/car-media-common.aar
-cp $OUTPUT_DIR/car-telephony-common/outputs/aar/car-telephony-common-release.aar $1/car-telephony-common-aar
+cp $OUTPUT_DIR/car-telephony-common/outputs/aar/car-telephony-common-release.aar $1/car-telephony-common.aar
+cp $OUTPUT_DIR/car-messenger-common/model/outputs/aar/model-release.aar $1/car-messaging-models.aar
+cp $OUTPUT_DIR/car-messenger-common/outputs/aar/car-messenger-common-release.aar $1/car-messenger-common.aar
 
 # ??? car-ui-lib-oem-apis-jar
 # ??? car-ui-lib-testing-support-aar
-# ??? car-messaging-models-aar
 
-# TODO CarMessengerUnitTests, CarRotaryLibUnitTests, CarUILibUnitTests, car-apps-common-unit-tests
+# TODO CarRotaryLibUnitTests, CarUILibUnitTests, car-apps-common-unit-tests
 cp $OUTPUT_DIR/car-dialer-app/outputs/apk/emulator/debug/car-dialer-app-emulator-debug.apk $1/CarDialerAppForTesting.apk
 cp $OUTPUT_DIR/car-dialer-app/outputs/apk/androidTest/emulator/debug/car-dialer-app-emulator-debug-androidTest.apk $1/CarDialerUnitTests.apk
 cp $OUTPUT_DIR/car-telephony-common/outputs/apk/androidTest/debug/car-telephony-common-debug-androidTest.apk $1/CarTelephonyLibTests.apk
+cp $OUTPUT_DIR/car-messenger-app/outputs/apk/fake/debug/car-messenger-app-fake-debug.apk $1/CarMessengerAppForTesting.apk
+cp $OUTPUT_DIR/car-messenger-app/outputs/apk/androidTest/fake/debug/car-messenger-app-fake-debug-androidTest.apk $1/CarMessengerUnitTests.apk
