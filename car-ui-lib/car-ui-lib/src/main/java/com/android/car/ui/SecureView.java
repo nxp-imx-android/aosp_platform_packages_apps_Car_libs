@@ -31,20 +31,21 @@ public class SecureView extends View {
     private boolean mSecure = true;
 
     public SecureView(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public SecureView(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
     }
 
     public SecureView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+        this(context, attrs, defStyleAttr, 0);
     }
 
     public SecureView(Context context, @Nullable AttributeSet attrs, int defStyleAttr,
             int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
     }
 
     @Override
