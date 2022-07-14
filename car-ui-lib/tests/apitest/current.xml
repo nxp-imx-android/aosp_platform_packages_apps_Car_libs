@@ -59,6 +59,7 @@
   <public type="bool" name="car_ui_preference_list_instant_change_callback"/>
   <public type="bool" name="car_ui_preference_list_show_full_screen"/>
   <public type="bool" name="car_ui_preference_show_chevron"/>
+  <public type="bool" name="car_ui_preference_two_action_switch_widget_focusable"/>
   <public type="bool" name="car_ui_scrollbar_enable"/>
   <public type="bool" name="car_ui_toolbar_logo_fills_nav_icon_space"/>
   <public type="bool" name="car_ui_toolbar_menuitem_individual_click_listeners"/>

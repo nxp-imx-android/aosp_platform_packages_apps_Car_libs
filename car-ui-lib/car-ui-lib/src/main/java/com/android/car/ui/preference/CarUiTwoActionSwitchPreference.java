@@ -40,6 +40,8 @@ public class CarUiTwoActionSwitchPreference extends CarUiTwoActionBasePreference
     @Nullable
     protected Consumer<Boolean> mSecondaryActionOnClickListener;
     private boolean mSecondaryActionChecked;
+    private final boolean mSwitchWidgetFocusable = getContext().getResources().getBoolean(
+            R.bool.car_ui_preference_two_action_switch_widget_focusable);
 
     public CarUiTwoActionSwitchPreference(Context context,
             AttributeSet attrs,
@@ -62,7 +64,6 @@ public class CarUiTwoActionSwitchPreference extends CarUiTwoActionBasePreference
     @Override
     protected void init(@Nullable AttributeSet attrs) {
         super.init(attrs);
-
         setLayoutResourceInternal(R.layout.car_ui_preference_two_action_switch);
     }
 
@@ -78,7 +79,6 @@ public class CarUiTwoActionSwitchPreference extends CarUiTwoActionBasePreference
     @Override
     public void onBindViewHolder(PreferenceViewHolder holder) {
         super.onBindViewHolder(holder);
-
         View firstActionContainer = requireViewByRefId(holder.itemView,
                 R.id.car_ui_first_action_container);
         View secondActionContainer = requireViewByRefId(holder.itemView,
@@ -98,13 +98,22 @@ public class CarUiTwoActionSwitchPreference extends CarUiTwoActionBasePreference
 
         secondActionContainer.setVisibility(mSecondaryActionVisible ? View.VISIBLE : View.GONE);
         s.setChecked(mSecondaryActionChecked);
-        s.setEnabled(isSecondaryActionEnabled());
 
-        secondaryAction.setOnClickListener(v -> performSecondaryActionClick());
         secondaryAction.setEnabled(
                 isSecondaryActionEnabled() || isUxRestricted() || isClickableWhileDisabled());
-        secondaryAction.setFocusable(
+        s.setEnabled(
                 isSecondaryActionEnabled() || isUxRestricted() || isClickableWhileDisabled());
+        secondaryAction.setOnClickListener(v -> performSecondaryActionClick());
+        s.setOnClickListener(v -> performSecondaryActionClick());
+        if (mSwitchWidgetFocusable) {
+            secondaryAction.setFocusable(false);
+            s.setFocusable(
+                    isSecondaryActionEnabled() || isUxRestricted() || isClickableWhileDisabled());
+        } else {
+            s.setFocusable(false);
+            secondaryAction.setFocusable(
+                    isSecondaryActionEnabled() || isUxRestricted() || isClickableWhileDisabled());
+        }
 
         CarUiUtils.makeAllViewsEnabledAndUxRestricted(secondaryAction, isSecondaryActionEnabled(),
                 isUxRestricted());
@@ -129,7 +138,6 @@ public class CarUiTwoActionSwitchPreference extends CarUiTwoActionBasePreference
 
     /**
      * Sets the on-click listener of the secondary action button.
-     *
      * The listener is called with the current checked state of the switch.
      */
     public void setOnSecondaryActionClickListener(@Nullable Consumer<Boolean> onClickListener) {
