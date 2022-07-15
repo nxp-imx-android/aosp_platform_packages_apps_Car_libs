@@ -56,7 +56,9 @@ import com.chassis.car.ui.plugin.recyclerview.AdapterWrapper.ViewHolderWrapper;
 import com.chassis.car.ui.plugin.uxr.CarUxRestrictionsUtil;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Reference OEM implementation for RecyclerView
@@ -138,6 +140,9 @@ public final class RecyclerViewImpl extends FrameLayout implements RecyclerViewO
 
     @Nullable
     private LayoutStyleOEMV1 mLayoutStyle;
+
+    @NonNull
+    private final Set<Runnable> mOnLayoutCompletedListeners = new HashSet<>();
 
     public RecyclerViewImpl(@NonNull Context context) {
         this(context, null);
@@ -315,14 +320,38 @@ public final class RecyclerViewImpl extends FrameLayout implements RecyclerViewO
 
         if (layoutStyle == null
                 || layoutStyle.getLayoutType() == LayoutStyleOEMV1.LAYOUT_TYPE_LINEAR) {
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
-                    orientation,
-                    reverseLayout));
+            LinearLayoutManager lm = new LinearLayoutManager(getContext(), orientation,
+                    reverseLayout) {
+                @Override
+                public void onLayoutCompleted(RecyclerView.State state) {
+                    super.onLayoutCompleted(state);
+                    // Iterate through a copied set instead of the original set because the original
+                    // set might be modified during iteration.
+                    Set<Runnable> onLayoutCompletedListeners =
+                            new HashSet<>(mOnLayoutCompletedListeners);
+                    for (Runnable runnable : onLayoutCompletedListeners) {
+                        runnable.run();
+                    }
+                }
+            };
+            mRecyclerView.setLayoutManager(lm);
         } else {
             GridLayoutManager glm = new GridLayoutManager(getContext(),
                     layoutStyle.getSpanCount(),
                     orientation,
-                    reverseLayout);
+                    reverseLayout) {
+                @Override
+                public void onLayoutCompleted(RecyclerView.State state) {
+                    super.onLayoutCompleted(state);
+                    // Iterate through a copied set instead of the original set because the original
+                    // set might be modified during iteration.
+                    Set<Runnable> onLayoutCompletedListeners =
+                            new HashSet<>(mOnLayoutCompletedListeners);
+                    for (Runnable runnable : onLayoutCompletedListeners) {
+                        runnable.run();
+                    }
+                }
+            };
             glm.setSpanSizeLookup(new SpanSizeLookup() {
                 @Override
                 public int getSpanSize(int position) {
@@ -636,6 +665,25 @@ public final class RecyclerViewImpl extends FrameLayout implements RecyclerViewO
             return mRecyclerView.getLayoutManager().findViewByPosition(position);
         } else {
             return null;
+        }
+    }
+
+    @Override
+    public boolean isComputingLayout() {
+        return mRecyclerView.isComputingLayout();
+    }
+
+    @Override
+    public void addOnLayoutCompleteListener(@Nullable Runnable runnable) {
+        if (runnable != null) {
+            mOnLayoutCompletedListeners.add(runnable);
+        }
+    }
+
+    @Override
+    public void removeOnLayoutCompleteListener(@Nullable Runnable runnable) {
+        if (runnable != null) {
+            mOnLayoutCompletedListeners.remove(runnable);
         }
     }
 
