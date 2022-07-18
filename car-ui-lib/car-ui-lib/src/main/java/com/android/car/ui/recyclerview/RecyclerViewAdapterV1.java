@@ -15,6 +15,8 @@
  */
 package com.android.car.ui.recyclerview;
 
+import static com.android.car.ui.utils.ViewUtils.LazyLayoutView;
+
 import android.content.Context;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -55,7 +57,7 @@ import java.util.List;
  */
 public final class RecyclerViewAdapterV1 extends FrameLayout
         implements CarUiRecyclerView, OnScrollListenerOEMV1, AndroidxRecyclerViewProvider,
-        OnChildAttachStateChangeListenerOEMV1 {
+        OnChildAttachStateChangeListenerOEMV1, LazyLayoutView {
 
     @Nullable
     private RecyclerViewOEMV1 mOEMRecyclerView;
@@ -667,6 +669,33 @@ public final class RecyclerViewAdapterV1 extends FrameLayout
     public void onChildViewDetachedFromWindow(@NonNull View view) {
         for (OnChildAttachStateChangeListener listener : mChildAttachStateChangeListeners) {
             listener.onChildViewDetachedFromWindow(view);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Note that this method will never return true if this view has no items in it's adapter. This
+     * is fine since an RecyclerView with empty items is not able to restore focus inside it.
+     */
+    @Override
+    public boolean isLayoutCompleted() {
+        RecyclerView.Adapter adapter = getAdapter();
+        return adapter != null && adapter.getItemCount() > 0 && !(mOEMRecyclerView == null
+            || mOEMRecyclerView.isComputingLayout());
+    }
+
+    @Override
+    public void addOnLayoutCompleteListener(@Nullable Runnable runnable) {
+        if (mOEMRecyclerView != null) {
+            mOEMRecyclerView.addOnLayoutCompleteListener(runnable);
+        }
+    }
+
+    @Override
+    public void removeOnLayoutCompleteListener(@Nullable Runnable runnable) {
+        if (mOEMRecyclerView != null) {
+            mOEMRecyclerView.removeOnLayoutCompleteListener(runnable);
         }
     }
 }

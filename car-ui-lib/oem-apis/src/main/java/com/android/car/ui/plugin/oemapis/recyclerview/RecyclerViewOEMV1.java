@@ -199,4 +199,17 @@ public interface RecyclerViewOEMV1 {
     /** {@code LayoutManager#findViewByPosition} */
     @Nullable
     View findViewByPosition(int position);
+
+    /** {code RecyclerView#isComputingLayout()} */
+    boolean isComputingLayout();
+
+    /**
+     * Adds a listener to be called when the view's layout is completed.
+     */
+    void addOnLayoutCompleteListener(@Nullable Runnable runnable);
+
+    /**
+     * Removes a listener to be called when the view's layout is completed.
+     */
+    void removeOnLayoutCompleteListener(@Nullable Runnable runnable);
 }
