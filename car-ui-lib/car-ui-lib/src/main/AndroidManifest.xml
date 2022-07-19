@@ -20,7 +20,12 @@
     package="com.android.car.ui">
     <uses-sdk android:minSdkVersion="28" />
     <queries>
-      <provider
+        <!-- Required for querying the IME service at runtime -->
+        <intent>
+            <action android:name="android.view.InputMethod"/>
+        </intent>
+        <!-- Required for querying the plugin at runtime -->
+        <provider
           android:name="com.android.car.ui.plugin.PluginNameProvider"
           android:authorities="com.android.car.ui.plugin"
           tools:ignore="ExportedContentProvider,MissingClass" />
