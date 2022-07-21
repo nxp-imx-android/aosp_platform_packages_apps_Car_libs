@@ -78,6 +78,10 @@ android_library {
         "car-ui-lib-oem-apis-jar",
     ],
     static_libs: car_ui_lib_static_libs,
+    apex_available: [
+        "com.android.permission",
+        "//apex_available:platform",
+    ],
 }
 
 java_genrule {
