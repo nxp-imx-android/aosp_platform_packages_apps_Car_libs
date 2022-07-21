@@ -415,4 +415,22 @@ public final class CarUiUtils {
             };
         }
     }
+
+    /**
+     * Converts dp values to pixels.
+     */
+    public static float dpToPixel(@NonNull Resources res, int dp) {
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            dp,
+            res.getDisplayMetrics());
+    }
+
+    /**
+     * Creates a new scaled Bitmap keeping the original aspect ratio.
+     */
+    public static Bitmap scaleBitmapAndKeepRatio(@NonNull Bitmap srcBmp,
+            int reqWidthInPixels, int reqHeightInPixels) {
+        return Bitmap.createScaledBitmap(srcBmp, reqWidthInPixels, reqHeightInPixels, true);
+    }
 }

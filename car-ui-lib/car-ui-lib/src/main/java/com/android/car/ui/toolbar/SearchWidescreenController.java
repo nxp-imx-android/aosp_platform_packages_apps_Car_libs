@@ -31,10 +31,14 @@ import static com.android.car.ui.imewidescreen.CarUiImeWideScreenController.WIDE
 import static com.android.car.ui.imewidescreen.CarUiImeWideScreenController.WIDE_SCREEN_ON_BACK_CLICKED_ACTION;
 import static com.android.car.ui.imewidescreen.CarUiImeWideScreenController.WIDE_SCREEN_POST_LOAD_SEARCH_RESULTS_ACTION;
 import static com.android.car.ui.imewidescreen.CarUiImeWideScreenController.WIDE_SCREEN_SEARCH_RESULTS;
+import static com.android.car.ui.utils.CarUiUtils.drawableToBitmap;
 import static com.android.car.ui.utils.CarUiUtils.getBooleanSystemProperty;
+import static com.android.car.ui.utils.CarUiUtils.scaleBitmapAndKeepRatio;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.hardware.display.DisplayManager;
@@ -44,10 +48,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.os.Parcel;
+import android.provider.Settings;
+import android.provider.Settings.Secure;
+import android.util.Log;
 import android.view.Display;
 import android.view.SurfaceControlViewHost;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -63,9 +72,7 @@ import com.android.car.ui.imewidescreen.CarUiImeSearchListItem;
 import com.android.car.ui.recyclerview.CarUiContentListItem;
 import com.android.car.ui.recyclerview.CarUiRecyclerView;
 import com.android.car.ui.toolbar.SearchConfig.OnBackClickedListener;
-import com.android.car.ui.utils.CarUiUtils;
 
-import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -83,6 +90,8 @@ import java.util.function.BiConsumer;
 @SuppressWarnings("AndroidJdkLibsChecker")
 @RequiresApi(TARGET_API_R)
 public class SearchWidescreenController {
+
+    private static final String TAG = "SearchWidescreenController";
 
     private final Handler mHandler = new Handler(Looper.getMainLooper());
     private final Context mContext;
@@ -313,6 +322,37 @@ public class SearchWidescreenController {
         }
     }
 
+    /**
+     * Returns the values of {@code R.dimen.car_ui_primary_icon_size} either from current IME
+     * service context, or the current app context.
+     */
+    private int getIMEServiceRequiredDimen(@NonNull Context context) {
+        Resources r = context.getResources();
+        int id = R.dimen.car_ui_primary_icon_size;
+
+        try {
+            final InputMethodManager imeManager =
+                    context.getSystemService(InputMethodManager.class);
+            String defaultIme = Settings.Secure.getString(
+                    context.getContentResolver(), Secure.DEFAULT_INPUT_METHOD);
+            for (InputMethodInfo info : imeManager.getInputMethodList()) {
+                if (info.getId().equals(defaultIme)) {
+                    Context imeContext = context.createPackageContext(info.getPackageName(), 0);
+                    r = imeContext.getResources();
+                    id = r.getIdentifier(
+                            "car_ui_primary_icon_size",
+                            "dimen",
+                            info.getPackageName());
+                }
+            }
+        } catch (NameNotFoundException e) {
+            Log.w("car-ui-lib", "Unable to read `R.dimen.car_ui_primary_icon_size` from"
+                    + " the IME service. Please make sure the IME service is exported via"
+                    + " `android.view.InputMethod` intent-filter.", e);
+        }
+        return r.getDimensionPixelSize(id);
+    }
+
     private void onSurfaceInfo(int displayId, IBinder binder, int width, int height) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
             // Other code like getSearchCapabilities().canShowSearchResultsView() returning false
@@ -332,9 +372,12 @@ public class SearchWidescreenController {
 
         Bundle bundle = new Bundle();
         if (mSearchConfig.getSearchResultsInputViewIcon() != null) {
-            Bitmap bitmap = CarUiUtils.drawableToBitmap(
+            Bitmap bitmap = drawableToBitmap(
                     mSearchConfig.getSearchResultsInputViewIcon());
-            byte[] byteArray = getBytesFromBitmap(bitmap);
+
+            int dimen = getIMEServiceRequiredDimen(mContext);
+            Bitmap scaledBitmap = scaleBitmapAndKeepRatio(bitmap, dimen, dimen);
+            byte[] byteArray = getBytesFromBitmap(scaledBitmap);
             bundle.putByteArray(WIDE_SCREEN_EXTRACTED_TEXT_ICON, byteArray);
         }
 
@@ -458,11 +501,18 @@ public class SearchWidescreenController {
      * @return The byte array or null if the bitmap was null.
      */
     private static byte[] getBytesFromBitmap(Bitmap bitmap) {
+        byte[] result = null;
         if (bitmap != null) {
-            final ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 0, stream);
-            return stream.toByteArray();
+            try {
+                Parcel parcel = Parcel.obtain();
+                bitmap.writeToParcel(parcel, 0);
+                byte[] bytes = parcel.marshall();
+                parcel.recycle();
+                result = bytes;
+            } catch (RuntimeException e) {
+                Log.e(TAG, "failed to write bitmap", e);
+            }
         }
-        return null;
+        return result;
     }
 }
