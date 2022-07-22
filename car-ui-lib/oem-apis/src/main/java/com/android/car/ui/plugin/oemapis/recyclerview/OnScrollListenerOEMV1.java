@@ -15,7 +15,7 @@
  */
 package com.android.car.ui.plugin.oemapis.recyclerview;
 
-import com.android.car.ui.plugin.oemapis.NonNull;
+import androidx.annotation.NonNull;
 
 /** See {@code androidx.recyclerview.widget.RecyclerView.OnScrollListener} */
 public interface OnScrollListenerOEMV1 {

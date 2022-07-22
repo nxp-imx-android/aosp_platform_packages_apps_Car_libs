@@ -15,6 +15,8 @@
  */
 package com.android.car.ui.plugin.oemapis;
 
+import androidx.annotation.NonNull;
+
 /**
  * Compat version of {@link java.util.function.Function}
  *
@@ -28,5 +30,5 @@ public interface Function<I, O> {
      * @param input the input
      * @return the function result.
      */
-    O apply(I input);
+    @NonNull O apply(@NonNull I input);
 }

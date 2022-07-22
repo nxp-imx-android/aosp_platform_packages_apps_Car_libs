@@ -17,6 +17,8 @@ package com.android.car.ui.plugin.oemapis;
 
 import android.text.SpannableStringBuilder;
 
+import androidx.annotation.NonNull;
+
 import java.util.Collections;
 import java.util.List;
 

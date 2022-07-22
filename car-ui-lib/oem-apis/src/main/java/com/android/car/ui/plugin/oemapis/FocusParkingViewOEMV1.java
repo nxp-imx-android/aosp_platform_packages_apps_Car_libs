@@ -17,6 +17,8 @@ package com.android.car.ui.plugin.oemapis;
 
 import android.view.View;
 
+import androidx.annotation.NonNull;
+
 /**
  * The OEM interface for a FocusParkingView. Unlike most components, the FocusParkingView has it's
  * implementation in the static library, and this interface is to give the plugin access to

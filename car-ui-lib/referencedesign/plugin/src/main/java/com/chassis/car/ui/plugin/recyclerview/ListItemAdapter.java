@@ -471,6 +471,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.BaseVi
             mActionContainer.setClickable(false);
         }
 
+        @NonNull
         @Override
         public View getItemView() {
             return super.itemView;
@@ -501,6 +502,7 @@ public class ListItemAdapter extends RecyclerView.Adapter<ListItemAdapter.BaseVi
             }
         }
 
+        @NonNull
         @Override
         public View getItemView() {
             return super.itemView;

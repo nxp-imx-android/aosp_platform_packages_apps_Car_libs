@@ -18,6 +18,8 @@ package com.android.car.ui;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
+
 import com.android.car.ui.plugin.oemapis.FocusAreaOEMV1;
 
 /**
@@ -55,6 +57,7 @@ public class FocusAreaAdapterV1 implements FocusAreaOEMV1 {
         mFocusArea.setNudgeShortcut(direction, view);
     }
 
+    @NonNull
     @Override
     public LinearLayout getView() {
         return mFocusArea;

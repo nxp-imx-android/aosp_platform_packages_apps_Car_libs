@@ -15,6 +15,8 @@
  */
 package com.android.car.ui.plugin.oemapis;
 
+import androidx.annotation.NonNull;
+
 /**
  * Compat version of {@link java.util.function.Consumer}
  * @param <T> the type of the input to the operation
@@ -26,5 +28,5 @@ public interface Consumer<T> {
      *
      * @param t the input argument
      */
-    void accept(T t);
+    void accept(@NonNull T t);
 }

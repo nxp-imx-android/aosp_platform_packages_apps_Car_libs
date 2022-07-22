@@ -17,7 +17,7 @@ package com.android.car.ui.plugin.oemapis.recyclerview;
 
 import android.view.View;
 
-import com.android.car.ui.plugin.oemapis.NonNull;
+import androidx.annotation.NonNull;
 
 /** {@code androidx.recyclerview.widget.RecyclerView.ViewHolder} */
 public interface ViewHolderOEMV1 {

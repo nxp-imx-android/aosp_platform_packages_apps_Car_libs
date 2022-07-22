@@ -17,7 +17,7 @@ package com.android.car.ui.plugin.oemapis.recyclerview;
 
 import android.view.View;
 
-import com.android.car.ui.plugin.oemapis.NonNull;
+import androidx.annotation.NonNull;
 
 /** See {@code androidx.recyclerview.widget.RecyclerView.OnChildAttachStateChangeListenerOEMV1} */
 public interface OnChildAttachStateChangeListenerOEMV1 {

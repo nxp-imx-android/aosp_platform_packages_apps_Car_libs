@@ -15,6 +15,8 @@
  */
 package com.android.car.ui.plugin.oemapis;
 
+import androidx.annotation.NonNull;
+
 /**
  * Compat version of {@link java.util.function.BiConsumer}
  *
@@ -29,5 +31,5 @@ public interface BiConsumer<T, U> {
      * @param t the first input argument
      * @param u the second input argument
      */
-    void accept(T t, U u);
+    void accept(@NonNull T t, @NonNull U u);
 }
