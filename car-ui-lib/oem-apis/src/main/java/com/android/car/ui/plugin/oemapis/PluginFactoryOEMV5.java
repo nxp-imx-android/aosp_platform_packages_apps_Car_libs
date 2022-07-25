@@ -25,9 +25,8 @@ import com.android.car.ui.plugin.oemapis.appstyledview.AppStyledViewControllerOE
 import com.android.car.ui.plugin.oemapis.recyclerview.AdapterOEMV1;
 import com.android.car.ui.plugin.oemapis.recyclerview.ListItemOEMV1;
 import com.android.car.ui.plugin.oemapis.recyclerview.RecyclerViewAttributesOEMV1;
-import com.android.car.ui.plugin.oemapis.recyclerview.RecyclerViewOEMV1;
+import com.android.car.ui.plugin.oemapis.recyclerview.RecyclerViewOEMV2;
 import com.android.car.ui.plugin.oemapis.recyclerview.ViewHolderOEMV1;
-import com.android.car.ui.plugin.oemapis.toolbar.ToolbarControllerOEMV1;
 import com.android.car.ui.plugin.oemapis.toolbar.ToolbarControllerOEMV2;
 
 import java.util.List;
@@ -41,11 +40,8 @@ import java.util.List;
  * <p>
  * Multiple of these can be provided via {@link PluginVersionProviderOEMV1} to allow plugins
  * to provide an old implementation for old apps, and a newer implementation for newer apps.
- *
- * @deprecated Use {@link PluginFactoryOEMV5} instead
  */
-@Deprecated
-public interface PluginFactoryOEMV4 {
+public interface PluginFactoryOEMV5 {
     /**
      * Gives the plugin access to two factories that will create FocusParkingViews and
      * FocusAreas. These views have their implementation in the static car-ui-lib.
@@ -79,7 +75,7 @@ public interface PluginFactoryOEMV4 {
      * @param fullscreen            Whether or not this base layout / toolbar is taking up the whole
      *                              screen. This can be used to decide whether or not to add
      *                              decorations around the edge of it.
-     * @return A {@link ToolbarControllerOEMV1} or null if {@code toolbarEnabled} was false.
+     * @return A {@link ToolbarControllerOEMV2} or null if {@code toolbarEnabled} was false.
      */
     @Nullable
     ToolbarControllerOEMV2 installBaseLayoutAround(
@@ -125,7 +121,7 @@ public interface PluginFactoryOEMV4 {
      * @param attrs   An object containing initial attributes for the button.
      */
     @Nullable
-    RecyclerViewOEMV1 createRecyclerView(
+    RecyclerViewOEMV2 createRecyclerView(
             @NonNull Context sourceContext,
             @Nullable RecyclerViewAttributesOEMV1 attrs);
 

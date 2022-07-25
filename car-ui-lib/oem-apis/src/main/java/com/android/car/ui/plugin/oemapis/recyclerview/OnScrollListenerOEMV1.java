@@ -17,7 +17,12 @@ package com.android.car.ui.plugin.oemapis.recyclerview;
 
 import androidx.annotation.NonNull;
 
-/** See {@code androidx.recyclerview.widget.RecyclerView.OnScrollListener} */
+/**
+ * See {@code androidx.recyclerview.widget.RecyclerView.OnScrollListener}
+ *
+ * @deprecated Use {@link RecyclerViewOEMV2.OnScrollListenerOEMV2} instead
+ */
+@Deprecated
 public interface OnScrollListenerOEMV1 {
 
     /**

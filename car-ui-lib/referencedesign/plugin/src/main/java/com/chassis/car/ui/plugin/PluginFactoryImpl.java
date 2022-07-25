@@ -18,6 +18,7 @@ package com.chassis.car.ui.plugin;
 import android.content.Context;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.android.car.ui.plugin.oemapis.Consumer;
@@ -25,12 +26,12 @@ import com.android.car.ui.plugin.oemapis.FocusAreaOEMV1;
 import com.android.car.ui.plugin.oemapis.FocusParkingViewOEMV1;
 import com.android.car.ui.plugin.oemapis.Function;
 import com.android.car.ui.plugin.oemapis.InsetsOEMV1;
-import com.android.car.ui.plugin.oemapis.PluginFactoryOEMV4;
+import com.android.car.ui.plugin.oemapis.PluginFactoryOEMV5;
 import com.android.car.ui.plugin.oemapis.appstyledview.AppStyledViewControllerOEMV2;
 import com.android.car.ui.plugin.oemapis.recyclerview.AdapterOEMV1;
 import com.android.car.ui.plugin.oemapis.recyclerview.ListItemOEMV1;
 import com.android.car.ui.plugin.oemapis.recyclerview.RecyclerViewAttributesOEMV1;
-import com.android.car.ui.plugin.oemapis.recyclerview.RecyclerViewOEMV1;
+import com.android.car.ui.plugin.oemapis.recyclerview.RecyclerViewOEMV2;
 import com.android.car.ui.plugin.oemapis.recyclerview.ViewHolderOEMV1;
 import com.android.car.ui.plugin.oemapis.toolbar.ToolbarControllerOEMV2;
 
@@ -45,7 +46,7 @@ import java.util.List;
  * An implementation of {@link PluginFactoryImpl} for creating the reference design
  * car-ui-lib components.
  */
-public class PluginFactoryImpl implements PluginFactoryOEMV4 {
+public class PluginFactoryImpl implements PluginFactoryOEMV5 {
 
     private final Context mPluginContext;
     @Nullable
@@ -67,8 +68,8 @@ public class PluginFactoryImpl implements PluginFactoryOEMV4 {
 
     @Override
     public ToolbarControllerOEMV2 installBaseLayoutAround(
-            Context sourceContext,
-            View contentView,
+            @NonNull Context sourceContext,
+            @NonNull View contentView,
             Consumer<InsetsOEMV1> insetsChangedListener,
             boolean toolbarEnabled,
             boolean fullscreen) {
@@ -90,20 +91,20 @@ public class PluginFactoryImpl implements PluginFactoryOEMV4 {
     }
 
     @Override
-    public AppStyledViewControllerOEMV2 createAppStyledView(Context sourceContext) {
+    public AppStyledViewControllerOEMV2 createAppStyledView(@NonNull Context sourceContext) {
         return new AppStyleViewControllerImpl(mPluginContext);
     }
 
     @Override
-    public RecyclerViewOEMV1 createRecyclerView(
-            Context sourceContext,
+    public RecyclerViewOEMV2 createRecyclerView(
+            @NonNull Context sourceContext,
             RecyclerViewAttributesOEMV1 attrs) {
         return new RecyclerViewImpl(mPluginContext, attrs);
     }
 
     @Override
     public AdapterOEMV1<? extends ViewHolderOEMV1> createListItemAdapter(
-            List<ListItemOEMV1> items) {
+            @NonNull List<ListItemOEMV1> items) {
         return new ListItemAdapter(mPluginContext, items);
     }
 }
