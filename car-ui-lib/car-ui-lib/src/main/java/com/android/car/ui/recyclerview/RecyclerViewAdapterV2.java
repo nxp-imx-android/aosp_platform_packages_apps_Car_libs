@@ -40,9 +40,9 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 import com.android.car.ui.plugin.oemapis.recyclerview.AdapterOEMV1;
 import com.android.car.ui.plugin.oemapis.recyclerview.LayoutStyleOEMV1;
 import com.android.car.ui.plugin.oemapis.recyclerview.OnChildAttachStateChangeListenerOEMV1;
-import com.android.car.ui.plugin.oemapis.recyclerview.OnScrollListenerOEMV1;
 import com.android.car.ui.plugin.oemapis.recyclerview.RecyclerViewAttributesOEMV1;
-import com.android.car.ui.plugin.oemapis.recyclerview.RecyclerViewOEMV1;
+import com.android.car.ui.plugin.oemapis.recyclerview.RecyclerViewOEMV2;
+import com.android.car.ui.plugin.oemapis.recyclerview.RecyclerViewOEMV2.OnScrollListenerOEMV2;
 import com.android.car.ui.plugin.oemapis.recyclerview.ViewHolderOEMV1;
 import com.android.car.ui.preference.PreferenceFragment.AndroidxRecyclerViewProvider;
 import com.android.car.ui.recyclerview.RecyclerViewAdapterAdapterV1.ViewHolderAdapterV1;
@@ -55,12 +55,12 @@ import java.util.List;
  * <p>
  * For CarUi internal usage only.
  */
-public final class RecyclerViewAdapterV1 extends FrameLayout
-        implements CarUiRecyclerView, OnScrollListenerOEMV1, AndroidxRecyclerViewProvider,
-        OnChildAttachStateChangeListenerOEMV1, LazyLayoutView {
+public final class RecyclerViewAdapterV2 extends FrameLayout
+        implements CarUiRecyclerView, OnScrollListenerOEMV2, AndroidxRecyclerViewProvider,
+                OnChildAttachStateChangeListenerOEMV1, LazyLayoutView {
 
     @Nullable
-    private RecyclerViewOEMV1 mOEMRecyclerView;
+    private RecyclerViewOEMV2 mOEMRecyclerView;
     @Nullable
     private AdapterOEMV1 mOEMAdapter;
     @Nullable
@@ -78,15 +78,15 @@ public final class RecyclerViewAdapterV1 extends FrameLayout
     private final List<OnChildAttachStateChangeListener> mChildAttachStateChangeListeners =
             new ArrayList<>();
 
-    public RecyclerViewAdapterV1(@NonNull Context context) {
+    public RecyclerViewAdapterV2(@NonNull Context context) {
         this(context, null);
     }
 
-    public RecyclerViewAdapterV1(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public RecyclerViewAdapterV2(@NonNull Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public RecyclerViewAdapterV1(@NonNull Context context, @Nullable AttributeSet attrs,
+    public RecyclerViewAdapterV2(@NonNull Context context, @Nullable AttributeSet attrs,
             int defStyle) {
         super(context, attrs, defStyle, 0);
         // Background and padding to be handled by plugin implementation
@@ -99,7 +99,7 @@ public final class RecyclerViewAdapterV1 extends FrameLayout
      *
      * @param oemRecyclerView plugin implementation of {@link CarUiRecyclerView}
      */
-    public void setOemRecyclerView(@NonNull RecyclerViewOEMV1 oemRecyclerView,
+    public void setOemRecyclerView(@NonNull RecyclerViewOEMV2 oemRecyclerView,
             @Nullable RecyclerViewAttributesOEMV1 oemAttrs) {
         mOEMRecyclerView = oemRecyclerView;
 
@@ -271,10 +271,10 @@ public final class RecyclerViewAdapterV1 extends FrameLayout
         /* default to RecyclerViewOEMV1.SCROLL_STATE_IDLE */
         int internalState = SCROLL_STATE_IDLE;
         switch (state) {
-            case RecyclerViewOEMV1.SCROLL_STATE_DRAGGING:
+            case RecyclerViewOEMV2.SCROLL_STATE_DRAGGING:
                 internalState = SCROLL_STATE_DRAGGING;
                 break;
-            case RecyclerViewOEMV1.SCROLL_STATE_SETTLING:
+            case RecyclerViewOEMV2.SCROLL_STATE_SETTLING:
                 internalState = SCROLL_STATE_SETTLING;
                 break;
         }
@@ -396,14 +396,14 @@ public final class RecyclerViewAdapterV1 extends FrameLayout
     }
 
     @Override
-    public void onScrollStateChanged(@NonNull RecyclerViewOEMV1 recyclerView, int newState) {
+    public void onScrollStateChanged(@NonNull RecyclerViewOEMV2 recyclerView, int newState) {
         for (OnScrollListener listener : mScrollListeners) {
             listener.onScrollStateChanged(this, toInternalScrollState(newState));
         }
     }
 
     @Override
-    public void onScrolled(@NonNull RecyclerViewOEMV1 recyclerView, int dx, int dy) {
+    public void onScrolled(@NonNull RecyclerViewOEMV2 recyclerView, int dx, int dy) {
         for (OnScrollListener listener : mScrollListeners) {
             listener.onScrolled(this, dx, dy);
         }
@@ -673,22 +673,29 @@ public final class RecyclerViewAdapterV1 extends FrameLayout
     }
 
     /**
-     * Unsupported. Always returns true;
+     * {@inheritDoc}
+     * <p>
+     * Note that this method will never return true if this view has no items in it's adapter. This
+     * is fine since an RecyclerView with empty items is not able to restore focus inside it.
      */
     @Override
     public boolean isLayoutCompleted() {
-        return true;
+        Adapter adapter = getAdapter();
+        return adapter != null && adapter.getItemCount() > 0 && !(mOEMRecyclerView == null
+            || mOEMRecyclerView.isComputingLayout());
     }
 
-    /**
-     * Unsupported. Always returns true;
-     */
     @Override
-    public void addOnLayoutCompleteListener(@Nullable Runnable runnable) {}
+    public void addOnLayoutCompleteListener(@Nullable Runnable runnable) {
+        if (mOEMRecyclerView != null) {
+            mOEMRecyclerView.addOnLayoutCompleteListener(runnable);
+        }
+    }
 
-    /**
-     * Unsupported. Always returns true;
-     */
     @Override
-    public void removeOnLayoutCompleteListener(@Nullable Runnable runnable) {}
+    public void removeOnLayoutCompleteListener(@Nullable Runnable runnable) {
+        if (mOEMRecyclerView != null) {
+            mOEMRecyclerView.removeOnLayoutCompleteListener(runnable);
+        }
+    }
 }

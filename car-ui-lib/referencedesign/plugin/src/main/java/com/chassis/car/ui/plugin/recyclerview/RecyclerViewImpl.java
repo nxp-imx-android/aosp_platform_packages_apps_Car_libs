@@ -46,9 +46,9 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 import com.android.car.ui.plugin.oemapis.recyclerview.AdapterOEMV1;
 import com.android.car.ui.plugin.oemapis.recyclerview.LayoutStyleOEMV1;
 import com.android.car.ui.plugin.oemapis.recyclerview.OnChildAttachStateChangeListenerOEMV1;
-import com.android.car.ui.plugin.oemapis.recyclerview.OnScrollListenerOEMV1;
 import com.android.car.ui.plugin.oemapis.recyclerview.RecyclerViewAttributesOEMV1;
-import com.android.car.ui.plugin.oemapis.recyclerview.RecyclerViewOEMV1;
+import com.android.car.ui.plugin.oemapis.recyclerview.RecyclerViewOEMV2;
+import com.android.car.ui.plugin.oemapis.recyclerview.RecyclerViewOEMV2.OnScrollListenerOEMV2;
 import com.android.car.ui.plugin.oemapis.recyclerview.ViewHolderOEMV1;
 
 import com.chassis.car.ui.plugin.R;
@@ -63,7 +63,7 @@ import java.util.Set;
 /**
  * Reference OEM implementation for RecyclerView
  */
-public final class RecyclerViewImpl extends FrameLayout implements RecyclerViewOEMV1 {
+public final class RecyclerViewImpl extends FrameLayout implements RecyclerViewOEMV2 {
 
     /**
      * {@link com.android.car.ui.utils.RotaryConstants#ROTARY_CONTAINER}
@@ -93,21 +93,21 @@ public final class RecyclerViewImpl extends FrameLayout implements RecyclerViewO
     private final DefaultScrollBar mScrollBar;
 
     @NonNull
-    private final List<OnScrollListenerOEMV1> mScrollListeners = new ArrayList<>();
+    private final List<OnScrollListenerOEMV2> mScrollListeners = new ArrayList<>();
 
     @NonNull
     private final RecyclerView.OnScrollListener mOnScrollListener =
             new RecyclerView.OnScrollListener() {
                 @Override
                 public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                    for (OnScrollListenerOEMV1 listener : mScrollListeners) {
+                    for (OnScrollListenerOEMV2 listener : mScrollListeners) {
                         listener.onScrolled(RecyclerViewImpl.this, dx, dy);
                     }
                 }
 
                 @Override
                 public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                    for (OnScrollListenerOEMV1 listener : mScrollListeners) {
+                    for (OnScrollListenerOEMV2 listener : mScrollListeners) {
                         listener.onScrollStateChanged(RecyclerViewImpl.this,
                                 toInternalScrollState(newState));
                     }
@@ -246,7 +246,7 @@ public final class RecyclerViewImpl extends FrameLayout implements RecyclerViewO
     }
 
     @Override
-    public void addOnScrollListener(OnScrollListenerOEMV1 listener) {
+    public void addOnScrollListener(OnScrollListenerOEMV2 listener) {
         if (listener == null) {
             return;
         }
@@ -257,7 +257,7 @@ public final class RecyclerViewImpl extends FrameLayout implements RecyclerViewO
     }
 
     @Override
-    public void removeOnScrollListener(OnScrollListenerOEMV1 listener) {
+    public void removeOnScrollListener(OnScrollListenerOEMV2 listener) {
         if (listener == null) {
             return;
         }
@@ -413,13 +413,13 @@ public final class RecyclerViewImpl extends FrameLayout implements RecyclerViewO
 
     private static int toInternalScrollState(int state) {
         /* default to RecyclerView.SCROLL_STATE_IDLE */
-        int internalState = RecyclerViewOEMV1.SCROLL_STATE_IDLE;
+        int internalState = RecyclerViewOEMV2.SCROLL_STATE_IDLE;
         switch (state) {
             case RecyclerView.SCROLL_STATE_DRAGGING:
-                internalState = RecyclerViewOEMV1.SCROLL_STATE_DRAGGING;
+                internalState = RecyclerViewOEMV2.SCROLL_STATE_DRAGGING;
                 break;
             case RecyclerView.SCROLL_STATE_SETTLING:
-                internalState = RecyclerViewOEMV1.SCROLL_STATE_SETTLING;
+                internalState = RecyclerViewOEMV2.SCROLL_STATE_SETTLING;
                 break;
         }
         return internalState;
