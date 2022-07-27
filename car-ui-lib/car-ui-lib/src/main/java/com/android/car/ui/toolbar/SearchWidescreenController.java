@@ -33,6 +33,7 @@ import static com.android.car.ui.imewidescreen.CarUiImeWideScreenController.WIDE
 import static com.android.car.ui.imewidescreen.CarUiImeWideScreenController.WIDE_SCREEN_SEARCH_RESULTS;
 import static com.android.car.ui.utils.CarUiUtils.drawableToBitmap;
 import static com.android.car.ui.utils.CarUiUtils.getBooleanSystemProperty;
+import static com.android.car.ui.utils.CarUiUtils.getBytesFromBitmap;
 import static com.android.car.ui.utils.CarUiUtils.scaleBitmapAndKeepRatio;
 
 import android.content.ContentValues;
@@ -48,7 +49,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
-import android.os.Parcel;
 import android.provider.Settings;
 import android.provider.Settings.Secure;
 import android.util.Log;
@@ -492,27 +492,5 @@ public class SearchWidescreenController {
                 .setCanShowSearchResultsView(canShowSearchResultsView)
                 .setCanShowSearchResultItems(isWideScreenMode)
                 .build();
-    }
-
-    /**
-     * Converts a bitmap into a byte array.
-     *
-     * @param bitmap The bitmap.
-     * @return The byte array or null if the bitmap was null.
-     */
-    private static byte[] getBytesFromBitmap(Bitmap bitmap) {
-        byte[] result = null;
-        if (bitmap != null) {
-            try {
-                Parcel parcel = Parcel.obtain();
-                bitmap.writeToParcel(parcel, 0);
-                byte[] bytes = parcel.marshall();
-                parcel.recycle();
-                result = bytes;
-            } catch (RuntimeException e) {
-                Log.e(TAG, "failed to write bitmap", e);
-            }
-        }
-        return result;
     }
 }
