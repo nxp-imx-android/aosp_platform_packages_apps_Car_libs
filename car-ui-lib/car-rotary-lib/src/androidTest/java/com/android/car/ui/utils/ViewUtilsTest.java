@@ -41,9 +41,9 @@ import android.view.View;
 
 import androidx.test.rule.ActivityTestRule;
 
+import com.android.car.rotary.test.R;
 import com.android.car.ui.FocusArea;
 import com.android.car.ui.FocusParkingView;
-import com.android.car.ui.R;
 import com.android.car.ui.TestAdapter;
 import com.android.car.ui.recyclerview.CarUiRecyclerView;
 

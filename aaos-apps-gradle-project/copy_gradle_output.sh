@@ -32,7 +32,7 @@ cp $OUTPUT_DIR/car-messenger-app/outputs/apk/prod/release/car-messenger-app-prod
 cp $OUTPUT_DIR/PaintBooth/outputs/apk/release/PaintBooth-release-unsigned.apk $1/PaintBooth.apk
 cp $OUTPUT_DIR/test-rotary-playground/outputs/apk/release/test-rotary-playground-release-unsigned.apk $1/RotaryPlayground.apk
 # ??? TestMediaApp
-# TODO: create gradle project for RotaryIME
+cp $OUTPUT_DIR/test-rotary-ime/outputs/apk/release/test-rotary-ime-release-unsigned.apk $1/RotaryIME.apk
 
 # AARs
 cp $OUTPUT_DIR/car-ui-lib/outputs/aar/car-ui-lib-release.aar $1/car-ui-lib.aar
@@ -47,7 +47,9 @@ cp $OUTPUT_DIR/car-messenger-common/outputs/aar/car-messenger-common-release.aar
 # ??? car-ui-lib-oem-apis-jar
 # ??? car-ui-lib-testing-support-aar
 
-# TODO CarRotaryLibUnitTests, CarUILibUnitTests, car-apps-common-unit-tests
+# TODO car-apps-common-unit-tests
+cp $OUTPUT_DIR/car-rotary-lib/outputs/apk/androidTest/debug/car-rotary-lib-debug-androidTest.apk $1/CarRotaryLibUnitTests.apk
+cp $OUTPUT_DIR/car-ui-lib/outputs/apk/androidTest/debug/car-ui-lib-debug-androidTest.apk $1/CarUILibUnitTests.apk
 cp $OUTPUT_DIR/car-dialer-app/outputs/apk/emulator/debug/car-dialer-app-emulator-debug.apk $1/CarDialerAppForTesting.apk
 cp $OUTPUT_DIR/car-dialer-app/outputs/apk/androidTest/emulator/debug/car-dialer-app-emulator-debug-androidTest.apk $1/CarDialerUnitTests.apk
 cp $OUTPUT_DIR/car-telephony-common/outputs/apk/androidTest/debug/car-telephony-common-debug-androidTest.apk $1/CarTelephonyLibTests.apk

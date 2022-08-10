@@ -32,7 +32,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
 
 import androidx.test.rule.ActivityTestRule;
 
-import com.android.car.ui.R;
+import com.android.car.rotary.test.R;
 
 import org.junit.Before;
 import org.junit.Rule;
