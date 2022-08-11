@@ -31,8 +31,8 @@ cp $OUTPUT_DIR/car-media-app/outputs/apk/release/car-media-app-release-unsigned.
 cp $OUTPUT_DIR/car-messenger-app/outputs/apk/prod/release/car-messenger-app-prod-release-unsigned.apk $1/CarMessengerApp.apk
 cp $OUTPUT_DIR/PaintBooth/outputs/apk/release/PaintBooth-release-unsigned.apk $1/PaintBooth.apk
 cp $OUTPUT_DIR/test-rotary-playground/outputs/apk/release/test-rotary-playground-release-unsigned.apk $1/RotaryPlayground.apk
-# ??? TestMediaApp
 cp $OUTPUT_DIR/test-rotary-ime/outputs/apk/release/test-rotary-ime-release-unsigned.apk $1/RotaryIME.apk
+cp $OUTPUT_DIR/test-media-app/automotive/outputs/apk/release/automotive-release-unsigned.apk $1/TestMediaApp.apk
 
 # AARs
 cp $OUTPUT_DIR/car-ui-lib/outputs/aar/car-ui-lib-release.aar $1/car-ui-lib.aar
