@@ -15,6 +15,7 @@
  */
 package com.android.car.ui.shortcutspopup;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
 import android.util.Log;
@@ -139,6 +140,7 @@ public class CarUiShortcutsPopup implements ShortcutPopupAdapter.ItemClickListen
         if (mListPopupWindow.getListView() == null) {
             return;
         }
+        mListPopupWindow.getListView().setVisibility(View.VISIBLE);
         mListPopupWindow.getListView().setDivider(
                 AppCompatResources.getDrawable(mContext, R.drawable.car_ui_divider));
 
@@ -157,6 +159,20 @@ public class CarUiShortcutsPopup implements ShortcutPopupAdapter.ItemClickListen
      */
     public void dismiss() {
         if (isShowing()) {
+            mListPopupWindow.dismiss();
+        }
+    }
+
+    /**
+     * Dismisses the Popup Immediately, without showing exiting animation.
+     * <p>
+     * Note: Common use case for using this function over {@link CarUiShortcutsPopup#dismiss()} is
+     * in {@link Activity#onPause()}.
+     * </p>
+     */
+    public void dismissImmediate() {
+        if (isShowing() && mListPopupWindow.getListView() != null) {
+            mListPopupWindow.getListView().setVisibility(View.GONE);
             mListPopupWindow.dismiss();
         }
     }
