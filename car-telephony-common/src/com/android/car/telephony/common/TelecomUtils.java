@@ -681,6 +681,28 @@ public class TelecomUtils {
     }
 
     /**
+     * Splits the string and return the first letters of the first word and the last word.
+     */
+    public static String getInitials(String displayName) {
+        String[] words = displayName.split(" ");
+        if (words == null || words.length == 0) {
+            return null;
+        }
+
+        StringBuilder initials = new StringBuilder();
+        if (Character.isLetter(words[0].charAt(0))) {
+            initials.append(Character.toUpperCase(words[0].charAt(0)));
+        }
+        if (words.length > 1) {
+            if (Character.isLetter(words[words.length - 1].charAt(0))) {
+                initials.append(Character.toUpperCase(words[words.length - 1].charAt(0)));
+            }
+        }
+
+        return initials.toString();
+    }
+
+    /**
      * Creates a Letter Tile Icon that will display the given initials. If the initials are null,
      * then an avatar anonymous icon will be drawn.
      **/

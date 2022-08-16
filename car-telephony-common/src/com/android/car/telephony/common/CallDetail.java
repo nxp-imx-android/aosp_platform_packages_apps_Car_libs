@@ -22,6 +22,7 @@ import android.telecom.Call;
 import android.telecom.DisconnectCause;
 import android.telecom.GatewayInfo;
 import android.telecom.PhoneAccountHandle;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -44,27 +45,26 @@ public class CallDetail {
     private final boolean mIsConference;
     private final PhoneAccountHandle mPhoneAccountHandle;
     private final int mScoState;
+    private final String mCallerDisplayName;
+    private final boolean mIsSelfManaged;
 
-    private CallDetail(String number, CharSequence disconnectCause,
-            Uri gatewayInfoOriginalAddress, long connectTimeMillis,
-            boolean isConference, PhoneAccountHandle phoneAccountHandle, int scoState) {
-        mNumber = number;
-        mDisconnectCause = disconnectCause;
-        mGatewayInfoOriginalAddress = gatewayInfoOriginalAddress;
-        mConnectTimeMillis = connectTimeMillis;
-        mIsConference = isConference;
-        mPhoneAccountHandle = phoneAccountHandle;
-        mScoState = scoState;
+    private CallDetail(@Nullable Call.Details callDetails) {
+        mNumber = getNumber(callDetails);
+        mDisconnectCause = getDisconnectCause(callDetails);
+        mGatewayInfoOriginalAddress = getGatewayInfoOriginalAddress(callDetails);
+        mConnectTimeMillis = getConnectTimeMillis(callDetails);
+        mIsConference = isConferenceCall(callDetails);
+        mPhoneAccountHandle = getPhoneAccountHandle(callDetails);
+        mScoState = getScoState(callDetails);
+        mCallerDisplayName = getCallerDisplayName(callDetails);
+        mIsSelfManaged = isSelfManagedCall(callDetails);
     }
 
     /**
      * Creates an instance of {@link CallDetail} from a {@link Call.Details}.
      */
     public static CallDetail fromTelecomCallDetail(@Nullable Call.Details callDetail) {
-        return new CallDetail(getNumber(callDetail), getDisconnectCause(callDetail),
-                getGatewayInfoOriginalAddress(callDetail), getConnectTimeMillis(callDetail),
-                isConferenceCall(callDetail), getPhoneAccountHandle(callDetail),
-                getScoState(callDetail));
+        return new CallDetail(callDetail);
     }
 
     /**
@@ -105,11 +105,23 @@ public class CallDetail {
         return mIsConference;
     }
 
+    /** Returns if the call is a self managed call. */
+    public boolean isSelfManaged() {
+        return mIsSelfManaged;
+    }
+
     /**
      * Returns the SCO state of the call.
      */
     public int getScoState() {
         return mScoState;
+    }
+
+    /**
+     * Returns the caller display name.
+     */
+    public String getCallerDisplayName() {
+        return mCallerDisplayName;
     }
 
     /** Returns the {@link PhoneAccountHandle} for this call. */
@@ -154,9 +166,26 @@ public class CallDetail {
         return callDetail != null && callDetail.hasProperty(Call.Details.PROPERTY_CONFERENCE);
     }
 
+    private static boolean isSelfManagedCall(Call.Details callDetail) {
+        return callDetail != null && callDetail.hasProperty(Call.Details.PROPERTY_SELF_MANAGED);
+    }
+
     @Nullable
     private static PhoneAccountHandle getPhoneAccountHandle(Call.Details callDetail) {
         return callDetail == null ? null : callDetail.getAccountHandle();
+    }
+
+    @Nullable
+    private static String getCallerDisplayName(Call.Details callDetail) {
+        if (callDetail != null) {
+            String callerDisplayName = callDetail.getCallerDisplayName();
+            if (!TextUtils.isEmpty(callerDisplayName)) {
+                return callerDisplayName;
+            }
+            return callDetail.getContactDisplayName();
+        }
+
+        return null;
     }
 
     private static int getScoState(Call.Details callDetail) {
