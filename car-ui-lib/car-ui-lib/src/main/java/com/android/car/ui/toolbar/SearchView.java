@@ -22,6 +22,7 @@ import android.annotation.TargetApi;
 import android.car.drivingstate.CarUxRestrictions;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -33,8 +34,10 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.android.car.ui.R;
@@ -42,6 +45,7 @@ import com.android.car.ui.utils.CarUxRestrictionsUtil;
 
 import java.util.Collections;
 import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
@@ -153,10 +157,23 @@ public class SearchView extends ConstraintLayout {
         });
 
         mSearchWidescreenController = new SearchWidescreenController(context);
-        mSearchWidescreenController.setTextView(mSearchText);
+        setSearchTextViewConsumer(mSearchWidescreenController::setTextView);
+        setOnPrivateImeCommandListener(
+                mSearchWidescreenController.getOnPrivateImeCommandListener());
+    }
+
+    /** Sets the OnPrivateImeCommandListener to the search text view. */
+    public void setOnPrivateImeCommandListener(@Nullable BiConsumer<String, Bundle> biConsumer) {
         if (mSearchText instanceof CarUiEditText) {
-            ((CarUiEditText) mSearchText).setOnPrivateImeCommandListener(
-                    mSearchWidescreenController.getOnPrivateImeCommandListener());
+            ((CarUiEditText) mSearchText).setOnPrivateImeCommandListener(biConsumer);
+        }
+    }
+
+    /** Updates the consumer with the searchtext view. */
+    public void setSearchTextViewConsumer(
+            @Nullable com.android.car.ui.plugin.oemapis.Consumer<TextView> consumer) {
+        if (consumer != null) {
+            consumer.accept(mSearchText);
         }
     }
 

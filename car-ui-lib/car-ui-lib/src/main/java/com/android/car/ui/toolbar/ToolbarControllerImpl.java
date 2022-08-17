@@ -29,12 +29,14 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
@@ -47,6 +49,7 @@ import com.android.car.ui.AlertDialogBuilder;
 import com.android.car.ui.CarUiText;
 import com.android.car.ui.R;
 import com.android.car.ui.imewidescreen.CarUiImeSearchListItem;
+import com.android.car.ui.plugin.oemapis.toolbar.ImeSearchInterfaceOEMV2;
 import com.android.car.ui.recyclerview.CarUiContentListItem;
 import com.android.car.ui.recyclerview.CarUiListItem;
 import com.android.car.ui.recyclerview.CarUiListItemAdapter;
@@ -61,6 +64,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -1149,10 +1153,34 @@ public final class ToolbarControllerImpl implements ToolbarController {
     }
 
     /**
-     * Returns the progress bar
+     * Returns the progress bar.
      */
     @Override
     public ProgressBarController getProgressBar() {
         return mProgressBar;
+    }
+
+    /**
+     * Returns a ImeSearchInterfaceOEMV2 implementation.
+     */
+    public ImeSearchInterfaceOEMV2 getImeSearchInterface() {
+        return new ImeSearchInterfaceOEMV2() {
+            @Override
+            public void setSearchTextViewConsumer(
+                    @Nullable com.android.car.ui.plugin.oemapis.Consumer<TextView> consumer) {
+                mSearchView.setSearchTextViewConsumer(consumer);
+            }
+
+            @Override
+            public void setOnPrivateImeCommandListener(@Nullable
+                    com.android.car.ui.plugin.oemapis.BiConsumer<String, Bundle> biConsumer) {
+                mSearchView.setOnPrivateImeCommandListener(new BiConsumer<String, Bundle>() {
+                    @Override
+                    public void accept(String s, Bundle b) {
+                        biConsumer.accept(s, b);
+                    }
+                });
+            }
+        };
     }
 }
