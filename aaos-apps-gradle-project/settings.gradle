@@ -16,13 +16,6 @@
 
 rootProject.name='AAOS Apps'
 
-gradle.ext.aaosLatestSDK = 32
-gradle.ext.aaosTargetSDK = 32
-
-gradle.ext.repoRootPath = rootDir.parentFile.parentFile.parentFile.parentFile.parent
-gradle.ext.lib_car_system_stubs = gradle.ext.repoRootPath + "/prebuilts/sdk/" + gradle.ext.aaosLatestSDK + "/system/android.car-system-stubs.jar"
-gradle.ext.lib_system_stubs = gradle.ext.repoRootPath + "/prebuilts/sdk/" + gradle.ext.aaosLatestSDK + "/system/android.jar"
-
 include ':car-ui-lib'
 project(':car-ui-lib').projectDir = new File('../car-ui-lib/car-ui-lib')
 include ':PaintBooth'
