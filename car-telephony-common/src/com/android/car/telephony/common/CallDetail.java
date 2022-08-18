@@ -38,6 +38,7 @@ public class CallDetail {
     public static final int STATE_AUDIO_CONNECTING = 1;
     public static final int STATE_AUDIO_CONNECTED = 2;
 
+    private final Call.Details mCallDetails;
     private final String mNumber;
     private final CharSequence mDisconnectCause;
     private final Uri mGatewayInfoOriginalAddress;
@@ -49,6 +50,7 @@ public class CallDetail {
     private final boolean mIsSelfManaged;
 
     private CallDetail(@Nullable Call.Details callDetails) {
+        mCallDetails = callDetails;
         mNumber = getNumber(callDetails);
         mDisconnectCause = getDisconnectCause(callDetails);
         mGatewayInfoOriginalAddress = getGatewayInfoOriginalAddress(callDetails);
@@ -58,6 +60,11 @@ public class CallDetail {
         mScoState = getScoState(callDetails);
         mCallerDisplayName = getCallerDisplayName(callDetails);
         mIsSelfManaged = isSelfManagedCall(callDetails);
+    }
+
+    /** Returns if the call supports the given capability. */
+    public boolean can(int capability) {
+        return mCallDetails != null && mCallDetails.can(capability);
     }
 
     /**
