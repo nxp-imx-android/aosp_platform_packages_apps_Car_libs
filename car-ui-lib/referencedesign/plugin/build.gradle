@@ -36,12 +36,34 @@ android {
     // a certificate in the Android.bp file, the default certificate that will
     // be used is build/target/product/security/testkey.{pk8,x509.pem}. Android studio doesn't
     // support signing apps using individual pk8 and x509.pem files, it requires a keystore file.
+
     signingConfigs {
-        debug {
+        "default" {
             storeFile file('../../../../../../../vendor/auto/embedded/prebuilts/car-ui-lib/chassis_upload_key.jks')
             storePassword 'chassis'
             keyAlias 'chassis'
             keyPassword 'chassis'
+        }
+
+        platform {
+            storeFile file(gradle.ext.platformCertPath)
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+        }
+    }
+
+    flavorDimensions "signingkey"
+    productFlavors {
+        "default" {
+            dimension "signingkey"
+            signingConfig signingConfigs.default
+        }
+        platform {
+            dimension "signingkey"
+            if (file(gradle.ext.platformCertPath).exists()) {
+                signingConfig signingConfigs.platform
+            }
         }
     }
 

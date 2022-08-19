@@ -28,6 +28,15 @@ buildscript {
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
+
+    gradle.ext.aaosLatestSDK = 32
+    gradle.ext.aaosTargetSDK = 32
+
+    gradle.ext.repoRootPath = rootDir.parentFile.parentFile.parentFile.parentFile.parent
+    gradle.ext.lib_car_system_stubs = gradle.ext.repoRootPath + "/prebuilts/sdk/" + gradle.ext.aaosLatestSDK + "/system/android.car-system-stubs.jar"
+    gradle.ext.lib_system_stubs = gradle.ext.repoRootPath + "/prebuilts/sdk/" + gradle.ext.aaosLatestSDK + "/system/android.jar"
+    gradle.ext.aaosCertPath = gradle.ext.repoRootPath + "/packages/apps/Car/libs/certs/com_android_car_apps_test.jks"
+    gradle.ext.platformCertPath = gradle.ext.repoRootPath + "/vendor/google/certs/devkeys/platform.keystore"
 }
 
 allprojects {
