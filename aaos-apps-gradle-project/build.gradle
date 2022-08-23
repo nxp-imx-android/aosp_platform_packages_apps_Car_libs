@@ -37,6 +37,18 @@ buildscript {
     gradle.ext.lib_system_stubs = gradle.ext.repoRootPath + "/prebuilts/sdk/" + gradle.ext.aaosLatestSDK + "/system/android.jar"
     gradle.ext.aaosCertPath = gradle.ext.repoRootPath + "/packages/apps/Car/libs/certs/com_android_car_apps_test.jks"
     gradle.ext.platformCertPath = gradle.ext.repoRootPath + "/vendor/google/certs/devkeys/platform.keystore"
+
+    gradle.ext.getVersionCode = { ->
+        def code = project.hasProperty('versionCode') ? versionCode.toInteger() : 1
+        println "VersionCode is set to $code"
+        return code
+    }
+
+    gradle.ext.getVersionName = { ->
+        def name = project.hasProperty('versionName') ? versionName : "1.0"
+        println "VersionName is set to $name"
+        return name
+    }
 }
 
 allprojects {
