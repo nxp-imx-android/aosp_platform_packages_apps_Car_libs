@@ -24,6 +24,8 @@ android {
     defaultConfig {
         minSdkVersion 28
         targetSdkVersion 32
+        versionCode gradle.ext.getVersionCode()
+        versionName gradle.ext.getVersionName()
     }
 
     compileOptions {
