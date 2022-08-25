@@ -41,7 +41,7 @@ android {
 
     signingConfigs {
         "default" {
-            storeFile file('../../../../../../../vendor/auto/embedded/prebuilts/car-ui-lib/chassis_upload_key.jks')
+            storeFile file(gradle.ext.chassisCertPath)
             storePassword 'chassis'
             keyAlias 'chassis'
             keyPassword 'chassis'
@@ -59,7 +59,9 @@ android {
     productFlavors {
         "default" {
             dimension "signingkey"
-            signingConfig signingConfigs.default
+            if (file(gradle.ext.chassisCertPath).exists()) {
+                signingConfig signingConfigs.default
+            }
         }
         platform {
             dimension "signingkey"
