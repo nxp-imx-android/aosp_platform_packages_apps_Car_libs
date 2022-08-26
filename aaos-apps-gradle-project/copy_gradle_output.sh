@@ -28,17 +28,17 @@ OUTPUT_DIR=../../../../../out/aaos-apps-gradle-build
 # APKs
 cp $OUTPUT_DIR/car-dialer-app/outputs/apk/production/release/car-dialer-app-production-release.apk $1/CarDialerApp.apk
 cp $OUTPUT_DIR/car-dialer-app/outputs/apk/platform/release/car-dialer-app-platform-release.apk $1/CarDialerApp_platform_cert.apk
-cp $OUTPUT_DIR/car-media-app/outputs/apk/default/release/car-media-app-default-release.apk $1/CarMediaApp.apk
+cp $OUTPUT_DIR/car-media-app/outputs/apk/aaos/release/car-media-app-aaos-release.apk $1/CarMediaApp.apk
 cp $OUTPUT_DIR/car-media-app/outputs/apk/platform/release/car-media-app-platform-release.apk $1/CarMediaApp_platform_cert.apk
 cp $OUTPUT_DIR/car-messenger-app/outputs/apk/prod/release/car-messenger-app-prod-release.apk $1/CarMessengerApp.apk
 cp $OUTPUT_DIR/car-messenger-app/outputs/apk/platform/release/car-messenger-app-platform-release.apk $1/CarMessengerApp_platform_cert.apk
-cp $OUTPUT_DIR/PaintBooth/outputs/apk/default/release/PaintBooth-default-release.apk $1/PaintBooth.apk
+cp $OUTPUT_DIR/PaintBooth/outputs/apk/aaos/release/PaintBooth-aaos-release.apk $1/PaintBooth.apk
 cp $OUTPUT_DIR/PaintBooth/outputs/apk/platform/release/PaintBooth-platform-release.apk $1/PaintBooth_platform_cert.apk
-cp $OUTPUT_DIR/test-rotary-playground/outputs/apk/default/release/test-rotary-playground-default-release.apk $1/RotaryPlayground.apk
+cp $OUTPUT_DIR/test-rotary-playground/outputs/apk/aaos/release/test-rotary-playground-aaos-release.apk $1/RotaryPlayground.apk
 cp $OUTPUT_DIR/test-rotary-playground/outputs/apk/platform/release/test-rotary-playground-platform-release.apk $1/RotaryPlayground_platform_cert.apk
-cp $OUTPUT_DIR/test-rotary-ime/outputs/apk/default/release/test-rotary-ime-default-release.apk $1/RotaryIME.apk
+cp $OUTPUT_DIR/test-rotary-ime/outputs/apk/aaos/release/test-rotary-ime-aaos-release.apk $1/RotaryIME.apk
 cp $OUTPUT_DIR/test-rotary-ime/outputs/apk/platform/release/test-rotary-ime-platform-release.apk $1/RotaryIME_platform_cert.apk
-cp $OUTPUT_DIR/test-media-app/automotive/outputs/apk/default/release/automotive-default-release.apk $1/TestMediaApp.apk
+cp $OUTPUT_DIR/test-media-app/automotive/outputs/apk/aaos/release/automotive-aaos-release.apk $1/TestMediaApp.apk
 cp $OUTPUT_DIR/test-media-app/automotive/outputs/apk/platform/release/automotive-platform-release.apk $1/TestMediaApp_platform_cert.apk
 
 # AARs
