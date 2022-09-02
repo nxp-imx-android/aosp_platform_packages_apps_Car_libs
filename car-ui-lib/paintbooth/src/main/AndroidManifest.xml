@@ -118,6 +118,9 @@
         android:exported="false"
         android:parentActivityName=".MainActivity"/>
 
+    <activity android:name=".shortcutspopup.ShortcutsPopupSamples"
+        android:exported="false"
+        android:parentActivityName=".MainActivity"/>
 
     <activity android:name=".theme.TextSamples"
         android:label="@string/theme_activity_name"
