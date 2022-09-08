@@ -26,6 +26,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Build.VERSION;
@@ -902,6 +903,10 @@ public class AlertDialogBuilder {
         mRoot = (ViewGroup) mDialog.getWindow().getDecorView().getRootView();
         FocusParkingView fpv = new FocusParkingView(mContext);
         mRoot.addView(fpv);
+
+        // Set alert dialog background color to transparent to avoid unexpected color below round
+        // corner.
+        mRoot.setBackgroundColor(Color.TRANSPARENT);
 
         // apply window insets listener to know when IME is visible so we can set title and desc.
         mRoot.setOnApplyWindowInsetsListener(mOnApplyWindowInsetsListener);
