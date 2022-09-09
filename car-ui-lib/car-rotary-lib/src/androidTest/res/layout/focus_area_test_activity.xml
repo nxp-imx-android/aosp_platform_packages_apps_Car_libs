@@ -46,7 +46,6 @@
         android:id="@+id/focus_area2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:nudgeUpDisabled="true"
         app:defaultFocus="@+id/default_focus2"
         app:highlightPaddingHorizontal="10dp"
         app:highlightPaddingVertical="20dp"
@@ -149,7 +148,8 @@
         <com.android.car.ui.TestFocusArea
             android:id="@+id/focus_area8"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:nudgeUpDisabled="true">
             <View
                 android:id="@+id/view8"
                 android:focusable="true"

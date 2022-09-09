@@ -778,33 +778,33 @@ public class FocusAreaTest {
     public void testPerformAccessibilityAction_actionNudgeToAnotherFocusArea_disabled()
             throws Exception {
         TestUtils.accept(mFocusArea1, v -> {
-            mFocusArea1.setNudgeTargetFocusArea(FOCUS_DOWN, mFocusArea2);
-            mFocusArea2.setNudgeTargetFocusArea(FOCUS_UP, mFocusArea1);
+            mFocusArea7.setNudgeTargetFocusArea(FOCUS_DOWN, mFocusArea8);
+            mFocusArea8.setNudgeTargetFocusArea(FOCUS_UP, mFocusArea7);
         });
 
-        TestUtils.requestFocusAndAssertFocused(mView2, true);
+        TestUtils.requestFocusAndAssertFocused(mView8, true);
         Bundle arguments = new Bundle();
         arguments.putInt(NUDGE_DIRECTION, FOCUS_UP);
-        TestUtils.accept(mFocusArea2,
+        TestUtils.accept(mFocusArea8,
                 v -> v.performAccessibilityAction(ACTION_NUDGE_TO_ANOTHER_FOCUS_AREA, arguments));
         // Nudging up is disabled in the layout file, so focus should stay on mView2.
-        assertThat(mView2.isFocused()).isTrue();
+        assertThat(mView8.isFocused()).isTrue();
 
         // Enable nudging up programmatically and try nudging up again.
-        TestUtils.accept(mFocusArea2, v -> {
-            mFocusArea2.setNudgeEnabled(FOCUS_UP, true);
-            mFocusArea2.performAccessibilityAction(ACTION_NUDGE_TO_ANOTHER_FOCUS_AREA, arguments);
+        TestUtils.accept(mFocusArea8, v -> {
+            mFocusArea8.setNudgeEnabled(FOCUS_UP, true);
+            mFocusArea8.performAccessibilityAction(ACTION_NUDGE_TO_ANOTHER_FOCUS_AREA, arguments);
         });
-        assertThat(mView1.isFocused()).isTrue();
+        assertThat(mView7.isFocused()).isTrue();
 
         // Disable nudging down programmatically and try nudging down.
         arguments.clear();
         arguments.putInt(NUDGE_DIRECTION, FOCUS_DOWN);
-        TestUtils.accept(mFocusArea1, v -> {
-            mFocusArea1.setNudgeEnabled(FOCUS_DOWN, false);
-            mFocusArea1.performAccessibilityAction(ACTION_NUDGE_TO_ANOTHER_FOCUS_AREA, arguments);
+        TestUtils.accept(mFocusArea7, v -> {
+            mFocusArea7.setNudgeEnabled(FOCUS_DOWN, false);
+            mFocusArea7.performAccessibilityAction(ACTION_NUDGE_TO_ANOTHER_FOCUS_AREA, arguments);
         });
-        assertThat(mView1.isFocused()).isTrue();
+        assertThat(mView7.isFocused()).isTrue();
     }
 
     @Test
