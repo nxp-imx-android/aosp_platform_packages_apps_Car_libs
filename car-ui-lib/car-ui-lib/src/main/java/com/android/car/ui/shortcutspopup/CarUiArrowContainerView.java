@@ -44,30 +44,32 @@ import com.android.car.ui.R;
 /**
  * <p>
  * Wrapper view which has an optional Arrow. Positioned with
- * {@link android.R.styleable#CarUiArrowContainerView_carUiArrowGravity}
+ * @attr ref com.android.car.ui.R.styleable#CarUiArrowContainerView_carUiArrowGravity
  * </p>
  *
  * <p>
- * The {@link CarUiArrowContainerView#mArrowViewSpace} has its own ViewBounds defined by
+ * The {@code CarUiArrowContainerView#mArrowViewSpace} has its own ViewBounds defined by
  * Width: {@link android.view.ViewGroup.LayoutParams#MATCH_PARENT}
- * and Height {@link CarUiArrowContainerView#mArrowHeight}, which lie outside Bounds of ContentView
- * ({@link CarUiArrowContainerView#mContentViewId})
+ * and Height {@code CarUiArrowContainerView#mArrowHeight}, which lie outside Bounds of ContentView
+ * ({@code CarUiArrowContainerView#mContentViewId})
  *
- * Arrow Path uses the space of view {@link CarUiArrowContainerView#mArrowViewSpace},
- * Its width is defined by: {@link CarUiArrowContainerView#mArrowWidth}
- * and Height: {@link CarUiArrowContainerView#mArrowHeight}
+ * Arrow Path uses the space of view {@code CarUiArrowContainerView#mArrowViewSpace},
+ * Its width is defined by: {@code CarUiArrowContainerView#mArrowWidth}
+ * and Height: {@code CarUiArrowContainerView#mArrowHeight}
  * </p>
  *
- * @attr ref R.styleable.CarUiArrowContainerView_carUiHasArrow
- * @attr ref R.styleable.CarUiArrowContainerView_carUiArrowColor
- * @attr ref R.styleable.CarUiArrowContainerView_carUiArrowWidth
- * @attr ref R.styleable.CarUiArrowContainerView_carUiArrowHeight
- * @attr ref R.styleable.CarUiArrowContainerView_carUiArrowRadius
- * @attr ref R.styleable.CarUiArrowContainerView_carUiOffsetX
- * @attr ref R.styleable.CarUiArrowContainerView_carUiOffsetY
- * @attr ref R.styleable.CarUiArrowContainerView_carUiArrowGravity
- * @attr ref R.styleable.CarUiArrowContainerView_carUiContentView
- * @attr ref R.styleable.CarUiArrowContainerView_carUiContentViewDrawable
+ * <p>
+ * @attr ref com.android.car.ui.R.styleable#CarUiArrowContainerView_carUiHasArrow
+ * @attr ref com.android.car.ui.R.styleable#CarUiArrowContainerView_carUiArrowColor
+ * @attr ref com.android.car.ui.R.styleable#CarUiArrowContainerView_carUiArrowWidth
+ * @attr ref com.android.car.ui.R.styleable#CarUiArrowContainerView_carUiArrowHeight
+ * @attr ref com.android.car.ui.R.styleable#CarUiArrowContainerView_carUiArrowRadius
+ * @attr ref com.android.car.ui.R.styleable#CarUiArrowContainerView_carUiOffsetX
+ * @attr ref com.android.car.ui.R.styleable#CarUiArrowContainerView_carUiOffsetY
+ * @attr ref com.android.car.ui.R.styleable#CarUiArrowContainerView_carUiArrowGravity
+ * @attr ref com.android.car.ui.R.styleable#CarUiArrowContainerView_carUiContentView
+ * @attr ref com.android.car.ui.R.styleable#CarUiArrowContainerView_carUiContentViewDrawable
+ * </p>
  */
 public class CarUiArrowContainerView extends LinearLayout {
 
@@ -163,7 +165,7 @@ public class CarUiArrowContainerView extends LinearLayout {
     }
 
     /**
-     * arrowOffset in the horizontal direction to {@link CarUiArrowContainerView#mContentViewId}
+     * arrowOffset in the horizontal direction to {@code CarUiArrowContainerView#mContentViewId}
      */
     public void setArrowOffsetX(int offsetX) {
         if (mArrowOffsetX == offsetX) {
@@ -174,7 +176,7 @@ public class CarUiArrowContainerView extends LinearLayout {
     }
 
     /**
-     * arrowOffset in the vertical direction to {@link CarUiArrowContainerView#mContentViewId}
+     * arrowOffset in the vertical direction to {@code CarUiArrowContainerView#mContentViewId}
      */
     public void setArrowOffsetY(int offsetY) {
         if (mArrowOffsetY == offsetY) {
@@ -196,7 +198,7 @@ public class CarUiArrowContainerView extends LinearLayout {
     }
 
     /**
-     * Sets the drawable to {@link CarUiArrowContainerView#mContentViewId}
+     * Sets the drawable to {@code CarUiArrowContainerView#mContentViewId}
      */
     public void setContentDrawableId(@DrawableRes int drawableId) {
         if (mContentDrawableId == drawableId) {
@@ -229,8 +231,8 @@ public class CarUiArrowContainerView extends LinearLayout {
     }
 
     /**
-     * Sets the gravity of the arrow above the Content View {@link
-     * CarUiArrowContainerView#mContentViewId}
+     * Sets the gravity of the arrow above the Content View
+     * {@code CarUiArrowContainerView#mContentViewId}
      *
      * @param gravityTop - if true sets to top, otherwise below.
      */
@@ -244,8 +246,8 @@ public class CarUiArrowContainerView extends LinearLayout {
     }
 
     /**
-     * Sets the gravity of the arrow left to the Content View {@link
-     * CarUiArrowContainerView#mContentViewId}
+     * Sets the gravity of the arrow left to the Content View
+     * {@code CarUiArrowContainerView#mContentViewId}
      *
      * @param gravityLeft - if true sets to left, otherwise right.
      */
@@ -329,7 +331,7 @@ public class CarUiArrowContainerView extends LinearLayout {
 
     /**
      * sets the background for
-     * {@link CarUiArrowContainerView#mContentViewId}
+     * {@code CarUiArrowContainerView#mContentViewId}
      */
     private void drawContentBody() {
         View contentView = findViewById(mContentViewId);
@@ -356,12 +358,12 @@ public class CarUiArrowContainerView extends LinearLayout {
      * @param arrowHeight      height of the arrow
      * @param arrowRadius      radius of the arrow
      * @param arrowGravityTop  is arrow gravity top relative to
-     *                         {@link CarUiArrowContainerView#mContentViewId}
+     *                         {@code CarUiArrowContainerView#mContentViewId}
      * @param arrowGravityLeft is arrow gravity left relative to
-     *                         {@link CarUiArrowContainerView#mContentViewId}
+     *                         {@code CarUiArrowContainerView#mContentViewId}
      * @param arrowOffsetX     offsets arrow horizontally from the edges.
      * @param arrowOffsetY     offsets arrow vertically from the edges.
-     *                         {@link CarUiArrowContainerView#mContentViewId}
+     *                         {@code CarUiArrowContainerView#mContentViewId}
      */
     private Path drawArrow(View arrowViewSpace, float arrowWidth, float arrowHeight,
             float arrowRadius, boolean arrowGravityTop, boolean arrowGravityLeft,

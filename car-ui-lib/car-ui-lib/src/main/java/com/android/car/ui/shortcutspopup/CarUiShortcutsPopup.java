@@ -38,7 +38,7 @@ import java.util.Map;
 
 /**
  * This is a Helper class which uses {@link ListPopupWindow} to draw a Popup anchored at
- * {@link CarUiShortcutsPopup#mAnchorView}
+ * {@code CarUiShortcutsPopup#mAnchorView}
  */
 public class CarUiShortcutsPopup implements ShortcutPopupAdapter.ItemClickListener {
 
@@ -123,7 +123,7 @@ public class CarUiShortcutsPopup implements ShortcutPopupAdapter.ItemClickListen
 
     /**
      * Aligns the Popup Horizontally and Vertically with the Anchor.
-     * Check {@link CarUiShortcutsPopup#mayBeReversePopupJustBeforeDrawingPopupWindow()} for
+     * Check {@code CarUiShortcutsPopup#mayBeReversePopupJustBeforeDrawingPopupWindow()} for
      * aligning either at the top or below the anchor.
      */
     public void show() {
@@ -266,7 +266,7 @@ public class CarUiShortcutsPopup implements ShortcutPopupAdapter.ItemClickListen
         private final List<ShortcutItem> mShortcutList = new ArrayList<>();
 
         /**
-         * add shortcut item to {@link Builder#mShortcutList}
+         * add shortcut item to {@code Builder#mShortcutList}
          *
          * @param shortcut - check {@link ShortcutItem}
          */
@@ -286,13 +286,13 @@ public class CarUiShortcutsPopup implements ShortcutPopupAdapter.ItemClickListen
     }
 
     /**
-     * Defines each item in {@link CarUiShortcutsPopup#mListPopupWindow}
+     * Defines each item in {@code CarUiShortcutsPopup#mListPopupWindow}
      */
     public interface ShortcutItem {
         /**
          * Defines
-         * {@link ItemData#mLeftDrawable} and
-         * {@link ItemData#mShortcutName}
+         * {@code ItemData#mLeftDrawable} and
+         * {@code ItemData#mShortcutName}
          */
         ItemData data();
 
@@ -308,7 +308,7 @@ public class CarUiShortcutsPopup implements ShortcutPopupAdapter.ItemClickListen
     }
 
     /**
-     * Data class for Item in {@link CarUiShortcutsPopup#mListPopupWindow}
+     * Data class for Item in {@code CarUiShortcutsPopup#mListPopupWindow}
      */
     public static class ItemData {
         private final int mLeftDrawable;

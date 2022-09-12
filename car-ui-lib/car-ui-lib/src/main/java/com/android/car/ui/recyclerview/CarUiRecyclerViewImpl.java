@@ -240,14 +240,14 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
             mRecyclerView.setVerticalScrollbarTrackDrawable(
                     getVerticalScrollbarTrackDrawable());
             mRecyclerView.setHorizontalScrollbarTrackDrawable(
-            	    getHorizontalScrollbarTrackDrawable());
+                    getHorizontalScrollbarTrackDrawable());
 
             mRecyclerView.setVerticalScrollbarPosition(getVerticalScrollbarPosition());
 
             mRecyclerView.setScrollBarSize(getScrollBarSize());
 
             mRecyclerView.setScrollBarStyle(getScrollBarStyle());
-            
+
             if (isVerticalFadingEdgeEnabled()) {
                 mRecyclerView.setVerticalFadingEdgeEnabled(true);
                 mRecyclerView.setFadingEdgeLength(getVerticalFadingEdgeLength());
