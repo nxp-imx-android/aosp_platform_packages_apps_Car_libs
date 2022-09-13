@@ -1168,7 +1168,12 @@ public final class ToolbarControllerImpl implements ToolbarController {
             @Override
             public void setSearchTextViewConsumer(
                     @Nullable com.android.car.ui.plugin.oemapis.Consumer<TextView> consumer) {
-                mSearchView.setSearchTextViewConsumer(consumer);
+                mSearchView.setSearchTextViewConsumer(new Consumer<TextView>() {
+                    @Override
+                    public void accept(TextView textView) {
+                        consumer.accept(textView);
+                    }
+                });
             }
 
             @Override

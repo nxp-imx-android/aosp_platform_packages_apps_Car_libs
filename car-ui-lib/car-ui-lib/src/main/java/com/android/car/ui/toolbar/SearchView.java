@@ -170,8 +170,7 @@ public class SearchView extends ConstraintLayout {
     }
 
     /** Updates the consumer with the searchtext view. */
-    public void setSearchTextViewConsumer(
-            @Nullable com.android.car.ui.plugin.oemapis.Consumer<TextView> consumer) {
+    public void setSearchTextViewConsumer(@Nullable Consumer<TextView> consumer) {
         if (consumer != null) {
             consumer.accept(mSearchText);
         }
