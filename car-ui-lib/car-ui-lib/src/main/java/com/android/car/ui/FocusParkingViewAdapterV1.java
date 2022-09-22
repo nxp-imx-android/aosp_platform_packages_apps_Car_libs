@@ -17,6 +17,8 @@ package com.android.car.ui;
 
 import android.view.View;
 
+import androidx.annotation.NonNull;
+
 import com.android.car.ui.plugin.oemapis.FocusParkingViewOEMV1;
 
 /**
@@ -34,6 +36,7 @@ public class FocusParkingViewAdapterV1 implements FocusParkingViewOEMV1 {
         mFocusParkingView.setShouldRestoreFocus(shouldRestoreFocus);
     }
 
+    @NonNull
     @Override
     public View getView() {
         return mFocusParkingView;

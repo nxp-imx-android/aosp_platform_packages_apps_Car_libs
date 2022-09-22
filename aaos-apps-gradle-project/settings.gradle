@@ -16,18 +16,6 @@
 
 rootProject.name='AAOS Apps'
 
-gradle.ext.aaosLatestSDK = 31
-gradle.ext.aaosTargetSDK = 31
-
-gradle.ext.lib_car_system_stubs = rootDir.absolutePath + "/../../../../../prebuilts/sdk/" + gradle.ext.aaosLatestSDK + "/system/android.car-system-stubs.jar"
-gradle.ext.lib_system_stubs = rootDir.absolutePath + "/../../../../../prebuilts/sdk/" + gradle.ext.aaosLatestSDK + "/system/android.jar"
-
-//TODO: find something that works
-//def repoRootFolder = settingsDir.getParentFile().getParentFile().getParentFile().getParentFile().getParentFile()
-//gradle.ext.aaosBuildDir = new File(repoRootFolder, "/out/aaos-apps-gradle-project.build/")
-//gradle.ext.aaosBuildDir = new File('../../../../../out/aaos-apps-gradle-project.build/').getParentFile()
-
-
 include ':car-ui-lib'
 project(':car-ui-lib').projectDir = new File('../car-ui-lib/car-ui-lib')
 include ':PaintBooth'
@@ -60,6 +48,9 @@ include ':car-messenger-common:model'
 
 include ':car-media-app'
 project(':car-media-app').projectDir = new File('../../Media')
+
+include ':tests' // needed to pick up the git repository
+project(':tests').projectDir = new File('../../tests')
 
 include ':test-media-app'
 project(':test-media-app').projectDir = new File('../../tests/TestMediaApp')

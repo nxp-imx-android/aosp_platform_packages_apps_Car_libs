@@ -33,6 +33,7 @@ import android.view.ViewGroup;
 
 import androidx.test.rule.ActivityTestRule;
 
+import com.android.car.rotary.test.R;
 import com.android.car.ui.recyclerview.CarUiRecyclerView;
 import com.android.car.ui.utils.TestUtils;
 import com.android.car.ui.utils.ViewUtils;

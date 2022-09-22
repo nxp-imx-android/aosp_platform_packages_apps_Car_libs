@@ -49,6 +49,9 @@
     <bool name="car_ui_preference_list_show_full_screen">true</bool>
     <!-- Whether list and multi-select preference selection changes should propagate instantly -->
     <bool name="car_ui_preference_list_instant_change_callback">false</bool>
+    <!-- Whether two action switch preference's secondary action focus should outline the switch -->
+    <!-- true outlines switch, false outlines surrounding container (car_ui_secondary_action) -->
+    <bool name="car_ui_preference_two_action_switch_widget_focusable">false</bool>
 
     <!-- List items -->
 

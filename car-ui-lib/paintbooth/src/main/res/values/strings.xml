@@ -20,6 +20,9 @@
   <!-- Application name [CHAR LIMIT=30] -->
   <string name="app_name" translatable="false">Paint Booth (Gerrit)</string>
 
+  <!-- content description for the button in shortcuts_popup_activity -->
+  <string name="sample_btn1">Sample button 1</string>
+
   <!-- Description of the CurrentActivityService. [CHAR_LIMIT=200] -->
   <string name="current_activity_service_description">Shows the current activity</string>
 

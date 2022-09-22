@@ -28,6 +28,30 @@ buildscript {
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
+
+    gradle.ext.aaosLatestSDK = 32
+    gradle.ext.aaosTargetSDK = 32
+
+    gradle.ext.repoRootPath = rootDir.parentFile.parentFile.parentFile.parentFile.parent
+    gradle.ext.lib_car_system_stubs = gradle.ext.repoRootPath + "/prebuilts/sdk/" + gradle.ext.aaosLatestSDK + "/system/android.car-system-stubs.jar"
+    gradle.ext.lib_system_stubs = gradle.ext.repoRootPath + "/prebuilts/sdk/" + gradle.ext.aaosLatestSDK + "/system/android.jar"
+    gradle.ext.aaosCertPath = gradle.ext.repoRootPath + "/packages/apps/Car/libs/certs/com_android_car_apps_test.jks"
+    gradle.ext.chassisCertPath = gradle.ext.repoRootPath + "/vendor/auto/embedded/prebuilts/car-ui-lib/chassis_upload_key.jks"
+    gradle.ext.platformCertPath = gradle.ext.repoRootPath + "/vendor/google/certs/devkeys/platform.keystore"
+    gradle.ext.soongBash = gradle.ext.repoRootPath + "/build/soong/soong_ui.bash"
+    gradle.ext.platformSdkVersion = (gradle.ext.soongBash + " --dumpvar-mode PLATFORM_SDK_VERSION").execute().text.trim()
+
+    gradle.ext.getVersionCode = { ->
+        def code = project.hasProperty('versionCode') ? versionCode.toInteger() : gradle.ext.platformSdkVersion.toInteger()
+        println "VersionCode is set to $code"
+        return code
+    }
+
+    gradle.ext.getVersionName = { ->
+        def name = project.hasProperty('versionName') ? versionName : gradle.ext.platformSdkVersion
+        println "VersionName is set to $name"
+        return name
+    }
 }
 
 allprojects {
@@ -45,5 +69,7 @@ allprojects {
     // Send all the build files to the out folder under the root of the repo init.
     // Gradle creates that folder if it doesn't exist.
     // Keep in sync with ./copy_gradle_output.sh
-    buildDir = new File(rootProject.projectDir, "../../../../../out/aaos-apps-gradle-build/" + project.name)
+    ext.buildOutputPath = gradle.ext.repoRootPath + "/out/aaos-apps-gradle-build/"
+    buildDir = new File(project.parent == null ? ext.buildOutputPath :
+            project.parent.buildDir.path + "/" + project.name)
 }

@@ -17,7 +17,7 @@ package com.android.car.ui.plugin.oemapis.recyclerview;
 
 import android.view.ViewGroup;
 
-import com.android.car.ui.plugin.oemapis.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * See {@code androidx.recyclerview.widget.RecyclerView.Adapter}

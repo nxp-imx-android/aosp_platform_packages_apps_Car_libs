@@ -17,7 +17,6 @@
 // Library-level build file
 
 apply plugin: 'com.android.library'
-apply plugin: 'jacoco'
 
 android {
     compileSdkVersion 32

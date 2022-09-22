@@ -23,6 +23,8 @@
     android:layout_height="match_parent"
     android:background="@drawable/car_ui_app_styled_view_background">
     <com.android.car.ui.FocusParkingView
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
     <com.android.car.ui.FocusArea

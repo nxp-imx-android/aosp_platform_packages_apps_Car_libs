@@ -26,6 +26,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Build.VERSION;
@@ -498,8 +499,9 @@ public class AlertDialogBuilder {
      *                     the dialog.
      * @return This Builder object to allow for chaining of calls to set methods
      */
-    public AlertDialogBuilder setMultiChoiceItems(@ArrayRes int itemsId, boolean[] checkedItems,
-            final DialogInterface.OnMultiChoiceClickListener listener) {
+    public AlertDialogBuilder setMultiChoiceItems(@ArrayRes int itemsId,
+            @Nullable boolean[] checkedItems,
+            @Nullable final DialogInterface.OnMultiChoiceClickListener listener) {
         CharSequence[] itemText = mContext.getResources().getTextArray(itemsId);
         return setMultiChoiceItems(itemText, checkedItems, listener);
     }
@@ -901,6 +903,10 @@ public class AlertDialogBuilder {
         mRoot = (ViewGroup) mDialog.getWindow().getDecorView().getRootView();
         FocusParkingView fpv = new FocusParkingView(mContext);
         mRoot.addView(fpv);
+
+        // Set alert dialog background color to transparent to avoid unexpected color below round
+        // corner.
+        mRoot.setBackgroundColor(Color.TRANSPARENT);
 
         // apply window insets listener to know when IME is visible so we can set title and desc.
         mRoot.setOnApplyWindowInsetsListener(mOnApplyWindowInsetsListener);

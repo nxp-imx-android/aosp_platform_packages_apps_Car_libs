@@ -42,6 +42,14 @@
         <item name="android:tint">@color/icon_tint</item>
     </style>
 
+    <!-- Styles for play/pause action buttons -->
+    <style name="Widget.ActionButton.PlayPause">
+        <item name="android:layout_width">@dimen/play_pause_image_size</item>
+        <item name="android:layout_height">@dimen/play_pause_image_size</item>
+        <item name="android:scaleType">centerInside</item>
+        <item name="android:tint">@color/action_button_icon_tint</item>
+    </style>
+
     <!-- Styles for car tab view -->
     <style name="CarTabItemText">
         <item name="android:textAppearance">@style/TextAppearance.Body3</item>

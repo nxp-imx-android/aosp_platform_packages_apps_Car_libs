@@ -138,7 +138,7 @@ public final class PluginFactoryAdapterV3 implements PluginFactory {
         RecyclerViewOEMV1 oemRecyclerView = mOem.createRecyclerView(context, oemAttrs);
         if (oemRecyclerView != null) {
             RecyclerViewAdapterV1 rv = new RecyclerViewAdapterV1(context, attrs, 0);
-            rv.setRecyclerViewOEMV1(oemRecyclerView, oemAttrs);
+            rv.setOemRecyclerView(oemRecyclerView, oemAttrs);
             return rv;
         } else {
             return mFactoryStub.createRecyclerView(context, attrs);

@@ -45,6 +45,16 @@ public class ViewMatchers {
         return new DrawableMatcher(drawable);
     }
 
+    public static Matcher<View> withBackgroundDrawable(
+            @NonNull Context context, @DrawableRes int drawableId) {
+        return new BackgroundDrawableMatcher(context, drawableId);
+    }
+
+    public static Matcher<View> withBackgroundDrawable(
+            @NonNull Drawable drawable) {
+        return new BackgroundDrawableMatcher(drawable);
+    }
+
     public static Matcher<View> nthChildOfView(Matcher<View> parentMatcher, int n) {
         return new NthChildMatcher(parentMatcher, n);
     }

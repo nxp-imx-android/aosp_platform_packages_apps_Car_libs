@@ -26,6 +26,7 @@ import android.annotation.SuppressLint;
 import android.car.drivingstate.CarUxRestrictions;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.os.Build.VERSION_CODES;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.InputDevice;
@@ -163,7 +164,6 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
         init(context, null, attrs, 0);
     }
 
-
     @Override
     public boolean canScrollHorizontally(int direction) {
         return mRecyclerView.canScrollHorizontally(direction);
@@ -219,6 +219,49 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
             mRecyclerView = (RecyclerView) recyclerViewContainer;
         }
 
+        // The methods in this block should always get the value from super if the methods
+        // are overridden in this class.
+        // e.g. isVerticalScrollBarEnabled() becomes super.isVerticalScrollBarEnabled()
+        // We've decided to support this feature for R and below. OEMs will need to use the plugin
+        // to support this if they wanted to support this feature.
+        if (android.os.Build.VERSION.SDK_INT <= VERSION_CODES.R
+                && android.os.Build.VERSION.SDK_INT >= VERSION_CODES.Q) {
+
+            mRecyclerView.setVerticalScrollBarEnabled(isVerticalScrollBarEnabled());
+            setVerticalScrollBarEnabled(false);
+            mRecyclerView.setHorizontalScrollBarEnabled(isHorizontalScrollBarEnabled());
+            setHorizontalScrollBarEnabled(false);
+
+            mRecyclerView.setVerticalScrollbarThumbDrawable(
+                    getVerticalScrollbarThumbDrawable());
+            mRecyclerView.setHorizontalScrollbarThumbDrawable(
+                    getHorizontalScrollbarThumbDrawable());
+
+            mRecyclerView.setVerticalScrollbarTrackDrawable(
+                    getVerticalScrollbarTrackDrawable());
+            mRecyclerView.setHorizontalScrollbarTrackDrawable(
+                    getHorizontalScrollbarTrackDrawable());
+
+            mRecyclerView.setVerticalScrollbarPosition(getVerticalScrollbarPosition());
+
+            mRecyclerView.setScrollBarSize(getScrollBarSize());
+
+            mRecyclerView.setScrollBarStyle(getScrollBarStyle());
+
+            if (isVerticalFadingEdgeEnabled()) {
+                mRecyclerView.setVerticalFadingEdgeEnabled(true);
+                mRecyclerView.setFadingEdgeLength(getVerticalFadingEdgeLength());
+                setVerticalFadingEdgeEnabled(false);
+                setFadingEdgeLength(0);
+            }
+            if (isHorizontalFadingEdgeEnabled()) {
+                mRecyclerView.setHorizontalFadingEdgeEnabled(true);
+                mRecyclerView.setFadingEdgeLength(getHorizontalFadingEdgeLength());
+                setHorizontalFadingEdgeEnabled(false);
+                setFadingEdgeLength(0);
+            }
+        }
+
         boolean rotaryScrollEnabled = (attrs2 != null) ? attrs2.isRotaryScrollEnabled() :
                 a.getBoolean(
                     R.styleable.CarUiRecyclerView_rotaryScrollEnabled, /* defValue=*/ false);
@@ -237,8 +280,8 @@ public final class CarUiRecyclerViewImpl extends FrameLayout
                 a.getInt(R.styleable.CarUiRecyclerView_layoutStyle, CarUiRecyclerViewLayout.LINEAR);
         mNumOfColumns = (attrs2 != null) ? attrs2.getLayoutStyle().getSpanCount() :
             a.getInt(R.styleable.CarUiRecyclerView_numOfColumns, /* defValue= */ 2);
-        mEnableDividers = (attrs2 != null) ? false :
-            a.getBoolean(R.styleable.CarUiRecyclerView_enableDivider, /* defValue= */ false);
+        mEnableDividers = attrs2 == null && a.getBoolean(
+            R.styleable.CarUiRecyclerView_enableDivider, /* defValue= */ false);
 
         mDividerItemDecorationLinear = new LinearDividerItemDecoration(
             ContextCompat.getDrawable(context, R.drawable.car_ui_recyclerview_divider));

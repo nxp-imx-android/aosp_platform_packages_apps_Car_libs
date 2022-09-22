@@ -28,23 +28,24 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
 
-import com.android.car.ui.plugin.oemapis.toolbar.ImeSearchInterfaceOEMV1;
+import com.android.car.ui.plugin.oemapis.BiConsumer;
+import com.android.car.ui.plugin.oemapis.Consumer;
+import com.android.car.ui.plugin.oemapis.toolbar.ImeSearchInterfaceOEMV2;
 import com.android.car.ui.plugin.oemapis.toolbar.MenuItemOEMV1;
 import com.android.car.ui.plugin.oemapis.toolbar.ProgressBarControllerOEMV1;
 import com.android.car.ui.plugin.oemapis.toolbar.TabOEMV1;
 import com.android.car.ui.plugin.oemapis.toolbar.ToolbarControllerOEMV1;
+import com.android.car.ui.plugin.oemapis.toolbar.ToolbarControllerOEMV2;
 
 import com.chassis.car.ui.plugin.R;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @SuppressWarnings("AndroidJdkLibsChecker")
-class ToolbarControllerImpl implements ToolbarControllerOEMV1 {
+class ToolbarControllerImpl implements ToolbarControllerOEMV2 {
 
     private final Context mPluginContext;
     private final ImageView mBackButtonView;
@@ -184,8 +185,8 @@ class ToolbarControllerImpl implements ToolbarControllerOEMV1 {
     }
 
     @Override
-    public ImeSearchInterfaceOEMV1 getImeSearchInterface() {
-        return new ImeSearchInterfaceOEMV1() {
+    public ImeSearchInterfaceOEMV2 getImeSearchInterface() {
+        return new ImeSearchInterfaceOEMV2() {
             @Override
             public void setSearchTextViewConsumer(Consumer<TextView> textViewConsumer) {
                 mSearchController.setSearchTextViewConsumer(textViewConsumer);

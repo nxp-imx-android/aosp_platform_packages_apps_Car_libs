@@ -18,6 +18,8 @@ package com.android.car.ui.plugin.oemapis;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
+
 /**
  * The OEM interface for a FocusArea. Unlike most components, the FocusArea has it's implementation
  * in the static library, and this interface is to give the plugin access to it. The

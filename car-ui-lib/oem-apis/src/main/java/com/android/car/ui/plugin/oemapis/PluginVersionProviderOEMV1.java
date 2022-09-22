@@ -17,6 +17,9 @@ package com.android.car.ui.plugin.oemapis;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 /**
  * An interface for objects that support providing a list a supported versions of
  * {@link PluginFactoryOEMV1} to the app. See {@link #getPluginFactory}

@@ -15,6 +15,8 @@
  */
 package com.android.car.ui.recyclerview;
 
+import static com.android.car.ui.utils.ViewUtils.LazyLayoutView;
+
 import android.content.Context;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -55,7 +57,7 @@ import java.util.List;
  */
 public final class RecyclerViewAdapterV1 extends FrameLayout
         implements CarUiRecyclerView, OnScrollListenerOEMV1, AndroidxRecyclerViewProvider,
-        OnChildAttachStateChangeListenerOEMV1 {
+        OnChildAttachStateChangeListenerOEMV1, LazyLayoutView {
 
     @Nullable
     private RecyclerViewOEMV1 mOEMRecyclerView;
@@ -97,7 +99,7 @@ public final class RecyclerViewAdapterV1 extends FrameLayout
      *
      * @param oemRecyclerView plugin implementation of {@link CarUiRecyclerView}
      */
-    public void setRecyclerViewOEMV1(@NonNull RecyclerViewOEMV1 oemRecyclerView,
+    public void setOemRecyclerView(@NonNull RecyclerViewOEMV1 oemRecyclerView,
             @Nullable RecyclerViewAttributesOEMV1 oemAttrs) {
         mOEMRecyclerView = oemRecyclerView;
 
@@ -335,7 +337,7 @@ public final class RecyclerViewAdapterV1 extends FrameLayout
     }
 
     @Override
-    public void setAdapter(RecyclerView.Adapter<?> adapter) {
+    public void setAdapter(Adapter<?> adapter) {
         if (adapter == null) {
             mAdapter = null;
             mOEMAdapter = null;
@@ -669,4 +671,24 @@ public final class RecyclerViewAdapterV1 extends FrameLayout
             listener.onChildViewDetachedFromWindow(view);
         }
     }
+
+    /**
+     * Unsupported. Always returns true;
+     */
+    @Override
+    public boolean isLayoutCompleted() {
+        return true;
+    }
+
+    /**
+     * Unsupported. Always returns true;
+     */
+    @Override
+    public void addOnLayoutCompleteListener(@Nullable Runnable runnable) {}
+
+    /**
+     * Unsupported. Always returns true;
+     */
+    @Override
+    public void removeOnLayoutCompleteListener(@Nullable Runnable runnable) {}
 }

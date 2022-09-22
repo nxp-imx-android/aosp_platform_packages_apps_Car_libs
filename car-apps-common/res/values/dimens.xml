@@ -16,6 +16,8 @@
 -->
 <resources>
     <item name="letter_to_tile_ratio" format="fraction" type="fraction">67%</item>
+    <dimen name="letter_tile_drawable_height">24dp</dimen>
+    <dimen name="letter_tile_drawable_width">24dp</dimen>
 
     <dimen name="fab_focused_stroke_width">8dp</dimen>
     <dimen name="fab_focused_growth">1.2dp</dimen>
@@ -32,6 +34,7 @@
     <dimen name="control_bar_elevation">0dp</dimen>
     <dimen name="control_bar_button_padding">30dp</dimen>
     <dimen name="control_bar_button_background_radius">52dp</dimen>
+    <dimen name="play_pause_image_size">@dimen/control_bar_button_size</dimen>
 
     <!-- Overflow button in control Bar -->
     <dimen name="overflow_button_icon_size">44dp</dimen>

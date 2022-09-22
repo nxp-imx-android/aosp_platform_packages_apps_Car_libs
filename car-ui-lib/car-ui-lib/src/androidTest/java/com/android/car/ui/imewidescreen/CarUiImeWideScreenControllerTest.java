@@ -44,6 +44,8 @@ import static com.android.car.ui.imewidescreen.CarUiImeWideScreenController.WIDE
 import static com.android.car.ui.imewidescreen.CarUiImeWideScreenController.WIDE_SCREEN_SEARCH_RESULTS;
 import static com.android.car.ui.imewidescreen.CarUiImeWideScreenTestActivity.sCarUiImeWideScreenController;
 import static com.android.car.ui.matchers.CarUiRecyclerViewMatcher.atPosition;
+import static com.android.car.ui.utils.CarUiUtils.drawableToBitmap;
+import static com.android.car.ui.utils.CarUiUtils.getBytesFromBitmap;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
@@ -69,7 +71,6 @@ import android.inputmethodservice.InputMethodService.Insets;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.Parcel;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.SurfaceControlViewHost;
@@ -90,7 +91,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.android.car.ui.core.SearchResultsProvider;
 import com.android.car.ui.test.R;
-import com.android.car.ui.utils.CarUiUtils;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -295,8 +295,8 @@ public class CarUiImeWideScreenControllerTest {
 
             Bundle bundle = new Bundle();
             Drawable drawable = mContext.getResources().getDrawable(R.drawable.ic_launcher);
-            Bitmap bitmap = CarUiUtils.drawableToBitmap(drawable);
-            byte[] byteArray = bitmapToByteArray(bitmap);
+            Bitmap bitmap = drawableToBitmap(drawable);
+            byte[] byteArray = getBytesFromBitmap(bitmap);
 
             bundle.putByteArray(WIDE_SCREEN_EXTRACTED_TEXT_ICON, byteArray);
             sCarUiImeWideScreenController.onAppPrivateCommand(WIDE_SCREEN_SEARCH_RESULTS, bundle);
@@ -475,21 +475,13 @@ public class CarUiImeWideScreenControllerTest {
         BitmapDrawable icon = (BitmapDrawable) mContext.getResources()
                 .getDrawable(R.drawable.ic_launcher);
         values.put(SearchResultsProvider.PRIMARY_IMAGE_BLOB,
-                icon != null ? bitmapToByteArray(icon.getBitmap()) : null);
+                icon != null ? getBytesFromBitmap(icon.getBitmap()) : null);
         BitmapDrawable supplementalIcon = (BitmapDrawable) mContext.getResources()
                 .getDrawable(R.drawable.ic_launcher);
         values.put(SearchResultsProvider.SECONDARY_IMAGE_BLOB,
-                supplementalIcon != null ? bitmapToByteArray(supplementalIcon.getBitmap())
+                supplementalIcon != null ? getBytesFromBitmap(supplementalIcon.getBitmap())
                         : null);
         return values;
-    }
-
-    private byte[] bitmapToByteArray(Bitmap bitmap) {
-        Parcel parcel = Parcel.obtain();
-        bitmap.writeToParcel(parcel, 0);
-        byte[] bytes = parcel.marshall();
-        parcel.recycle();
-        return bytes;
     }
 
     private CarUiImeWideScreenController getController() {

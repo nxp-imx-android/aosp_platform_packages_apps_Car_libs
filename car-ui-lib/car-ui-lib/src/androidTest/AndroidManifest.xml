@@ -29,6 +29,12 @@
             android:name="com.android.car.ui.recyclerview.CarUiRecyclerViewTestActivity"
             android:exported="true" />
         <activity
+            android:name="com.android.car.ui.shortcutspopup.CarUiArrowContainerViewTestActivity"
+            android:exported="true" />
+        <activity
+            android:name="com.android.car.ui.shortcutspopup.CarUiShortcutsPopupTestActivity"
+            android:exported="true" />
+        <activity
             android:name="com.android.car.ui.imewidescreen.CarUiImeWideScreenTestActivity"
             android:exported="true" />
         <activity

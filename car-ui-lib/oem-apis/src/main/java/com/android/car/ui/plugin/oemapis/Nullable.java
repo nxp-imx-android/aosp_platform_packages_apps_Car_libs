@@ -38,9 +38,12 @@ import java.lang.annotation.Target;
  * null.
  * <p>
  * This is a marker annotation and it has no specific attributes.
+ *
+ * @deprecated use {@link androidx.annotation.Nullable} instead
  */
 @Documented
 @Retention(CLASS)
 @Target({METHOD, PARAMETER, FIELD, LOCAL_VARIABLE, ANNOTATION_TYPE, PACKAGE})
+@Deprecated
 public @interface Nullable {
 }

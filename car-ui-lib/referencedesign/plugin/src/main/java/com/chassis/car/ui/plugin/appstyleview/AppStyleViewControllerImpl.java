@@ -17,10 +17,13 @@
 package com.chassis.car.ui.plugin.appstyleview;
 
 import android.content.Context;
+import android.content.res.Configuration;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.widget.ImageView;
 import android.widget.ScrollView;
@@ -33,6 +36,7 @@ import com.chassis.car.ui.plugin.R;
  * The OEM implementation for {@link AppStyledViewControllerOEMV2} for a AppStyledView.
  */
 public class AppStyleViewControllerImpl implements AppStyledViewControllerOEMV2 {
+    private static final double VISIBLE_SCREEN_PERCENTAGE = 0.9;
     private final Context mPluginContext;
     private final View mAppStyleView;
     private int mWidth;
@@ -42,6 +46,7 @@ public class AppStyleViewControllerImpl implements AppStyledViewControllerOEMV2 
         mPluginContext = pluginContext;
         LayoutInflater inflater = LayoutInflater.from(mPluginContext);
         mAppStyleView = inflater.inflate(R.layout.app_styled_view, null, false);
+        mAppStyleView.setClipToOutline(true);
     }
 
     @Override
@@ -86,28 +91,66 @@ public class AppStyleViewControllerImpl implements AppStyledViewControllerOEMV2 
 
     @Override
     public LayoutParams getDialogWindowLayoutParam(LayoutParams params) {
-        mWidth = Math.round(
-                mPluginContext.getResources().getDimension(R.dimen.app_styled_dialog_width));
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        WindowManager wm = mPluginContext.getSystemService(WindowManager.class);
+        wm.getDefaultDisplay().getMetrics(displayMetrics);
+
+        int maxWidth = mPluginContext.getResources().getDimensionPixelSize(
+                R.dimen.app_styled_dialog_width_max);
+        int maxHeight = mPluginContext.getResources().getDimensionPixelSize(
+                R.dimen.app_styled_dialog_height_max);
+
+        int displayWidth = (int) (displayMetrics.widthPixels * VISIBLE_SCREEN_PERCENTAGE);
+        int displayHeight = (int) (displayMetrics.heightPixels * VISIBLE_SCREEN_PERCENTAGE);
+
+        if (mPluginContext.getResources().getConfiguration()
+                .orientation == Configuration.ORIENTATION_LANDSCAPE && maxWidth < displayWidth) {
+            params.gravity = Gravity.START;
+        }
+
+        int configuredWidth = mPluginContext.getResources().getDimensionPixelSize(
+                R.dimen.app_styled_dialog_width);
+        mWidth = configuredWidth != 0 ? configuredWidth : Math.min(displayWidth, maxWidth);
+        int configuredHeight = mPluginContext.getResources().getDimensionPixelSize(
+                R.dimen.app_styled_dialog_height);
+        mHeight = configuredHeight != 0 ? configuredHeight : Math.min(displayHeight, maxHeight);
+
         params.width = mWidth;
-        mHeight = Math.round(
-                mPluginContext.getResources().getDimension(R.dimen.app_styled_dialog_height));
         params.height = mHeight;
-        params.gravity = Gravity.TOP | Gravity.START;
-        params.x = Math.round(
-                mPluginContext.getResources().getDimension(R.dimen.app_styled_dialog_position_x));
-        params.y = Math.round(
-                mPluginContext.getResources().getDimension(R.dimen.app_styled_dialog_position_y));
+
+        int posX = mPluginContext.getResources().getDimensionPixelSize(
+                R.dimen.app_styled_dialog_position_x);
+        int posY = mPluginContext.getResources().getDimensionPixelSize(
+                R.dimen.app_styled_dialog_position_y);
+
+        if (posX != 0 || posY != 0) {
+            params.gravity = Gravity.TOP | Gravity.START;
+            params.x = posX;
+            params.y = posY;
+        }
+        // TODO (233660647) AppStyledView animations don't render when using plugin
         return params;
     }
 
     @Override
     public int getContentAreaWidth() {
-        return mWidth - mPluginContext.getResources().getDimensionPixelSize(
-                R.dimen.app_styled_dialog_nav_bar_width);
+        int orientation = mPluginContext.getResources().getConfiguration().orientation;
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            return mWidth - mPluginContext.getResources().getDimensionPixelSize(
+                    R.dimen.app_styled_dialog_nav_bar_height);
+        }
+
+        return mWidth;
     }
 
     @Override
     public int getContentAreaHeight() {
-        return mHeight;
+        int orientation = mPluginContext.getResources().getConfiguration().orientation;
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            return mHeight;
+        }
+
+        return mHeight - mPluginContext.getResources().getDimensionPixelSize(
+                R.dimen.app_styled_dialog_nav_bar_height);
     }
 }

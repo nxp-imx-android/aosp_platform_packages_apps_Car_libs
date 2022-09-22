@@ -46,9 +46,9 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 import com.android.car.ui.plugin.oemapis.recyclerview.AdapterOEMV1;
 import com.android.car.ui.plugin.oemapis.recyclerview.LayoutStyleOEMV1;
 import com.android.car.ui.plugin.oemapis.recyclerview.OnChildAttachStateChangeListenerOEMV1;
-import com.android.car.ui.plugin.oemapis.recyclerview.OnScrollListenerOEMV1;
 import com.android.car.ui.plugin.oemapis.recyclerview.RecyclerViewAttributesOEMV1;
-import com.android.car.ui.plugin.oemapis.recyclerview.RecyclerViewOEMV1;
+import com.android.car.ui.plugin.oemapis.recyclerview.RecyclerViewOEMV2;
+import com.android.car.ui.plugin.oemapis.recyclerview.RecyclerViewOEMV2.OnScrollListenerOEMV2;
 import com.android.car.ui.plugin.oemapis.recyclerview.ViewHolderOEMV1;
 
 import com.chassis.car.ui.plugin.R;
@@ -56,12 +56,14 @@ import com.chassis.car.ui.plugin.recyclerview.AdapterWrapper.ViewHolderWrapper;
 import com.chassis.car.ui.plugin.uxr.CarUxRestrictionsUtil;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Reference OEM implementation for RecyclerView
  */
-public final class RecyclerViewImpl extends FrameLayout implements RecyclerViewOEMV1 {
+public final class RecyclerViewImpl extends FrameLayout implements RecyclerViewOEMV2 {
 
     /**
      * {@link com.android.car.ui.utils.RotaryConstants#ROTARY_CONTAINER}
@@ -91,21 +93,21 @@ public final class RecyclerViewImpl extends FrameLayout implements RecyclerViewO
     private final DefaultScrollBar mScrollBar;
 
     @NonNull
-    private final List<OnScrollListenerOEMV1> mScrollListeners = new ArrayList<>();
+    private final List<OnScrollListenerOEMV2> mScrollListeners = new ArrayList<>();
 
     @NonNull
     private final RecyclerView.OnScrollListener mOnScrollListener =
             new RecyclerView.OnScrollListener() {
                 @Override
                 public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                    for (OnScrollListenerOEMV1 listener : mScrollListeners) {
+                    for (OnScrollListenerOEMV2 listener : mScrollListeners) {
                         listener.onScrolled(RecyclerViewImpl.this, dx, dy);
                     }
                 }
 
                 @Override
                 public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                    for (OnScrollListenerOEMV1 listener : mScrollListeners) {
+                    for (OnScrollListenerOEMV2 listener : mScrollListeners) {
                         listener.onScrollStateChanged(RecyclerViewImpl.this,
                                 toInternalScrollState(newState));
                     }
@@ -138,6 +140,9 @@ public final class RecyclerViewImpl extends FrameLayout implements RecyclerViewO
 
     @Nullable
     private LayoutStyleOEMV1 mLayoutStyle;
+
+    @NonNull
+    private final Set<Runnable> mOnLayoutCompletedListeners = new HashSet<>();
 
     public RecyclerViewImpl(@NonNull Context context) {
         this(context, null);
@@ -241,7 +246,7 @@ public final class RecyclerViewImpl extends FrameLayout implements RecyclerViewO
     }
 
     @Override
-    public void addOnScrollListener(OnScrollListenerOEMV1 listener) {
+    public void addOnScrollListener(OnScrollListenerOEMV2 listener) {
         if (listener == null) {
             return;
         }
@@ -252,7 +257,7 @@ public final class RecyclerViewImpl extends FrameLayout implements RecyclerViewO
     }
 
     @Override
-    public void removeOnScrollListener(OnScrollListenerOEMV1 listener) {
+    public void removeOnScrollListener(OnScrollListenerOEMV2 listener) {
         if (listener == null) {
             return;
         }
@@ -315,14 +320,38 @@ public final class RecyclerViewImpl extends FrameLayout implements RecyclerViewO
 
         if (layoutStyle == null
                 || layoutStyle.getLayoutType() == LayoutStyleOEMV1.LAYOUT_TYPE_LINEAR) {
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
-                    orientation,
-                    reverseLayout));
+            LinearLayoutManager lm = new LinearLayoutManager(getContext(), orientation,
+                    reverseLayout) {
+                @Override
+                public void onLayoutCompleted(RecyclerView.State state) {
+                    super.onLayoutCompleted(state);
+                    // Iterate through a copied set instead of the original set because the original
+                    // set might be modified during iteration.
+                    Set<Runnable> onLayoutCompletedListeners =
+                            new HashSet<>(mOnLayoutCompletedListeners);
+                    for (Runnable runnable : onLayoutCompletedListeners) {
+                        runnable.run();
+                    }
+                }
+            };
+            mRecyclerView.setLayoutManager(lm);
         } else {
             GridLayoutManager glm = new GridLayoutManager(getContext(),
                     layoutStyle.getSpanCount(),
                     orientation,
-                    reverseLayout);
+                    reverseLayout) {
+                @Override
+                public void onLayoutCompleted(RecyclerView.State state) {
+                    super.onLayoutCompleted(state);
+                    // Iterate through a copied set instead of the original set because the original
+                    // set might be modified during iteration.
+                    Set<Runnable> onLayoutCompletedListeners =
+                            new HashSet<>(mOnLayoutCompletedListeners);
+                    for (Runnable runnable : onLayoutCompletedListeners) {
+                        runnable.run();
+                    }
+                }
+            };
             glm.setSpanSizeLookup(new SpanSizeLookup() {
                 @Override
                 public int getSpanSize(int position) {
@@ -384,13 +413,13 @@ public final class RecyclerViewImpl extends FrameLayout implements RecyclerViewO
 
     private static int toInternalScrollState(int state) {
         /* default to RecyclerView.SCROLL_STATE_IDLE */
-        int internalState = RecyclerViewOEMV1.SCROLL_STATE_IDLE;
+        int internalState = RecyclerViewOEMV2.SCROLL_STATE_IDLE;
         switch (state) {
             case RecyclerView.SCROLL_STATE_DRAGGING:
-                internalState = RecyclerViewOEMV1.SCROLL_STATE_DRAGGING;
+                internalState = RecyclerViewOEMV2.SCROLL_STATE_DRAGGING;
                 break;
             case RecyclerView.SCROLL_STATE_SETTLING:
-                internalState = RecyclerViewOEMV1.SCROLL_STATE_SETTLING;
+                internalState = RecyclerViewOEMV2.SCROLL_STATE_SETTLING;
                 break;
         }
         return internalState;
@@ -636,6 +665,25 @@ public final class RecyclerViewImpl extends FrameLayout implements RecyclerViewO
             return mRecyclerView.getLayoutManager().findViewByPosition(position);
         } else {
             return null;
+        }
+    }
+
+    @Override
+    public boolean isComputingLayout() {
+        return mRecyclerView.isComputingLayout();
+    }
+
+    @Override
+    public void addOnLayoutCompleteListener(@Nullable Runnable runnable) {
+        if (runnable != null) {
+            mOnLayoutCompletedListeners.add(runnable);
+        }
+    }
+
+    @Override
+    public void removeOnLayoutCompleteListener(@Nullable Runnable runnable) {
+        if (runnable != null) {
+            mOnLayoutCompletedListeners.remove(runnable);
         }
     }
 
