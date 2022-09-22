@@ -13,16 +13,29 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="@color/car_ui_ripple_color">
-    <item>
-        <selector>
-            <item
-                android:drawable="@drawable/car_ui_shortcuts_rounded_corner_button_default"
-                android:state_enabled="true" />
-            <item
-                android:drawable="@drawable/car_ui_shortcuts_rounded_corner_button_disabled"
-                android:state_enabled="false" />
-        </selector>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_focused="true" android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/car_ui_rotary_focus_pressed_fill_color" />
+            <stroke android:width="@dimen/car_ui_rotary_focus_pressed_stroke_width"
+                android:color="@color/car_ui_rotary_focus_pressed_stroke_color" />
+            <corners android:radius="76dp" />
+        </shape>
     </item>
-</ripple>
+    <item android:state_focused="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/car_ui_rotary_focus_fill_color" />
+            <stroke android:width="@dimen/car_ui_rotary_focus_stroke_width"
+                android:color="@color/car_ui_rotary_focus_stroke_color" />
+            <corners android:radius="76dp" />
+        </shape>
+    </item>
+    <item android:drawable="@drawable/car_ui_shortcuts_rounded_corner_button_disabled" android:state_enabled="false" />
+
+    <item>
+        <ripple android:color="@color/car_ui_ripple_color">
+            <item android:drawable="@drawable/car_ui_shortcuts_rounded_corner_button_default" android:state_enabled="true" />
+        </ripple>
+    </item>
+
+</selector>
