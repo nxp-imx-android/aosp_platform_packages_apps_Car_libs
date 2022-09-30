@@ -24,8 +24,6 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import androidx.annotation.LayoutRes;
@@ -108,16 +106,6 @@ public final class PluginFactoryStub implements PluginFactory {
             } else {
                 toolbarController = new ToolbarControllerImpl(baseLayout);
             }
-        }
-
-        // Allow for content to be rendered in display cut-out area
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
-                && contentView.getContext() instanceof Activity) {
-            Window baseLayoutWindow = ((Activity) contentView.getContext()).getWindow();
-            WindowManager.LayoutParams lp = baseLayoutWindow.getAttributes();
-            lp.layoutInDisplayCutoutMode =
-                    WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS;
-            baseLayoutWindow.setAttributes(lp);
         }
 
         InsetsUpdater insetsUpdater = new InsetsUpdater(baseLayout, contentView);
