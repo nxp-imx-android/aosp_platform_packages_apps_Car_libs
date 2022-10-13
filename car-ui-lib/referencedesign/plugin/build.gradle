@@ -41,12 +41,10 @@ android {
 
     signingConfigs {
         aaos {
-            if (file(gradle.ext.chassisCertPath).exists()) {
-                storeFile file(gradle.ext.chassisCertPath)
-                storePassword 'chassis'
-                keyAlias 'chassis'
-                keyPassword 'chassis'
-            }
+            storeFile file(gradle.ext.chassisCertPath)
+            storePassword 'chassis'
+            keyAlias 'chassis'
+            keyPassword 'chassis'
         }
 
         platform {
@@ -61,7 +59,9 @@ android {
     productFlavors {
         aaos {
             dimension "signingkey"
-            signingConfig signingConfigs.aaos
+            if (file(gradle.ext.chassisCertPath).exists()) {
+                signingConfig signingConfigs.aaos
+            }
         }
         platform {
             dimension "signingkey"
