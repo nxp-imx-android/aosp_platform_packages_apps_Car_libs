@@ -40,7 +40,10 @@ buildscript {
     gradle.ext.chassisCertPath = gradle.ext.repoRootPath + "/vendor/auto/embedded/prebuilts/car-ui-lib/chassis_upload_key.jks"
     gradle.ext.platformCertPath = gradle.ext.repoRootPath + "/vendor/google/certs/devkeys/platform.keystore"
     gradle.ext.soongBash = gradle.ext.repoRootPath + "/build/soong/soong_ui.bash"
-    gradle.ext.platformSdkVersion = (gradle.ext.soongBash + " --dumpvar-mode PLATFORM_SDK_VERSION").execute().text.trim()
+    gradle.ext.platformSdkVersion = 33 // Change this to the most recent android API level.
+    if (file(gradle.ext.soongBash).exists()) {
+        gradle.ext.platformSdkVersion = (gradle.ext.soongBash + " --dumpvar-mode PLATFORM_SDK_VERSION").execute().text.trim()
+    }
 
     gradle.ext.getVersionCode = { ->
         def code = project.hasProperty('versionCode') ? versionCode.toInteger() : gradle.ext.platformSdkVersion.toInteger()
