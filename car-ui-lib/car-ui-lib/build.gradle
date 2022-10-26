@@ -40,6 +40,7 @@ android {
         main {
             res.srcDirs = [
                     'src/main/res',
+                    'src/main/res-overlayable',
                     'src/main/res-private'
             ]
         }
