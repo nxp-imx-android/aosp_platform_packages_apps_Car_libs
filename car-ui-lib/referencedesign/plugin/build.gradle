@@ -71,6 +71,12 @@ android {
         }
     }
 
+    buildTypes {
+        debug {
+            signingConfig android.buildTypes.release.signingConfig
+        }
+    }
+
     useLibrary 'android.car'
 }
 
