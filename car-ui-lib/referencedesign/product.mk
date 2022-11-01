@@ -2,6 +2,8 @@
 
 PRODUCT_PACKAGES += \
    car-ui-lib-plugin-prebuilt \
+   token-rro \
+   oem-token-shared-lib
 
 PRODUCT_PRODUCT_PROPERTIES += \
     ro.build.automotive.car.ui.plugin.package.name=com.chassis.car.ui.plugin
