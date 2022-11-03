@@ -26,6 +26,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Parcel;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
@@ -414,5 +415,45 @@ public final class CarUiUtils {
                     androidStateUxRestricted
             };
         }
+    }
+
+    /**
+     * Converts dp values to pixels.
+     */
+    public static float dpToPixel(@NonNull Resources res, int dp) {
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            dp,
+            res.getDisplayMetrics());
+    }
+
+    /**
+     * Creates a new scaled Bitmap keeping the original aspect ratio.
+     */
+    public static Bitmap scaleBitmapAndKeepRatio(@NonNull Bitmap srcBmp,
+            int reqWidthInPixels, int reqHeightInPixels) {
+        return Bitmap.createScaledBitmap(srcBmp, reqWidthInPixels, reqHeightInPixels, true);
+    }
+
+    /**
+     * Converts a bitmap into a byte array.
+     *
+     * @param bitmap The bitmap.
+     * @return The byte array or null if the bitmap was null.
+     */
+    public static byte[] getBytesFromBitmap(Bitmap bitmap) {
+        byte[] result = null;
+        if (bitmap != null) {
+            try {
+                Parcel parcel = Parcel.obtain();
+                bitmap.writeToParcel(parcel, 0);
+                byte[] bytes = parcel.marshall();
+                parcel.recycle();
+                result = bytes;
+            } catch (RuntimeException e) {
+                Log.e(TAG, "failed to write bitmap", e);
+            }
+        }
+        return result;
     }
 }

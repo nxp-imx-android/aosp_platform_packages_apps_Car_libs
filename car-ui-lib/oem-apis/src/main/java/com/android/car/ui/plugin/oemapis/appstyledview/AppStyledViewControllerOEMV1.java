@@ -19,8 +19,8 @@ package com.android.car.ui.plugin.oemapis.appstyledview;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.android.car.ui.plugin.oemapis.NonNull;
-import com.android.car.ui.plugin.oemapis.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * The OEM interface for a AppStyledView.

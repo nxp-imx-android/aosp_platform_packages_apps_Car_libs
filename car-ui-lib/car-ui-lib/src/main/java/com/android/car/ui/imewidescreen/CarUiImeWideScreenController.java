@@ -27,16 +27,17 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.inputmethodservice.ExtractEditText;
 import android.inputmethodservice.InputMethodService;
 import android.net.Uri;
+import android.os.BadParcelableException;
 import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Parcel;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
@@ -514,10 +515,21 @@ public class CarUiImeWideScreenController {
      */
     private static Bitmap getBitmapFromBytes(byte[] bytes) {
         if (bytes != null) {
-            final Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-            return bitmap;
+            try {
+                return Bitmap.CREATOR.createFromParcel(byteArrayToParcel(bytes));
+            } catch (BadParcelableException e) {
+                Log.e(TAG, "failed to create bitmap", e);
+                return null;
+            }
         }
         return null;
+    }
+
+    private static Parcel byteArrayToParcel(byte[] bytes) throws BadParcelableException {
+        Parcel parcel = Parcel.obtain();
+        parcel.unmarshall(bytes, 0, bytes.length);
+        parcel.setDataPosition(0);
+        return parcel;
     }
 
     /**

@@ -17,6 +17,7 @@
 package com.android.car.ui.toolbar;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.android.car.ui.plugin.oemapis.toolbar.MenuItemOEMV1;
 import com.android.car.ui.utils.CarUiUtils;
@@ -27,8 +28,10 @@ import com.android.car.ui.utils.CarUiUtils;
  */
 public class MenuItemAdapterV1 {
 
-    @NonNull
-    private final ToolbarControllerAdapterV1 mToolbar;
+    @Nullable
+    private ToolbarControllerAdapterV1 mToolbarV1;
+    @Nullable
+    private ToolbarControllerAdapterV2 mToolbarV2;
     @NonNull
     private final MenuItem mClientMenuItem;
     @NonNull
@@ -41,14 +44,25 @@ public class MenuItemAdapterV1 {
     };
 
     public MenuItemAdapterV1(@NonNull ToolbarControllerAdapterV1 toolbar, @NonNull MenuItem item) {
-        mToolbar = toolbar;
+        mToolbarV1 = toolbar;
+        mClientMenuItem = item;
+        item.setListener(mClientListener);
+        updateMenuItem();
+    }
+
+    public MenuItemAdapterV1(@NonNull ToolbarControllerAdapterV2 toolbar, @NonNull MenuItem item) {
+        mToolbarV2 = toolbar;
         mClientMenuItem = item;
         item.setListener(mClientListener);
         updateMenuItem();
     }
 
     private void updateMenuItems() {
-        mToolbar.updateMenuItems();
+        if (mToolbarV2 != null) {
+            mToolbarV2.updateMenuItems();
+        } else if (mToolbarV1 != null) {
+            mToolbarV1.updateMenuItems();
+        }
     }
 
     // Recreates mPluginMenuItem from mClientMenuItem

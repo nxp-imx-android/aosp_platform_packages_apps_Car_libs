@@ -59,6 +59,7 @@
   <public type="bool" name="car_ui_preference_list_instant_change_callback"/>
   <public type="bool" name="car_ui_preference_list_show_full_screen"/>
   <public type="bool" name="car_ui_preference_show_chevron"/>
+  <public type="bool" name="car_ui_preference_two_action_switch_widget_focusable"/>
   <public type="bool" name="car_ui_scrollbar_enable"/>
   <public type="bool" name="car_ui_toolbar_logo_fills_nav_icon_space"/>
   <public type="bool" name="car_ui_toolbar_menuitem_individual_click_listeners"/>
@@ -208,6 +209,7 @@
   <public type="dimen" name="car_ui_scrollbar_separator_margin"/>
   <public type="dimen" name="car_ui_scrollbar_thumb_radius"/>
   <public type="dimen" name="car_ui_scrollbar_thumb_width"/>
+  <public type="dimen" name="car_ui_shortcuts_popup_width"/>
   <public type="dimen" name="car_ui_sub1_size"/>
   <public type="dimen" name="car_ui_sub2_size"/>
   <public type="dimen" name="car_ui_sub3_size"/>
@@ -292,6 +294,8 @@
   <public type="id" name="car_ui_closeKeyboard"/>
   <public type="id" name="car_ui_component_reference"/>
   <public type="id" name="car_ui_contentAreaAutomotive"/>
+  <public type="id" name="car_ui_content_left_drawable"/>
+  <public type="id" name="car_ui_content_name"/>
   <public type="id" name="car_ui_divider"/>
   <public type="id" name="car_ui_first_action_container"/>
   <public type="id" name="car_ui_focus_area"/>
@@ -332,6 +336,7 @@
   <public type="id" name="car_ui_second_action_container"/>
   <public type="id" name="car_ui_secondary_action"/>
   <public type="id" name="car_ui_secondary_action_concrete"/>
+  <public type="id" name="car_ui_shortcuts_contentView"/>
   <public type="id" name="car_ui_toolbar_background"/>
   <public type="id" name="car_ui_toolbar_bottom_guideline"/>
   <public type="id" name="car_ui_toolbar_bottom_styleable"/>
@@ -422,6 +427,7 @@
   <public type="layout" name="car_ui_recycler_view_item"/>
   <public type="layout" name="car_ui_recyclerview_scrollbar"/>
   <public type="layout" name="car_ui_seekbar_dialog"/>
+  <public type="layout" name="car_ui_shortcut_popup_item"/>
   <public type="layout" name="car_ui_toolbar"/>
   <public type="layout" name="car_ui_toolbar_menu_item"/>
   <public type="layout" name="car_ui_toolbar_menu_item_primary"/>

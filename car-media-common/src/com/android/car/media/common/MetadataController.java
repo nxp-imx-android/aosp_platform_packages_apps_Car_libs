@@ -80,9 +80,9 @@ public class MetadataController {
      * @param lifecycleOwner    The lifecycle scope for the Views provided to this controller.
      * @param playbackViewModel The Model to provide metadata for display.
      * @param title             Displays the track's title. Must not be {@code null}.
-     * @param artist            Displays the track's artist. May be {@code null}.
-     * @param albumTitle        Displays the track's album title. May be {@code null}.
-     * @param outerSeparator    Displays the separator between the album title and time. May be
+     * @param subtitle          Displays the track's subtitle. May be {@code null}.
+     * @param description       Displays the track's description. May be {@code null}.
+     * @param outerSeparator    Displays the separator between the description and the time. May be
      *                          {@code null}.
      * @param currentTime       Displays the track's current position as text. May be {@code null}.
      * @param innerSeparator    Displays the separator between the currentTime and the maxTime. May
@@ -95,7 +95,7 @@ public class MetadataController {
      */
     public MetadataController(@NonNull LifecycleOwner lifecycleOwner,
             @NonNull PlaybackViewModel playbackViewModel, @NonNull TextView title,
-            @Nullable TextView artist, @Nullable TextView albumTitle,
+            @Nullable TextView subtitle, @Nullable TextView description,
             @Nullable TextView outerSeparator, @Nullable TextView currentTime,
             @Nullable TextView innerSeparator, @Nullable TextView maxTime,
             @Nullable SeekBar seekBar, @Nullable ImageView albumArt,
@@ -111,8 +111,8 @@ public class MetadataController {
                 metadata -> {
                     if (metadata == null) {
                         ViewUtils.setVisible(title, false);
-                        ViewUtils.setVisible(artist, false);
-                        ViewUtils.setVisible(albumTitle, false);
+                        ViewUtils.setVisible(subtitle, false);
+                        ViewUtils.setVisible(description, false);
                         ViewUtils.setVisible(albumArt, false);
                         return;
                     }
@@ -123,10 +123,10 @@ public class MetadataController {
                     title.setText(titleName);
                     ViewUtils.setVisible(title, true);
 
-                    if (artist != null) {
-                        CharSequence artistName = metadata.getArtist();
-                        artist.setText(artistName);
-                        ViewUtils.setVisible(artist, !TextUtils.isEmpty(artistName));
+                    if (subtitle != null) {
+                        CharSequence subtitleText = metadata.getSubtitle();
+                        subtitle.setText(subtitleText);
+                        ViewUtils.setVisible(subtitle, !TextUtils.isEmpty(subtitleText));
                     }
 
                     ViewUtils.setVisible(albumArt, true);
@@ -176,30 +176,30 @@ public class MetadataController {
         if (outerSeparator != null) {
             combine(playbackViewModel.getMetadata(), playbackViewModel.getProgress(),
                     (metadata, progress) -> metadata != null
-                            && !TextUtils.isEmpty(metadata.getAlbumTitle()) && progress.hasTime())
+                            && !TextUtils.isEmpty(metadata.getDescription()) && progress.hasTime())
                     .observe(lifecycleOwner,
                             visible -> ViewUtils.setVisible(outerSeparator, visible));
         }
 
-        if (albumTitle != null) {
+        if (description != null) {
             pair(playbackViewModel.getMetadata(), playbackViewModel.getProgress()).observe(
                     lifecycleOwner, pair -> {
-                        CharSequence albumName =
-                                pair.first == null ? null : pair.first.getAlbumTitle();
-                        albumTitle.setText(albumName);
+                        CharSequence descriptionText =
+                                pair.first == null ? null : pair.first.getDescription();
+                        description.setText(descriptionText);
 
-                        boolean hasAlbumName = !TextUtils.isEmpty(albumName);
+                        boolean hasDescriptionText = !TextUtils.isEmpty(descriptionText);
                         boolean hasTime = pair.second.hasTime();
-                        if (hasAlbumName) {
-                            ViewUtils.setVisible(albumTitle, true);
+                        if (hasDescriptionText) {
+                            ViewUtils.setVisible(description, true);
                         } else if (hasTime) {
-                            // In layout file, artist is constrained to albumTitle. When album
+                            // In layout file, subtitle is constrained to description. When album
                             // name is empty but progress is not empty, the visibility of
-                            // albumTitle should be INVISIBLE instead of GONE, otherwise the
+                            // description should be INVISIBLE instead of GONE, otherwise the
                             // constraint will be broken.
-                            ViewUtils.setInvisible(albumTitle, true);
+                            ViewUtils.setInvisible(description, true);
                         } else {
-                            ViewUtils.setVisible(albumTitle, false);
+                            ViewUtils.setVisible(description, false);
                         }
                     });
         }

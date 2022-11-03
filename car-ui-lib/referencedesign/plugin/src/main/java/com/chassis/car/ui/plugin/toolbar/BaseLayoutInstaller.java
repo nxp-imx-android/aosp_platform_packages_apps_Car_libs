@@ -26,28 +26,25 @@ import android.widget.LinearLayout;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
 
+import com.android.car.ui.plugin.oemapis.Consumer;
 import com.android.car.ui.plugin.oemapis.FocusAreaOEMV1;
 import com.android.car.ui.plugin.oemapis.FocusParkingViewOEMV1;
+import com.android.car.ui.plugin.oemapis.Function;
 import com.android.car.ui.plugin.oemapis.InsetsOEMV1;
-import com.android.car.ui.plugin.oemapis.PluginFactoryOEMV1;
-import com.android.car.ui.plugin.oemapis.toolbar.ToolbarControllerOEMV1;
+import com.android.car.ui.plugin.oemapis.PluginFactoryOEMV4;
+import com.android.car.ui.plugin.oemapis.toolbar.ToolbarControllerOEMV2;
 
 import com.chassis.car.ui.plugin.R;
 
-import java.util.function.Consumer;
-import java.util.function.Function;
-
 /**
- * A helper class for implementing installBaseLayoutAround from
- * {@link PluginFactoryOEMV1}
+ * A helper class for implementing installBaseLayoutAround from {@link PluginFactoryOEMV4}
  */
-@SuppressWarnings("AndroidJdkLibsChecker")
 public class BaseLayoutInstaller {
     /**
      * Implementation of installBaseLayoutAround from
-     * {@link PluginFactoryOEMV1}
+     * {@link PluginFactoryOEMV4}
      */
-    public static ToolbarControllerOEMV1 installBaseLayoutAround(
+    public static ToolbarControllerOEMV2 installBaseLayoutAround(
             Context sourceContext,
             Context pluginContext,
             View contentView,
@@ -115,7 +112,7 @@ public class BaseLayoutInstaller {
         }
 
 
-        ToolbarControllerOEMV1 toolbarController = null;
+        ToolbarControllerOEMV2 toolbarController = null;
         if (toolbarEnabled) {
             toolbarController = new ToolbarControllerImpl(
                     baseLayout, pluginContext, sourceContext);

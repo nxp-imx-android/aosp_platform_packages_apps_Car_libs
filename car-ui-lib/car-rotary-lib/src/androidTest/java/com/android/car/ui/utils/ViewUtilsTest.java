@@ -41,9 +41,9 @@ import android.view.View;
 
 import androidx.test.rule.ActivityTestRule;
 
+import com.android.car.rotary.test.R;
 import com.android.car.ui.FocusArea;
 import com.android.car.ui.FocusParkingView;
-import com.android.car.ui.R;
 import com.android.car.ui.TestAdapter;
 import com.android.car.ui.recyclerview.CarUiRecyclerView;
 
@@ -515,11 +515,48 @@ public class ViewUtilsTest {
         assertThat(mFocusedByDefault3.isFocused()).isTrue();
     }
 
+    @Test
+    public void testBug236319192() throws InterruptedException {
+        TestUtils.hideFocusAndAssertFocusHidden(mRoot, mFpv);
+        ViewUtils.LazyLayoutView lazyLayoutView =
+                (ViewUtils.LazyLayoutView) mCarUiRecyclerView5;
+        TestUtils.accept(mRoot,
+                // This lazyLayoutView has completed layout but has no focusable descendants.
+                v -> mCarUiRecyclerView5.setAdapter(new TestAdapter(/* numItems= */ 0) {
+                    @Override
+                    public int getItemCount() {
+                        // A positive value ensure that lazyLayoutView.isLayoutCompleted() returns
+                        // true.
+                        return 3;
+                    }
+                    @Override
+                    public void onBindViewHolder(TestViewHolder holder, int position) {
+                        // No-op.
+                    }
+                }));
+        assertThat(lazyLayoutView.isLayoutCompleted()).isTrue();
+        assertThat(mCarUiRecyclerView5.getView().isShown()).isTrue();
+
+        TestUtils.accept(mRoot, v -> {
+            mCarUiRecyclerView5.setAdapter(new TestAdapter(/* numItems= */ 2));
+            ViewUtils.initFocusDelayed(lazyLayoutView);
+        });
+        wait(RESTORE_FOCUS_RETRY_DELAY_MS / 2);
+        // Since lazyLayoutView.isLayoutCompleted() is true, onLayoutCompleteListener will not kick
+        // in. Since the waiting time is less than RESTORE_FOCUS_RETRY_DELAY_MS, delayedTask hasn't
+        // kicked in. We're only relying on onGlobalLayoutListener to restore focus.
+        assertThat(mCarUiRecyclerView5.getView().hasFocus()).isTrue();
+    }
+
     private static void waitForFocusRestored() {
+        // Wait longer than RESTORE_FOCUS_RETRY_DELAY_MS to make sure the delayedTask in
+        // ViewUtils.initFocusDelayed() has completed.
+        wait(RESTORE_FOCUS_RETRY_DELAY_MS + 1000);
+    }
+
+    private static void wait(int millisecondsTimeout) {
         try {
-            // Wait longer than RESTORE_FOCUS_RETRY_DELAY_MS to make sure the delayedTask in
-            // ViewUtils.initFocusDelayed() has completed.
-            Thread.sleep(RESTORE_FOCUS_RETRY_DELAY_MS + 1000);
+            Thread.sleep(millisecondsTimeout);
         } catch (InterruptedException e) {
             throw new AssertionError("Unexpected InterruptedException", e);
         }

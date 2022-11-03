@@ -69,6 +69,9 @@ public class MediaButtonController {
     private boolean mSkipPrevAdded;
     private boolean mShowCircularProgressBar;
 
+    private final boolean mShowDisabledSkipButtons;
+    private final boolean mShowCircularProgressBarOnlyWhenActive;
+
     private PlaybackViewModel mModel;
     private PlaybackViewModel.PlaybackController mController;
 
@@ -106,6 +109,11 @@ public class MediaButtonController {
         mSkipNextButton.setVisibility(View.VISIBLE);
         mSkipNextButton.setOnClickListener(this::onNextClicked);
 
+        mShowDisabledSkipButtons = context.getResources().getBoolean(
+                R.bool.show_disabled_skip_buttons);
+        mShowCircularProgressBarOnlyWhenActive = context.getResources().getBoolean(
+                R.bool.show_circular_progress_bar_only_when_active);
+
         resetInitialViews();
     }
 
@@ -136,10 +144,17 @@ public class MediaButtonController {
     private void resetInitialViews() {
         mControlBar.setViews(new View[0]);
         mControlBar.setView(mPlayPauseStopImageContainer, ControlBar.SLOT_MAIN);
-        mControlBar.setView(null, ControlBar.SLOT_LEFT);
-        mControlBar.setView(null, ControlBar.SLOT_RIGHT);
-        mSkipNextAdded = false;
-        mSkipPrevAdded = false;
+        if (mShowDisabledSkipButtons) {
+            mControlBar.setView(mSkipPrevButton, ControlBar.SLOT_LEFT);
+            mControlBar.setView(mSkipNextButton, ControlBar.SLOT_RIGHT);
+            mSkipNextAdded = true;
+            mSkipPrevAdded = true;
+        } else {
+            mControlBar.setView(null, ControlBar.SLOT_LEFT);
+            mControlBar.setView(null, ControlBar.SLOT_RIGHT);
+            mSkipNextAdded = false;
+            mSkipPrevAdded = false;
+        }
         mImageButtons.clear();
     }
 
@@ -159,10 +174,11 @@ public class MediaButtonController {
     private void onPlaybackStateChanged(@Nullable PlaybackViewModel.PlaybackStateWrapper state) {
 
         boolean hasState = (state != null);
-        mPlayPauseStopImageView.setAction(convertMainAction(state));
+        int playPauseState = convertMainAction(state);
+        mPlayPauseStopImageView.setAction(playPauseState);
         boolean isLoading = hasState && state.isLoading();
-        mCircularProgressBar.setVisibility(
-                isLoading || mShowCircularProgressBar ? View.VISIBLE : View.INVISIBLE);
+        mCircularProgressBar.setVisibility(isCircularProgressBarVisible(isLoading, playPauseState)
+                        ? View.VISIBLE : View.INVISIBLE);
         mCircularProgressBar.setIndeterminate(isLoading);
 
         // If prev/next is reserved, but not enabled, the icon is displayed as disabled (inactive
@@ -172,7 +188,7 @@ public class MediaButtonController {
         boolean skipPreviousReserved = hasState && state.iSkipPreviousReserved();
         boolean skipPreviousEnabled = hasState && state.isSkipPreviousEnabled();
 
-        if (skipPreviousReserved || skipPreviousEnabled) {
+        if (skipPreviousReserved || skipPreviousEnabled || mShowDisabledSkipButtons) {
             if (!mSkipPrevAdded) {
                 mControlBar.setView(mSkipPrevButton, ControlBar.SLOT_LEFT);
                 mSkipPrevAdded = true;
@@ -186,7 +202,7 @@ public class MediaButtonController {
         boolean skipNextReserved = hasState && state.isSkipNextReserved();
         boolean skipNextEnabled = hasState && state.isSkipNextEnabled();
 
-        if (skipNextReserved || skipNextEnabled) {
+        if (skipNextReserved || skipNextEnabled || mShowDisabledSkipButtons) {
             if (!mSkipNextAdded) {
                 mControlBar.setView(mSkipNextButton, ControlBar.SLOT_RIGHT);
                 mSkipNextAdded = true;
@@ -198,6 +214,19 @@ public class MediaButtonController {
         mSkipNextButton.setEnabled(skipNextEnabled);
 
         updateCustomActions(state);
+    }
+
+    private boolean isCircularProgressBarVisible(boolean isLoading, int playPauseState) {
+        if (!isLoading && !mShowCircularProgressBar) {
+            return false;
+        }
+
+        if (mShowCircularProgressBarOnlyWhenActive) {
+            return playPauseState == PlayPauseStopImageView.ACTION_PAUSE
+                    || playPauseState == PlayPauseStopImageView.ACTION_STOP;
+        }
+
+        return true;
     }
 
     @PlayPauseStopImageView.Action

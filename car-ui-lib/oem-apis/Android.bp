@@ -33,4 +33,11 @@ java_library {
         "com.android.permission",
         "//apex_available:platform",
     ],
+    static_libs: [
+        // NOTE: DO NOT ADD ANY OTHER DEPENDENCIES HERE.
+        // Adding dependencies here can cause library version conflicts at runtime
+        // if both the app and the plugin are depending on the same library but with
+        // different versions.
+        "androidx.annotation_annotation",
+    ],
 }

@@ -234,6 +234,7 @@ public final class RecyclerViewAdapterAdapterV1
             return mViewHolder.isRecyclable();
         }
 
+        @NonNull
         @Override
         public View getItemView() {
             return mViewHolder.itemView;

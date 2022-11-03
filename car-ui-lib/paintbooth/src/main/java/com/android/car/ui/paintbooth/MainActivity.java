@@ -52,6 +52,7 @@ import com.android.car.ui.paintbooth.dialogs.DialogsActivity;
 import com.android.car.ui.paintbooth.overlays.OverlayActivity;
 import com.android.car.ui.paintbooth.preferences.PreferenceActivity;
 import com.android.car.ui.paintbooth.preferences.SplitPreferenceActivity;
+import com.android.car.ui.paintbooth.shortcutspopup.ShortcutsPopupSamples;
 import com.android.car.ui.paintbooth.theme.TextSamples;
 import com.android.car.ui.paintbooth.toolbar.NoCarUiToolbarActivity;
 import com.android.car.ui.paintbooth.toolbar.ToolbarActivity;
@@ -94,7 +95,8 @@ public class MainActivity extends Activity implements InsetsChangedListener {
             new ActivityElement("Widget sample", WidgetActivity.class),
             new ActivityElement("Wide Screen IME", WideScreenImeActivity.class),
             new ActivityElement("Wide Screen View IME", WideScreenTestView.class),
-            new ActivityElement("ListItem sample", CarUiListItemActivity.class));
+            new ActivityElement("ListItem sample", CarUiListItemActivity.class),
+            new ActivityElement("ShortcutsPopup sample", ShortcutsPopupSamples.class));
 
     private abstract static class ViewHolder extends RecyclerView.ViewHolder {
 

@@ -18,12 +18,17 @@ package com.android.car.ui.plugin.oemapis.toolbar;
 
 import android.graphics.drawable.Drawable;
 
-import com.android.car.ui.plugin.oemapis.Nullable;
+import androidx.annotation.Nullable;
 
 import java.util.List;
 import java.util.function.Consumer;
 
-/** The OEM interface for a Toolbar. */
+/**
+ * The OEM interface for a Toolbar.
+ *
+ * @deprecated Use {@link ToolbarControllerOEMV2} instead
+ */
+@Deprecated
 @SuppressWarnings("AndroidJdkLibsChecker")
 public interface ToolbarControllerOEMV1 {
 

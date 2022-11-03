@@ -205,6 +205,12 @@ public class MediaItemMetadata implements Parcelable {
         return mMediaDescription.getSubtitle();
     }
 
+    /** @return media item description */
+    @Nullable
+    public CharSequence getDescription() {
+        return mMediaDescription.getDescription();
+    }
+
     /** @return the album title for the media */
     @Nullable
     public String getAlbumTitle() {
@@ -460,6 +466,7 @@ public class MediaItemMetadata implements Parcelable {
                 && Objects.equals(getId(), that.getId())
                 && Objects.equals(getTitle(), that.getTitle())
                 && Objects.equals(getSubtitle(), that.getSubtitle())
+                && Objects.equals(getDescription(), that.getDescription())
                 && Objects.equals(getAlbumTitle(), that.getAlbumTitle())
                 && Objects.equals(getArtist(), that.getArtist())
                 && Objects.equals(getNonEmptyArtworkUri(), that.getNonEmptyArtworkUri())
@@ -486,7 +493,9 @@ public class MediaItemMetadata implements Parcelable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(mMediaDescription.getMediaId(), mQueueId, mIsBrowsable, mIsPlayable);
+        return Objects.hash(mIsBrowsable, mIsPlayable, getId(), getTitle(), getSubtitle(),
+                getDescription(), getAlbumTitle(), getArtist(), getNonEmptyArtworkUri(),
+                mQueueId, hasPlaybackStatus(), hasProgress(), getProgress());
     }
 
     @Override

@@ -19,14 +19,18 @@ package com.android.car.messenger.common;
 import static com.android.car.assist.CarVoiceInteractionSession.KEY_DEVICE_ADDRESS;
 import static com.android.car.assist.CarVoiceInteractionSession.KEY_PHONE_NUMBER;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.telephony.SmsManager;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.text.TextUtils;
 import android.util.Log;
+
+import androidx.core.app.ActivityCompat;
 
 import java.util.List;
 
@@ -39,7 +43,8 @@ public final class MessagingUtils {
     /** Action used to direct send to a specified phone number */
     public static final String ACTION_DIRECT_SEND = "ACTION_DIRECT_SEND";
 
-    private MessagingUtils() {}
+    private MessagingUtils() {
+    }
 
     /**
      * Sends a reply, meant to be used from a caller originating from voice input.
@@ -62,6 +67,11 @@ public final class MessagingUtils {
         }
 
         SubscriptionManager subManager = context.getSystemService(SubscriptionManager.class);
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE)
+                != PackageManager.PERMISSION_GRANTED) {
+            Log.w(TAG, "Permission READ_PHONE_STATE missing to access subscriptions.");
+            return;
+        }
         List<SubscriptionInfo> infos = subManager.getActiveSubscriptionInfoList();
         if (Log.isLoggable(TAG, Log.DEBUG)) {
             Log.d(TAG, "active subscriptions: " + infos);

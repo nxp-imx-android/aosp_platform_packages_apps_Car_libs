@@ -17,12 +17,15 @@ package com.android.car.ui.plugin.oemapis.recyclerview;
 
 import android.view.View;
 
-import com.android.car.ui.plugin.oemapis.NonNull;
-import com.android.car.ui.plugin.oemapis.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * {@code androidx.recyclerview.widget.RecyclerView}
+ *
+ * @deprecated Use {@link RecyclerViewOEMV2} instead
  */
+@Deprecated
 public interface RecyclerViewOEMV1 {
 
     /**

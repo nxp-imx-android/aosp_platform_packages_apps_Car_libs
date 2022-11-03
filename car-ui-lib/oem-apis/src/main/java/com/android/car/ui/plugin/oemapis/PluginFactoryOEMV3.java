@@ -18,6 +18,9 @@ package com.android.car.ui.plugin.oemapis;
 import android.content.Context;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.android.car.ui.plugin.oemapis.appstyledview.AppStyledViewControllerOEMV2;
 import com.android.car.ui.plugin.oemapis.recyclerview.AdapterOEMV1;
 import com.android.car.ui.plugin.oemapis.recyclerview.ListItemOEMV1;
@@ -39,7 +42,10 @@ import java.util.function.Function;
  * <p>
  * Multiple of these can be provided via {@link PluginVersionProviderOEMV1} to allow plugins
  * to provide an old implementation for old apps, and a newer implementation for newer apps.
+ *
+ * @deprecated Use {@link PluginFactoryOEMV4} instead
  */
+@Deprecated
 @SuppressWarnings("AndroidJdkLibsChecker")
 public interface PluginFactoryOEMV3 {
     /**

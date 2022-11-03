@@ -39,6 +39,8 @@ public class LetterTileDrawable extends Drawable {
     private static int[] sColors;
     private static int sDefaultColor;
     private static int sTileFontColor;
+    private static int sDefaultWidth;
+    private static int sDefaultHeight;
     private static float sLetterToTileRatio;
     private static Drawable sDefaultPersonAvatar;
     private static Drawable sDefaultBusinessAvatar;
@@ -107,6 +109,8 @@ public class LetterTileDrawable extends Drawable {
             sDefaultPersonAvatar = res.getDrawable(R.drawable.ic_person, null /* theme */);
             sDefaultBusinessAvatar = res.getDrawable(R.drawable.ic_person, null /* theme */);
             sDefaultVoicemailAvatar = res.getDrawable(R.drawable.ic_person, null /* theme */);
+            sDefaultHeight = res.getDimensionPixelSize(R.dimen.letter_tile_drawable_height);
+            sDefaultWidth = res.getDimensionPixelSize(R.dimen.letter_tile_drawable_width);
             sTextPaint.setTypeface(
                     Typeface.create(res.getString(R.string.config_letter_tile_font_family),
                             res.getInteger(R.integer.config_letter_tile_text_style)));
@@ -116,6 +120,20 @@ public class LetterTileDrawable extends Drawable {
         }
 
         setContactDetails(letters, identifier);
+    }
+
+    @Override
+    public int getIntrinsicHeight() {
+        return !TextUtils.isEmpty(mLetters)
+            ? sDefaultHeight
+            : getDrawablepForContactType(mContactType).getIntrinsicHeight();
+    }
+
+    @Override
+    public int getIntrinsicWidth() {
+        return !TextUtils.isEmpty(mLetters)
+            ? sDefaultWidth
+            : getDrawablepForContactType(mContactType).getIntrinsicWidth();
     }
 
     @Override

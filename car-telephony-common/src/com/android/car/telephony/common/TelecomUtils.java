@@ -43,6 +43,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -81,6 +82,11 @@ public class TelecomUtils {
      * Get the voicemail number.
      */
     public static String getVoicemailNumber(Context context) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE)
+                != PackageManager.PERMISSION_GRANTED) {
+            L.w(TAG, "Missing READ_PHONE_STATE permission; not getting voicemail number.");
+            return null;
+        }
         if (sVoicemailNumber == null) {
             sVoicemailNumber = getTelephonyManager(context).getVoiceMailNumber();
         }
@@ -99,6 +105,7 @@ public class TelecomUtils {
 
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE)
                 != PackageManager.PERMISSION_GRANTED) {
+            L.w(TAG, "Missing READ_PHONE_STATE permission; not getting voicemail number.");
             return false;
         }
 
@@ -123,8 +130,8 @@ public class TelecomUtils {
      */
     public static String getNormalizedNumber(Context context, String number) {
         String countryIso = getCurrentCountryIsoFromLocale(context);
-        L.d(TAG, "PhoneNumberUtils.formatNumberToE164, number: " + piiLog(number)
-                + ", country: " + countryIso);
+        L.d(TAG, "PhoneNumberUtils.formatNumberToE164, number: %s, country: %s",
+                piiLog(number), countryIso);
         return PhoneNumberUtils.formatNumberToE164(number, countryIso);
     }
 
@@ -132,18 +139,18 @@ public class TelecomUtils {
      * Format a number as a phone number.
      */
     public static String getFormattedNumber(Context context, String number) {
-        L.d(TAG, "getFormattedNumber: " + piiLog(number));
+        L.d(TAG, "getFormattedNumber: %s", piiLog(number));
         if (number == null) {
             return "";
         }
 
         String countryIso = getCurrentCountryIsoFromLocale(context);
-        L.d(TAG, "PhoneNumberUtils.formatNumber, number: " + piiLog(number)
-                + ", country: " + countryIso);
+        L.d(TAG, "PhoneNumberUtils.formatNumber, number: %s, country %s",
+                piiLog(number), countryIso);
 
         String formattedNumber = PhoneNumberUtils.formatNumber(number, countryIso);
         formattedNumber = TextUtils.isEmpty(formattedNumber) ? number : formattedNumber;
-        L.d(TAG, "getFormattedNumber, result: " + piiLog(formattedNumber));
+        L.d(TAG, "getFormattedNumber, result: %s", piiLog(formattedNumber));
 
         return formattedNumber;
     }
@@ -190,7 +197,7 @@ public class TelecomUtils {
         private final String mLookupKey;
 
         public PhoneNumberInfo(String phoneNumber, String displayName, String displayNameAlt,
-                String initials, Uri avatarUri, String typeLabel, String lookupKey) {
+                               String initials, Uri avatarUri, String typeLabel, String lookupKey) {
             mPhoneNumber = phoneNumber;
             mDisplayName = displayName;
             mDisplayNameAlt = displayNameAlt;
@@ -257,8 +264,14 @@ public class TelecomUtils {
     @WorkerThread
     public static PhoneNumberInfo lookupNumberInBackground(Context context, String number) {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS)
-                != PackageManager.PERMISSION_GRANTED
-                || TextUtils.isEmpty(number)) {
+                != PackageManager.PERMISSION_GRANTED) {
+            L.w(TAG, "Missing READ_CONTACTS permission; not looking up contact.");
+            String readableNumber = getReadableNumber(context, number);
+            return new PhoneNumberInfo(number, readableNumber, readableNumber, null, null, null,
+                    null);
+        }
+
+        if (TextUtils.isEmpty(number)) {
             String readableNumber = getReadableNumber(context, number);
             return new PhoneNumberInfo(number, readableNumber, readableNumber, null, null, null,
                     null);
@@ -301,7 +314,7 @@ public class TelecomUtils {
                         contact.getLookupKey());
             }
         } else {
-          L.d(TAG, "InMemoryPhoneBook not initialized.");
+            L.d(TAG, "InMemoryPhoneBook not initialized.");
         }
 
         String name = null;
@@ -380,7 +393,11 @@ public class TelecomUtils {
     static Contact lookupContactEntryAsync(
             Context context, String number, String accountName) {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS)
-                != PackageManager.PERMISSION_GRANTED || TextUtils.isEmpty(number)) {
+                != PackageManager.PERMISSION_GRANTED) {
+            L.w(TAG, "Missing READ_CONTACTS permission; not looking up contact.");
+            return null;
+        }
+        if (TextUtils.isEmpty(number)) {
             return null;
         }
 
@@ -452,9 +469,14 @@ public class TelecomUtils {
      * Returns true if the telephony network is available.
      */
     public static boolean isNetworkAvailable(Context context) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE)
+                != PackageManager.PERMISSION_GRANTED) {
+            L.w(TAG, "Missing READ_PHONE_STATE permission, not getting network type.");
+            return false;
+        }
         TelephonyManager tm =
                 (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        return tm.getNetworkType() != TelephonyManager.NETWORK_TYPE_UNKNOWN
+        return tm.getDataNetworkType() != TelephonyManager.NETWORK_TYPE_UNKNOWN
                 && tm.getSimState() == TelephonyManager.SIM_STATE_READY;
     }
 
@@ -655,6 +677,28 @@ public class TelecomUtils {
                 && Character.isLetter(nameAlt.charAt(0))) {
             initials.append(Character.toUpperCase(nameAlt.charAt(0)));
         }
+        return initials.toString();
+    }
+
+    /**
+     * Splits the string and return the first letters of the first word and the last word.
+     */
+    public static String getInitials(String displayName) {
+        String[] words = displayName.split(" ");
+        if (words == null || words.length == 0) {
+            return null;
+        }
+
+        StringBuilder initials = new StringBuilder();
+        if (Character.isLetter(words[0].charAt(0))) {
+            initials.append(Character.toUpperCase(words[0].charAt(0)));
+        }
+        if (words.length > 1) {
+            if (Character.isLetter(words[words.length - 1].charAt(0))) {
+                initials.append(Character.toUpperCase(words[words.length - 1].charAt(0)));
+            }
+        }
+
         return initials.toString();
     }
 

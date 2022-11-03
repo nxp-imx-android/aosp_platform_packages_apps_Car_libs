@@ -21,6 +21,10 @@
     <bool name="show_linear_progress_bar">true</bool>
     <!-- Whether to show a circular progress bar in control bar and minimized control bar or not. -->
     <bool name="show_circular_progress_bar">false</bool>
+    <!-- Whether to show disabled skip buttons in control bar or not. -->
+    <bool name="show_disabled_skip_buttons">false</bool>
+    <!-- Whether to show circular progress bar only when progress is active. -->
+    <bool name="show_circular_progress_bar_only_when_active">false</bool>
 
     <!-- Whether the media source logo should be used for the app selector button. If the flag is
         set to 'true', the main logo (which by default appears on the left hand side on toolbar)

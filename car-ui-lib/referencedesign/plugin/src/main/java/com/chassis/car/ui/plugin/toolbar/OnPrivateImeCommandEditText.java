@@ -21,7 +21,7 @@ import android.os.Bundle;
 import android.util.AttributeSet;
 import android.widget.EditText;
 
-import java.util.function.BiConsumer;
+import com.android.car.ui.plugin.oemapis.BiConsumer;
 
 /**
  * This is a regular {@link EditText}, but with the addition of a

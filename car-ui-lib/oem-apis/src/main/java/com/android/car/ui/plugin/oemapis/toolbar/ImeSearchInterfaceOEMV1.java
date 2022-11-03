@@ -18,7 +18,7 @@ package com.android.car.ui.plugin.oemapis.toolbar;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import com.android.car.ui.plugin.oemapis.Nullable;
+import androidx.annotation.Nullable;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -26,7 +26,10 @@ import java.util.function.Consumer;
 /**
  * This is an interface (as in "bridge") between the static lib and the plugin, so that
  * the static lib can handle showing search results inside the IME.
+ *
+ * @deprecated Use {@link ImeSearchInterfaceOEMV2} instead
  */
+@Deprecated
 @SuppressWarnings("AndroidJdkLibsChecker")
 public interface ImeSearchInterfaceOEMV1 {
     /**
