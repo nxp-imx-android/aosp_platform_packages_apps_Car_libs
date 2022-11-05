@@ -12,11 +12,16 @@ limitations under the License.-->
 <resources>
   <overlayable name="CarAppsCommon">
     <policy type="system|product|signature">
+      <item type="bool" name="enable_control_bar_overflow"/>
+
+      <item type="color" name="action_button_icon_tint" />
+
       <item type="dimen" name="control_bar_button_size" />
       <item type="dimen" name="play_pause_image_size" />
-      <item type="color" name="action_button_icon_tint" />
+
+      <item type="drawable" name="ic_overflow_button"/>
+
       <item type="integer" name="control_bar_columns"/>
-      <item type="bool" name="enable_control_bar_overflow"/>
     </policy>
   </overlayable>
 </resources>
