@@ -31,6 +31,12 @@
         <item>@drawable/ic_placeholder_6</item>
         <item>@drawable/ic_placeholder_7</item>
     </array>
+
+    <!-- This array is used when the placeholder images need to be tinted. -->
+    <array name="placeholder_icons">
+        <item>@drawable/ic_placeholder_tintable</item>
+    </array>
+
     <!-- This array is for the backgrounds of the placeholder images above -->
     <array name="placeholder_backgrounds">
         <item>@drawable/placeholder_color_drawable_0</item>
