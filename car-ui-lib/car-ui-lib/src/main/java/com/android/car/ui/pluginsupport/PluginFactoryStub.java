@@ -24,6 +24,9 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowInsets;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import androidx.annotation.LayoutRes;
@@ -42,6 +45,7 @@ import com.android.car.ui.recyclerview.CarUiRecyclerView;
 import com.android.car.ui.recyclerview.CarUiRecyclerViewImpl;
 import com.android.car.ui.toolbar.ToolbarController;
 import com.android.car.ui.toolbar.ToolbarControllerImpl;
+import com.android.car.ui.utils.CarUiUtils;
 import com.android.car.ui.widget.CarUiTextView;
 import com.android.car.ui.widget.CarUiTextViewImpl;
 
@@ -108,10 +112,43 @@ public final class PluginFactoryStub implements PluginFactory {
             }
         }
 
+        // Update display cut out insets on DecorView
+        handleDisplayCutOut(contentView);
+
         InsetsUpdater insetsUpdater = new InsetsUpdater(baseLayout, contentView);
         insetsUpdater.replaceInsetsChangedListenerWith(insetsChangedListener);
 
         return toolbarController;
+    }
+
+    private void handleDisplayCutOut(View contentView) {
+        if (!(contentView.getContext() instanceof Activity)) {
+            return;
+        }
+
+        Activity activity = ((Activity) contentView.getContext());
+        if (!CarUiUtils.getThemeBoolean(activity, R.attr.carUiOmitDisplayCutOutInsets)) {
+            return;
+        }
+
+        Window baseLayoutWindow = activity.getWindow();
+        WindowManager.LayoutParams lp = baseLayoutWindow.getAttributes();
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S_V2) {
+            return;
+        }
+
+        if (lp.layoutInDisplayCutoutMode
+                != WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS) {
+            return;
+        }
+
+        // Remove display cut-out insets on DecorView
+        baseLayoutWindow.getDecorView().setOnApplyWindowInsetsListener((v, insets) -> {
+            insets = new WindowInsets.Builder(insets).setInsets(
+                    WindowInsets.Type.displayCutout(), android.graphics.Insets.NONE).build();
+            return v.onApplyWindowInsets(insets);
+        });
     }
 
     @NonNull

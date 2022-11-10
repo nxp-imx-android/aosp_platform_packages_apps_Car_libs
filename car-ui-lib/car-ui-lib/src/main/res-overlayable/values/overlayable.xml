@@ -32,6 +32,7 @@ limitations under the License.-->
       <item type="attr" name="carUiClickableWhileDisabled"/>
       <item type="attr" name="carUiIcon"/>
       <item type="attr" name="carUiLayout"/>
+      <item type="attr" name="carUiOmitDisplayCutOutInsets"/>
       <item type="attr" name="carUiPreferenceStyle"/>
       <item type="attr" name="carUiRecyclerViewStyle"/>
       <item type="attr" name="carUiShowChevron"/>
