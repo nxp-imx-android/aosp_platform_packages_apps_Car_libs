@@ -105,9 +105,16 @@ public final class PluginFactoryAdapterV5 implements PluginFactory {
                 insets -> insetsChangedListener.onCarUiInsetsChanged(adaptInsets(insets)),
                 toolbarEnabled, fullscreen);
 
-        return toolbar != null
-                ? new ToolbarControllerAdapterV2(contentView.getContext(), toolbar)
-                : null;
+        if (toolbar != null) {
+            return new ToolbarControllerAdapterV2(contentView.getContext(), toolbar);
+        }
+
+        if (toolbarEnabled) {
+            return mFactoryStub.installBaseLayoutAround(contentView, insetsChangedListener,
+                    toolbarEnabled, fullscreen);
+        }
+
+        return null;
     }
 
     @NonNull
