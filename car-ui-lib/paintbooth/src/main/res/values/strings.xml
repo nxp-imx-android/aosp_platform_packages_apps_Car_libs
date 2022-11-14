@@ -55,7 +55,7 @@
 
   <!-- Title of a single line title preference [CHAR_LIMIT=250]-->
   <string name="title_single_line_title_preference">Two line title preference - no matter how long the title is it will never wrap to more than two lines. This is some extra text to demonstrate that the title will wrap after two lines.</string>
-  
+
   <!-- Summary of a single line title preference [CHAR_LIMIT=108]-->
   <string name="summary_single_line_title_preference">This title will wrap to two lines</string>
 
