@@ -140,6 +140,8 @@ public class CarUiShortcutsPopup implements ShortcutPopupAdapter.ItemClickListen
         if (mListPopupWindow.getListView() == null) {
             return;
         }
+        //for rotary to be able to focus the items
+        mListPopupWindow.getListView().setFocusable(false);
         mListPopupWindow.getListView().setVisibility(View.VISIBLE);
         mListPopupWindow.getListView().setDivider(
                 AppCompatResources.getDrawable(mContext, R.drawable.car_ui_divider));

@@ -99,8 +99,6 @@ public class ControlBar extends RelativeLayout implements ExpandableControlBar {
     // Whether this control bar has focus.
     private boolean mHasFocus;
 
-    // Default number of columns, if unspecified
-    private static final int DEFAULT_COLUMNS = 3;
     // Weight for the spacers used between buttons
     private static final float SPACERS_WEIGHT = 1f;
 
@@ -140,8 +138,10 @@ public class ControlBar extends RelativeLayout implements ExpandableControlBar {
 
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.ControlBar,
                 defStyleAttrs, defStyleRes);
-        mNumColumns = ta.getInteger(R.styleable.ControlBar_columns, DEFAULT_COLUMNS);
-        mExpandEnabled = ta.getBoolean(R.styleable.ControlBar_enableOverflow, true);
+        mNumColumns = ta.getInteger(R.styleable.ControlBar_columns,
+                context.getResources().getInteger(R.integer.control_bar_columns));
+        mExpandEnabled = ta.getBoolean(R.styleable.ControlBar_enableOverflow,
+                context.getResources().getBoolean(R.bool.enable_control_bar_overflow));
         ta.recycle();
 
         mRowsContainer = findViewById(R.id.rows_container);

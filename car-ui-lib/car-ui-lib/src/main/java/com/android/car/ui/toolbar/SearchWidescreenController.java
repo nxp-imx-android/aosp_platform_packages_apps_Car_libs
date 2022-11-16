@@ -36,6 +36,7 @@ import static com.android.car.ui.utils.CarUiUtils.getBooleanSystemProperty;
 import static com.android.car.ui.utils.CarUiUtils.getBytesFromBitmap;
 import static com.android.car.ui.utils.CarUiUtils.scaleBitmapAndKeepRatio;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -326,6 +327,7 @@ public class SearchWidescreenController {
      * Returns the values of {@code R.dimen.car_ui_primary_icon_size} either from current IME
      * service context, or the current app context.
      */
+    @SuppressLint("DiscouragedApi")
     private int getIMEServiceRequiredDimen(@NonNull Context context) {
         Resources r = context.getResources();
         int id = R.dimen.car_ui_primary_icon_size;

@@ -41,4 +41,6 @@
         of memory they take by considering they are equivalent to a 256x256 px bitmap. -->
     <integer name="drawable_default_weight_kb">250</integer>
 
+    <!-- Default number of control bar columns -->
+    <integer name="control_bar_columns">3</integer>
 </resources>

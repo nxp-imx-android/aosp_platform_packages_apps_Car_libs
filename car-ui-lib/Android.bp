@@ -253,8 +253,6 @@ android_app {
         "androidx.recyclerview_recyclerview",
         "androidx-constraintlayout_constraintlayout-solver",
         "androidx.asynclayoutinflater_asynclayoutinflater",
-        "guava",
-        "gson-prebuilt-jar",
     ],
 
     platform_apis: true,

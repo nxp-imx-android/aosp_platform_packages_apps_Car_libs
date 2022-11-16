@@ -16,11 +16,14 @@
   -->
 
 <resources>
+    <!-- Intent used to launch the app selector as popup.
+        This should be overlaid to match the actual launcher included in the car. -->
     <string name="launcher_popup_intent" translatable="false">
         intent:#Intent;component=com.android.car.carlauncher/.AppGridActivity;launchFlags=0x24000000;S.com.android.car.carlauncher.mode=MEDIA_POPUP;end
     </string>
 
-    <!-- See launcher_intent above. -->
+    <!-- Intent used to launch the app selector full screen.
+        This should be overlaid to match the actual launcher included in the car. -->
     <string name="launcher_intent" translatable="false">
         intent:#Intent;component=com.android.car.carlauncher/.AppGridActivity;launchFlags=0x24000000;S.com.android.car.carlauncher.mode=MEDIA_ONLY;end
     </string>
