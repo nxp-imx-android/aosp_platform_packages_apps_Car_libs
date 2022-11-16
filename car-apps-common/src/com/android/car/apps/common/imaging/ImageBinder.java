@@ -46,6 +46,8 @@ public class ImageBinder<T extends ImageBinder.ImageRef> {
         NONE,
         /** A placeholder displayed in the foreground, typically has more details. */
         FOREGROUND,
+        /** An icon placeholder displayed in the foreground, may be tinted. */
+        FOREGROUND_ICON,
         /** A placeholder displayed in the background, typically has less details. */
         BACKGROUND
     }
