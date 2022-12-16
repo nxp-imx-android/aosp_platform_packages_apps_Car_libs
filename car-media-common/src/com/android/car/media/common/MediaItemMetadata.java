@@ -34,6 +34,7 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.text.TextUtils;
 import android.util.Log;
 
+import androidx.annotation.ArrayRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
@@ -362,12 +363,23 @@ public class MediaItemMetadata implements Parcelable {
 
     private static Map<PlaceholderType, List<Drawable>> sPlaceHolders = new HashMap<>();
 
+    private static @ArrayRes int getPlaceHolderArray(PlaceholderType type) {
+        switch (type) {
+            case FOREGROUND_ICON:
+                return R.array.placeholder_icons;
+            case BACKGROUND:
+                return R.array.placeholder_backgrounds;
+            case FOREGROUND:
+            default:
+                return R.array.placeholder_images;
+        }
+    }
+
     private static List<Drawable> getPlaceHolders(PlaceholderType type, Context context) {
         List<Drawable> placeHolders = sPlaceHolders.get(type);
         if (placeHolders == null) {
             TypedArray placeholderImages = context.getResources().obtainTypedArray(
-                    type == PlaceholderType.FOREGROUND
-                            ? R.array.placeholder_images : R.array.placeholder_backgrounds);
+                    getPlaceHolderArray(type));
 
             if (placeholderImages == null) {
                 throw new NullPointerException("No placeholders for " + type);

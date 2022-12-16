@@ -469,7 +469,9 @@ public abstract class PreferenceFragment extends PreferenceFragmentCompat implem
         to.setIconSpaceReserved(from.isIconSpaceReserved());
         to.setWidgetLayoutResource(from.getWidgetLayoutResource());
         to.setPreferenceDataStore(from.getPreferenceDataStore());
-        to.setSingleLineTitle(from.isSingleLineTitle());
+        // Do not copy singleLineTitle because it is not possible to differentiate between true
+        // and unspecified values. This will make maxLines set in preference layout files take
+        // precedence when deciding number of lines in preference title.
         to.setVisible(from.isVisible());
         to.setLayoutResource(from.getLayoutResource());
         to.setCopyingEnabled(from.isCopyingEnabled());

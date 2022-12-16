@@ -53,10 +53,11 @@
   <!-- Summary of an icon preference [CHAR_LIMIT=103]-->
   <string name="summary_icon_preference">Define a drawable to display it at the start of the preference</string>
 
-  <!-- Title of a single line title preference [CHAR_LIMIT=165]-->
-  <string name="title_single_line_title_preference">Single line title preference - no matter how long the title is it will never wrap to multiple lines</string>
+  <!-- Title of a single line title preference [CHAR_LIMIT=250]-->
+  <string name="title_single_line_title_preference">Two line title preference - no matter how long the title is it will never wrap to more than two lines. This is some extra text to demonstrate that the title will wrap after two lines.</string>
+
   <!-- Summary of a single line title preference [CHAR_LIMIT=108]-->
-  <string name="summary_single_line_title_preference">This title will be ellipsized instead of wrapping to another line</string>
+  <string name="summary_single_line_title_preference">This title will wrap to two lines</string>
 
   <!-- Title of a single line title preference without summary [CHAR_LIMIT=28]-->
   <string name="title_single_line_no_summary">Single line preference - no summary</string>

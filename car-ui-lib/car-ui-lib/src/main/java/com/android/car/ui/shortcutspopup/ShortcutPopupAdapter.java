@@ -23,6 +23,8 @@ import android.widget.SimpleAdapter;
 
 import androidx.annotation.NonNull;
 
+import com.android.car.ui.R;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -61,9 +63,14 @@ class ShortcutPopupAdapter extends SimpleAdapter {
         containerView.setHasArrow(hasArrow);
         containerView.setArrowGravityTop(!mReverse);
         containerView.setArrowGravityLeft(!mArrowGravityRight);
-        containerView.setOnClickListener(v -> {
-            mItemClickListener.onClick((int) getItemId(position));
-        });
+
+        //set the click listener to contentView rather than parent for rotary support
+        View contentView = containerView.findViewById(R.id.car_ui_shortcuts_contentView);
+        if (contentView != null) {
+            contentView.setOnClickListener(v-> {
+                mItemClickListener.onClick((int) getItemId(position));
+            });
+        }
         containerView.setEnabled(mItemClickListener.isEnabled((int) getItemId(position)));
         return containerView;
     }

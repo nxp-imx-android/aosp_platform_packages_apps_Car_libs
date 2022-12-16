@@ -2,10 +2,11 @@
 
 PRODUCT_PACKAGES += \
    car-ui-lib-plugin-prebuilt \
+   token-rro \
+   oem-token-shared-lib
 
 PRODUCT_PRODUCT_PROPERTIES += \
-    ro.build.automotive.car.ui.plugin.package.name=com.chassis.car.ui.plugin \
-    persist.sys.automotive.car.ui.plugin.enabled=false \
+    ro.build.automotive.car.ui.plugin.package.name=com.chassis.car.ui.plugin
 
 PRODUCT_COPY_FILES += \
     packages/apps/Car/libs/car-ui-lib/referencedesign/car-ui-lib-preinstalled-packages.xml:system/etc/sysconfig/car-ui-lib-preinstalled-packages.xml \
