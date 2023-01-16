@@ -18,7 +18,7 @@ package {
 
 android_app {
     name: "car-ui-lib-proxyplugin",
-    certificate: ":car-ui-lib-plugin-certificate",
+    certificate: "platform",
 
     min_sdk_version: "28",
     target_sdk_version: "30",
